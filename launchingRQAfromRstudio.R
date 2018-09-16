@@ -1,0 +1,3 @@
+library(RQDA)
+RQDA()        
+
