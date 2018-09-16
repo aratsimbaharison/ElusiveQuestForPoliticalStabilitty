@@ -1,0 +1,30 @@
+---
+title: "Work Plan"
+author: "Adrien Ratsimbaharison"
+date: "9/16/2018"
+output: 
+  html_document:
+  toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Step 1: Collect and clean the data (by the end of September 2018)
+
+- This will include take a course on DataCamp and dowloading data from the World Bank, Polity IV, Freedom House, and other sources
+- I will start reading for Chapter 1 and 2.
+
+## Step 2: Complete Part I - Introduction (by end of October 2018)
+
+### Step 2.1 - Chapter 1: What is it and Why Does it Matters? (by mid-October)
+
+### Step 2.2 - Chapter 2: Approach and Methodology (by end-October)
+
+
+## Step 3: Complete Part II - The Condictions of Political Instability and Crisis (by end of November)
+
+
+## Step 4: Complete Part III - The Triggers of Political Instability and Crisis (by end of December)
+
