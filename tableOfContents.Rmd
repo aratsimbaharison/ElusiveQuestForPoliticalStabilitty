@@ -1,0 +1,56 @@
+---
+title: "Table of Contents"
+author: "Adrien Ratsimbaharison"
+date: "9/15/2018"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part I - Introduction
+
+### Chapter 1 - Political Stability: What is it and Why it Matters?
+
+### Chapter 2 - Political Stability: Approach and Methodology
+
+
+
+## Part II - The Conditions of Political Instability and Crisis in Post-Cold War Africa
+
+### Chapter 3 - Governance and Political Instability and Crisis
+
+### Chapter 4 - Political Conditions of Political Instability and Crisis
+
+### Chapter 5 - Economic and Social Conditions of Political Instability and Crisis
+
+### Chapter 6 - Cultural, Religious, and Geographic Conditions Political Instability and Crisis
+
+
+
+## Part III - The Triggers of Political Instability and Crisis in Post-Cold War Africa
+
+### Chapter 7 - Electoral Processes and Political Instability and Crisis
+
+### Chapter 8 - Politics of Exclusion and Political Instability and Crisis
+
+### Chapter 9 - Autocratization and Political Instability and Crisis
+
+
+## Part IV - Case Studies and Conclusion
+
+### Chapter 10 - Madagascar
+
+### Chapter 11 - Mali
+
+
+
+
+
+
+
+
