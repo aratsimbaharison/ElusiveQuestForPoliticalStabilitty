@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Step 1: Collect and clean the data (by the end of September 2018)
+## Step 1: Collect and clean the data (by end of September 2018)
 
 - This will include take a course on DataCamp and dowloading data from the World Bank, Polity IV, Freedom House, and other sources
 - I will start reading for Chapter 1 and 2.
