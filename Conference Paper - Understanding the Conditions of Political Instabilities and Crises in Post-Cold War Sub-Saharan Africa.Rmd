@@ -1,0 +1,689 @@
+---
+title: Understanding the Conditions of Political Stability Since the End of the Cold War
+author: "Adrien M. Ratsimbaharison,   
+Benedict College, Columbia, SC"
+date: "SCPSA Meeting, March 23-24, 2018, Coastal Carolina, Conway, SC"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+
+Despite the substantial decrease of the number of conflicts around the world since the end of the Cold War, many African and Asian countries are still struggling with political instabilities and crises.  Adopting a "conflict-approach" to political stability, instability, and crisis (based on Michael Lund's conceptual framework of "life history of conflict"), I am conducting a research project aimed at the identification of the common conditions (or determinants) and triggers of conflicts, sources of these political instabilities and crises.  In the current paper, I am focusing the conditions of political stability (or instability), using quantitative data from different sources, including the World Bank, the Center for Systemic Peace (Polity IV Project on Political Regime Characteristics and Transitions), and Freedom House.  At the current stage of this research project, I find that governance (as indicated by regulatory rule) and regime type (as indicated by civil liberties) constitute the most important conditions of political stability during the time period of 1996-2016 around the world.   
+
+*Keywoards:* political stability, political instability, crisis, governance, development, regime types 
+
+## I. Introduction
+
+According to Pettersson & Wallensteen, the "number of armed conflicts in the world has decreased substantially" since the end of the Cold War.[^3]  Nevertheless, despite this decrease of the number of armed conflicts, many African and Asian countries are still struggling with political instabilities and crises. In fact, as we can see in the data analysis in this paper, the level of political stability has remained low throughout the world during the time period of 1996-2016, and it was at the lowest level in Africa and Asia. The issue of political stability (or its opposite, instability) is still crucial for many countries, given its impact (positive or negative) on their economies and social wellbeing in general,[^4] and given particularly the fact that an unmitigated political instability can quickly escalate to political crisis and even armed conflict.[^5]   
+
+Adopting a "conflict-approach" to political stability, instability, and crisis (based on Michael Lund's conceptual framework of "life history of conflict"), I am conducting a research project aimed at the identification of the most common conditions (or determinants) and triggers of instability and crisis in Africa. In connection with this research project, I am focusing in the current paper on the conditions of political stability (or instability), using quantitative data from different sources, including the World Bank, the Center for Systemic Peace (Polity IV Project on Political Regime Characteristics and Transitions), and Freedom House. Simply stated, the research question I am addressing in this paper is as follows: what conditions (or determinants) are the most consistently associated with political stability? 
+
+### *Literature Review*
+
+The definition and measurement of the concept of "political stability" (and its opposite "political instability") has been always controversial, and no one seems to be able to come up with a consensual definition and measurement yet.  As a result, there is huge gap for instance between, on the one hand, the early definition proposed by Claude Ake, who suggested that "political stability is the regularity of the flow of political exchanges";[^1]  and on the other hand, the more recent examination of the "multidimensionality of political instability using 25 political instability indicators in an Exploratory Factor Analysis," done by Richard Jong-A-Pin, which resulted in the identification of the following four dimensions of political instability:  "politically motivated violence, mass civil protest, instability within the political regime, and instability of the political regime."[6] Consequently, the elusiveness of the concept of stability (or instability) and the lack of consensus with regard to the existing definitions and measurements led some scholars, like Keith M. Dowding and Richard Kimber, to argue that "stability cannot be quantified and that there are thus no degrees of stability."[^7]   
+
+However, in the absence of agreeable definition and measurement, the need to operationalize this concept in some way led different scholars to use different indicators as proxies.  The most commonly used proxies include the indicators of government and regime change or durability, the absence of major conflict, etc.  The long list of various authors who took this route include, for instance, Alberto Alesina and his associates in their investigation of "the relationship between political instability and per capita GDP growth,"[^8] H?vard Hegre and his associates in the study on the association between regime type and national security.[^9] More recently, however, Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, working on the World Governance Indicators (WGI) project for the World Bank, suggest a direct measurement of the concept of political stability using agent perception.[^10] Without specifically defining the concept of political stability, the authors consider it as one of the "six dimensions of governance," which include: "Voice and Accountability, Political Stability and Absence of Violence/Terrorism, Government Effectiveness, Regulatory Quality, Rule of Law, and Control of Corruption."[^11] Moreover, they state that the "Political Stability and Absence of Violence/Terrorism" indicator captures "perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically-motivated violence and terrorism." Furthermore, concerning the measurement of this concept and the other concepts used as "dimensions of governance," they provide the following explanation:
+
+> In the WGI project we rely exclusively on perceptions-based governance data sources. Our data sources include surveys of firms and households, as well as the subjective assessments of a variety of commercial business information providers, non-governmental organizations, and a number of multilateral organizations and other public-sector bodies.[^12] 
+
+After comparing Kaufmann et al.'s definition and measurement of political stability with those of other scholars, I decide to adopt the former's definition and measurement in this paper and in my research project on political stability in Africa for two main reasons. First, since the concept of stability is highly subjective, it makes sense to use the measurement technique based on intersubjectivity, which is commonly used in qualitative research methods.[^15] Second, Kaufmann et al. were able to build a consistent data set on political stability for most countries in the world since 1996, that can be accessed through the World Bank's database.[^13]   
+
+Concerning the conditions associated with political stability and conflict in general, James C. Davies revived in the 1960s the theory of rising expectation, which was already formulated since the 1800s by Alexis de Toqueville and others.[^16] Thus, according to Davies, "revolutions [as symptoms par excellence of political instability] are most likely to occur when a prolonged period of objective economic and social development is followed by a short period of sharp reversal."[^17] With regard to the political conditions, Hegre and his associates established recently that "semidemocracies [or partly free countries] are more likely to experience civil war [or violent political conflict in general] than either democracies or autocracies."[^18] We will explore in this paper the governance, socioeconomic, and political, conditions that may be associated with politica stability (or instability).    
+
+### *Data and Methodology*
+
+Thus, the purpose of this paper is to identify the conditions (or determinants) of political stability (or instability) during the time period of 1996-2016 around the world. To this end, as mentioned earlier, I adopt the definition and measurement of political stablity by Kaufmann and his associates, and use their "political stability and absence of violence/terrorism estimate" (or "political stability" for short) as a dependent variable. With regard to the independent variables, I collect different indicators of governance, economic and social development, and regime type mainly from the World Bank, the Center for Systemic Peace (Polity IV Project on Political Regime Characteristics and Transitions), and Freedom House.   
+
+The data were manipulated and analyzed with "R" statistical and programming language. In addition to the traditional correlation analysis, machine learning methods and techniques, including generalized linear regression and classification tree,[^19] were applied to build models predicting political stability (or instability).
+
+
+## II. Exploratory Data Analysis
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(knitr)
+
+# downloading the data on World Governance Indicators
+#data on stability estimate
+stabilityDf <- wb(country = "countries_only", indicator = "PV.EST", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+stabilityDf <- tbl_df(stabilityDf)
+stabilityDf <- select(stabilityDf, country, iso2c, date, stability = value)
+head(stabilityDf)
+
+
+# creating a variable for stability category with dplyr
+stabilityDf <- stabilityDf %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
+head(stabilityDf)
+str(stabilityDf)
+
+#data on control of corruption estimate
+corruptionControlDf <- wb(country = "countries_only", indicator = "GV.CONT.CO.ES", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+corruptionControlDf <- tbl_df(corruptionControlDf)
+corruptionControlDf <- select(corruptionControlDf, country, iso2c, date, corruptionControl = value)
+head(corruptionControlDf)
+
+
+#data on government effectiveness estimate
+governmentEffectivenessDf <- wb(country = "countries_only", indicator = "GV.GOVT.EF.ES", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+governmentEffectivenessDf <- tbl_df(governmentEffectivenessDf)
+governmentEffectivenessDf <- select(governmentEffectivenessDf, country, iso2c, date, governmentEffectiveness = value)
+head(governmentEffectivenessDf)
+
+#data on regulatory quality estimate
+regulatoryQualityDf <- wb(country = "countries_only", indicator = "RQ.EST", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+regulatoryQualityDf <- tbl_df(regulatoryQualityDf)
+regulatoryQualityDf <- select(regulatoryQualityDf, country, iso2c, date, regulatoryQuality = value)
+head(regulatoryQualityDf)
+
+#data on rule of law estimate
+ruleOfLawDf <- wb(country = "countries_only", indicator = "GV.RULE.LW.ES", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+ruleOfLawDf <- tbl_df(ruleOfLawDf)
+ruleOfLawDf <- select(ruleOfLawDf, country, iso2c, date, ruleOfLaw = value)
+head(ruleOfLawDf)
+
+#data on voice and accountability estimate
+voiceAndAccountabilityDf <- wb(country = "countries_only", indicator = "GV.VOIC.AC.ES", 
+                          startdate = 1996, enddate = 2017, POSIXct = TRUE)
+voiceAndAccountabilityDf <- tbl_df(voiceAndAccountabilityDf)
+voiceAndAccountabilityDf <- select(voiceAndAccountabilityDf, country, iso2c, date, voiceAndAccountability = value)
+head(voiceAndAccountabilityDf)
+
+# joining the data on WGI
+WGI <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., governmentEffectivenessDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., regulatoryQualityDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
+WGI <- tbl_df(WGI)
+head(WGI)
+
+# downloading the data on country code with region and subregion from a github repository maintained by Lukes  # at: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
+
+regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbaharison/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
+regionSubregionDf <- tbl_df(regionSubregionDf)
+regionSubregionDf <- select(regionSubregionDf, country = name, iso2c = `alpha-2`, iso3c = `alpha-3`, 
+                            countryCode = `country-code`, region, subregion = `sub-region`)
+head(regionSubregionDf)                           
+
+# merging WGI with UN classification by region and subregion
+WGIbyRegion <- merge(WGI, regionSubregionDf, by = "iso2c")
+WGIbyRegion <- tbl_df(WGIbyRegion)
+WGIbyRegion <- select(WGIbyRegion, country = country.x, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+head(WGIbyRegion)
+
+```
+
+
+
+**Political Stability Around the World: Descriptive Statistics**
+
+As shown in Table 1 and Figure 1 below, the summary statistics of political stability during the time period of 1996-2016 around the world produces an average of -0.0199 with standard deviation of 1.00, which seems to indicate that the whole world has been slightly unstable during this time period. One can also notice that whereas the maximum value of political stability is 1.96, the minimum value is -3.31. This minimum value seems abnormal, since the scale used by Kaufmann and his associates was -2.5 to 2.5.[^14] But this does not seem to affect our data analysis.   
+
+Furthermore, Figure 2 shows that the data on political stability is not normally distributed, but skweed to the left, which indicates the existence of outliers with negative values. Figure 2 also shows that the mode is between 0.5 and 1.   
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+
+# Table 1 - Summary statistics
+
+summary(WGIbyRegion$stability, na.rm = TRUE)
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 1 - Political Stability: Summary Statistics"}
+
+#Figure 1 - Political Stability: Summary Statistics
+
+boxplot(WGIbyRegion$stability, main = "")
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap= "Figure 2 - Political Stability: Frequency"}
+
+#Figure 2 - Political Stability: Frequency
+
+hist(WGIbyRegion$stability, main= "", xlab = "Political Stability Estimate")
+abline(v = median(WGIbyRegion$stability, na.rm = TRUE), lwd = 2)
+text(x = -1, y = 650, "Median= 0.089")
+
+```
+
+
+
+
+**Political Stability Trend: Annual Average Around the World**  
+
+As shown in Table 2 and Figure 3, the annual average of politial stability has remained below zero during the time period of 1996-2016 throughout the world. There was no time it had a positive value.
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+# Political Stability Trend: Annual Average Around the World
+PoliticalStabilityTrendWorld <- WGIbyRegion %>%
+  group_by(date) %>%
+  summarise(AnnualAverage = mean(stability, na.rm=TRUE))
+PoliticalStabilityTrendWorld <- tbl_df(PoliticalStabilityTrendWorld)
+
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, results= 'asis'}
+
+#Table 2 - Political Stability Trend: Annual Average Around the World
+
+kable(PoliticalStabilityTrendWorld, caption = "Table 2 - Political Stability Trend: Annual Average Around the World")
+
+```
+
+
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 3 - Political Stability Trend: Annual Average Around the World"}
+
+
+PoliticalStabilityTrendWorld$PSAnnualAverage <- as.numeric(PoliticalStabilityTrendWorld$AnnualAverage)
+
+plot(PoliticalStabilityTrendWorld$date, PoliticalStabilityTrendWorld$AnnualAverage, type="o", lwd = 2,
+     ylim=range( -1:1),
+     main="",
+     xlab = "Years", ylab = "Political Stability (Annual Average)")
+abline(h = 0, lwd = 1.5)
+
+
+```
+
+
+
+
+**Political Stability: Average by Region** 
+
+Table 3 and Figure 4 clearly show that the regions of Africa and Asia, with respectively an average of -0.575 and -0.388, were the two most unstable regions in the world during the time period of 1996-2016. On the contrary, the regions of Oceania and Europe, with respectively an average of 0.820 and 0.651, were the two most unstable regions in the world
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+#Political Stability summary for each region
+
+politicalStabilityByRegion <- summarise(group_by(WGIbyRegion, region),
+          mean=mean(stability, na.rm = TRUE), sd=sd(stability, na.rm = TRUE))
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, results= "asis"}
+
+#Table 3 - Political Stability: Average by Region
+
+kable(politicalStabilityByRegion, caption = "Table 3 - Political Stability: Average by Region")
+
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 4 - Political Stability: Average by Region"}
+
+# Boxplot of Political Stability by Region
+boxplot(stability~region,data=WGIbyRegion, main="",
+        xlab="Regions", ylab="Political Stability Estimate")
+abline(h = 0, lwd = 2)
+
+```
+
+### *Correlation Between Political Stability and the other World Governance Indicators (WGI)*
+
+In this section, we plot political stability against the other world governance indicators (corruption control, government effectiveness, regulatory quality, rule of law, and voice and accountability), and find that political stability is strongly and significantly correlated with these other world governance indicators. The correlation coefficients range from 0.63 to 0.77, with a p-value close to zero.   
+
+This result allows us to include all world governance indicators in our prediction models.
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 5 - Correlation between Political Stability and the other World Governance Indicators (WGI)"}
+
+# Scatterplot Matrix
+pairs(~ stability + ruleOfLaw + governmentEffectiveness + corruptionControl + regulatoryQuality +  voiceAndAccountability,data=WGI,
+   main="")
+
+```
+
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+# Correlation between Political Stability and the other World Governance Indicators (WGI)
+WGI2 <- select(WGI, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw,              voiceAndAccountability)
+correlationWGI2 <- rcorr(as.matrix(WGI2))
+
+
+```
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+
+#Table 4 - Correlation Matrix between Political Stability and the other World Governance Indicators (WGI)
+
+correlationWGI2
+
+
+```
+
+
+### *Correlation Between Political Stability, Development, and Social Inequality*
+
+In this section, we plot political stability against the indicators of socioeconomic development (GNI per capita and Human Development Index (HDI)) and social inequality (GINI index), and find that while the correlation between political stability and GNI per capita is relatively strong (0.61), those between political stability, on the one hand, and HID and GNI, on the other hand, are moderate (respectively 0.48 and -0.34).   
+
+Nevertheless, since all of these correlations are statistically significant (with p-values close to zero), we can still include these indicators of socioeconomic developmentin and social inequality in our prediction models.
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+#data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
+GNIperCapitaDf <- wb(country = "countries_only", indicator = "NY.GNP.PCAP.KD", 
+                     startdate = 1996, enddate = 2017, POSIXct = TRUE)
+GNIperCapitaDf <- tbl_df(GNIperCapitaDf)
+GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, value)
+GNIperCapitaDf <- rename(GNIperCapitaDf, GNIperCapita = value)
+head(GNIperCapitaDf)
+
+#data on human development index (UNDP.HDI.XD)
+HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
+            startdate = 1996, enddate = 2017, POSIXct = TRUE)
+HDIDf <- tbl_df(HDIDf)
+HDIDf <- select(HDIDf, country, iso2c, date, value)
+HDIDf <- rename(HDIDf, HDI = value)
+head(HDIDf)
+
+#data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
+GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
+            startdate = 1996, enddate = 2017, POSIXct = TRUE)
+GINIDf <- tbl_df(GINIDf)
+GINIDf <- select(GINIDf, country, iso2c, date, value)
+GINIDf <- rename(GINIDf, GINI = value)
+head(GINIDf)
+
+# joining the data on political stability and data on development and social inequality 
+# (devIneqStab)
+devIneqStabDf <- full_join(stabilityDf, GNIperCapitaDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., HDIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., GINIDf, by = c("country", "iso2c", "date")) 
+devIneqStabDf <- tbl_df(devIneqStabDf)
+head(devIneqStabDf)
+names(devIneqStabDf)
+
+```
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 6 - Correlation between Political Stability, Development, and Social Inequality"}
+# Scatterplot Matrix of Political Stability, Development, and Social Inequality
+pairs(~ stability + GNIperCapita + HDI + GINI, data=devIneqStabDf,
+   main=" ")
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+# Correlation Matrix between Political Stability and the Indicators of Development and Social Inequality
+devIneqAndStab2 <- select(devIneqStabDf, stability, GNIperCapita, HDI, GINI)
+correlationDevIneqStab2 <- rcorr(as.matrix(devIneqAndStab2))
+
+
+```
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+
+#Table 5 - Correlation Matrix between Political Stability and the Indicators of Development and Social Inequality
+
+correlationDevIneqStab2
+
+
+```
+
+
+### *Correlation Between Political Instability and Regime Type Indicators*
+
+In this section, we plot political stability against the indicators of regime type (Polity IV revised combined polity score, Polity IV score on institutionalized democracy, Polity IV score on institutionalized autocracy, Freedom House inversed score on political rights, Freedom House inversed score on civil liberties, Freedom House combined score), and find that while the correlation between political stability and GNI per capita is relatively strong (0.61), those between political stability, on the one hand, and HID and GNI, on the other hand, are moderate (respectively 0.48 and -0.34).   
+
+Nevertheless, since all of these correlations are statistically significant (with p-values close to zero), we can still include these indicators of socioeconomic developmentin and social inequality in our prediction models.
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+#data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
+polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
+                    startdate = 1996, enddate = 2017, POSIXct = TRUE)
+polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
+polityScoreDf <- rename(polityScoreDf, polityScore = value)
+head(polityScoreDf)
+
+# creating a new variable for polity category (polityCategory)
+polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
+head(polityScoreDf)
+
+#data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
+democracyDf <- wb(indicator = "UPP.INS.DEMO.XQ", startdate = 1996, enddate = 2017, POSIXct = TRUE)
+democracyDf <- select(democracyDf, country, iso2c, date, value)
+democracyDf <- rename(democracyDf, democracyInst = value)
+head(democracyDf)
+
+#data on political system, Institutionalized autocracy (UPP.INS.AUTO.XQ) - see Polity IV
+autocracyDf <- wb(country = "countries_only", indicator = "UPP.INS.AUTO.XQ", 
+                  startdate = 1996, enddate = 2017, POSIXct = TRUE)
+autocracyDf <- select(autocracyDf, country, iso2c, date, value)
+autocracyDf <- rename(autocracyDf, autocracyInst = value)
+head(autocracyDf)
+
+# downloadong the data on political right and civil liberty from Freedom house from the website of
+#Amanda B. Edgell, University of Florida
+library(readxl)
+url <- "https://acrowinghen.files.wordpress.com/2014/03/fh1972_20162.xlsx"
+destfile <- "fh1972_20162.xlsx"
+curl::curl_download(url, destfile)
+FHdf <- read_xlsx(destfile)
+FHdf <- tbl_df(FHdf)
+FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
+FHdf <- filter(FHdf, year>= 1996)
+FHdf <- rename(FHdf, date = year)
+FHdf$date <- as.character(FHdf$date)
+head(FHdf)
+
+#merging the data on political right and civil liberty with the data on region and subregion with iso2c
+FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
+FHDfByRegion <- tbl_df(FHDfByRegion)
+FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
+                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
+                       region, subregion)
+head(FHDfByRegion)
+str(FHDfByRegion)
+
+#joining the data on political stability and regime types indicators (regimeTypeDf)
+regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
+  right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
+regimeTypeDf <- tbl_df(regimeTypeDf)
+head(regimeTypeDf)
+str(regimeTypeDf)
+
+```
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 7 - Political Instability and Regime Type Indicators"}
+
+# Scatterplot Matrix of Political Instability and Regime Type Indicators
+pairs(~ stability + polityScore + democracyInst + autocracyInst + politicalRights +
+        civilLiberties + FHcombinedScore, data=regimeTypeDf,
+   main="")
+
+```
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+# Correlation Matrix between Political Stability and Regime Type Indicators
+regimeTypeDf2 <- select(regimeTypeDf, stability, polityScore, democracyInst, autocracyInst, politicalRights,         civilLiberties, FHcombinedScore)
+CorrelationRegimeTypeDf2 <- rcorr(as.matrix(regimeTypeDf2))
+
+
+```
+
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+
+#Table 6 - Correlation Matrix between Political Stability and Regime Type Indicators
+
+CorrelationRegimeTypeDf2
+
+
+```
+
+### *Generalized Linear Regression Model to Identify the Significant Variables*
+
+In this section, we include all variables in a single dataframe and run a step function in order to identify the most significant variables to be included in the prediction model.   
+
+However, before runing the step function, we need to clean the data. The following steps were followed in order to remove the missing values (NAs):   
+
+- first, we identify the variables with high percentage of missing values (more than 20%) and remove them from the dataframe,
+- second, from the remaining variables and observations, we remove the incomplete cases and only use the complete ones.   
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+#creating the main dataframe by joing the dataframes on governance, development and regime type, and selecting the variables that are highly correlated with political stability
+library(dplyr)
+WGIDevPolityDf <- left_join(WGIbyRegion, devIneqStabDf, by = c("country", "iso2c", "date")) %>%
+  left_join(., regimeTypeDf, by = c("country", "iso2c", "date"))
+WGIDevPolityDf <- tbl_df(WGIDevPolityDf)
+head(WGIDevPolityDf)
+str(WGIDevPolityDf)
+names(WGIDevPolityDf)
+
+# selecting the variables of interest in a new dataframe WGIDevPolityDf2:
+WGIDevPolityDf2 <- select(WGIDevPolityDf, country, countryCode, iso2c, iso3c, region = region.x, subregion = subregion.x, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, HDI, GINI, polityScore, polityCategory, democracyInst, autocracyInst, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
+WGIDevPolityDf2$FHstatus <- as.factor(WGIDevPolityDf2$FHstatus)
+WGIDevPolityDf2 <- tbl_df(WGIDevPolityDf2)
+str(WGIDevPolityDf2)
+
+#checking for missing values
+colSums(is.na(WGIDevPolityDf2))
+
+#removing the cases where stability score is missing
+noStability <- filter(WGIDevPolityDf2, is.na(stability))
+WGIDevPolityDf2 <- anti_join(WGIDevPolityDf2, noStability)
+
+# removing columns with more that 20% of missing values
+WGIDevPolityDf2 <- select(WGIDevPolityDf2, country, countryCode, iso2c, iso3c, region, subregion, date, stability, stabilityCategory, regulatoryQuality, GNIperCapita, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
+
+# using only complete cases (new dataframe = WGIDevPolityDf3)
+WGIDevPolityDf3 <- WGIDevPolityDf2[complete.cases(WGIDevPolityDf2),]
+dim(WGIDevPolityDf3)
+colSums(is.na(WGIDevPolityDf3))
+```
+
+```{r echo=FALSE, include=FALSE}
+# model including all variables with complete cases
+WGIDevPolityDf3b <- select(WGIDevPolityDf3, region, subregion, stability, regulatoryQuality, GNIperCapita, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
+
+```
+
+```{r echo=TRUE, include=TRUE}
+# Table 7 - Summary of the Generalized Linear Regression Model Using Step Function
+modelFit1 <- step(glm( data=WGIDevPolityDf3b, stability ~ .), trace=0,steps=10000) 
+summary(modelFit1)
+```
+
+The above step function allows us the identify the following variables as the most significant predictors to be included in the prediction models: 
+subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus.
+
+
+## III. Predicting Political Stability Using Machine Learning
+
+
+
+### *Predicting with Generalized Linear Regression*
+
+Using the variables identified through the above step function, we run machine learning predictions using generalized linear regression with the caret package, and we obtain the following results:    
+
+- As shown in Table 8a, on the trainning data set, the following variables are still significant: subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus.
+
+- As shown in Table 8b, on the test data set, the same variables (subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus) are also significant.
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+library(dplyr)
+library(caret)
+library(kernlab)
+#selecting the variables for the model
+WGIDevPolityDf4 <- select(WGIDevPolityDf3, stability, subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus)
+
+# create train and test sets
+set.seed(635)
+inTrain1 <- createDataPartition(y=WGIDevPolityDf4$stability, p=0.75, list=FALSE)
+train1 <- WGIDevPolityDf4[inTrain1,]
+test1 <- WGIDevPolityDf4[-inTrain1,]
+
+# build generalized linear regression model on training set
+modelFit1 <- glm(stability ~ .,data=train1)
+# print summary of modelFit1
+# summary(modelFit1)
+
+# build generalized linear regression model on test set
+modelFit2 <- glm(stability ~ .,data=test1)
+# print summary of modelFit2
+# summary(modelFit2)
+
+```
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+#Table 8a - Machine Learning Prediction Using Generalized Linear Regression on the Trainning Dataset
+summary(modelFit1)
+```
+
+
+```{r echo=TRUE, warning=FALSE, include=TRUE}
+# Table 8b - Machine Learning Prediction Using Generalized Linear Regression on the Testing Dataset
+summary(modelFit2)
+```
+
+
+### *Predicting with Classification Tree*
+
+In this classification tree, we are using "stability category" as the target variable. Using the variables identified through the above step function, we run machine learning predictions using classification tree with the caret package, and we obtain the following results:    
+
+- As shown in Figure 8, on the trainning data set, regulatoryQuality is the only variable that can predict either a case is "moderately unstable" (65%), "moderately stable" (22%), or "highly stable" (12%). 
+
+- As shown in Figure 9, on the test data set, two variables, civilLiberties and regulatoryQuality, are needed to predict either a case is "moderately unstable" (60%), "moderately stable" (29%), or "highly stable" (11%).
+
+In sum, in both models, only regulatoryQuality is the most consistent predictor of "stability category".
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+
+library(dplyr)
+library(caret)
+library(kernlab)
+library(rattle)
+
+#selecting the variables for the model (new dataframe = WGIDevPolityDf4)
+WGIDevPolityDf5 <- select(WGIDevPolityDf3, stabilityCategory, subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus)
+
+
+# create test/train data sets
+set.seed(123)
+inTrain2 <- createDataPartition(y=WGIDevPolityDf5$stabilityCategory,p=0.75, list=FALSE)
+train2 <- WGIDevPolityDf5[inTrain2,]
+test2 <- WGIDevPolityDf5[-inTrain2,]
+head(train2)
+
+```
+
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 8 - Classification Tree on the Trainning Data Set"}
+# fit classification tree on the train data set
+modFit3 <- train(stabilityCategory ~ .,method="rpart",data=train2)
+# print the classification tree
+print(modFit3$finalModel)
+
+# plot the classification tree
+fancyRpartPlot(modFit3$finalModel)
+
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap= "Fig. 9 - Classification Tree on the Testing Data Set"}
+# fit classification tree as on the train data set
+modFit4 <- train(stabilityCategory ~ .,method="rpart",data=test2)
+# print the classification tree
+print(modFit4$finalModel)
+
+# plot the classification tree
+fancyRpartPlot(modFit4$finalModel)
+
+
+```
+
+
+
+
+## V. Conclusion
+
+The purpose of this research project is to identify the conditions of political stability (or instability), using quantitative and qualitative data from the World Bank, the Center for Systemic Peace (Polity IV Project on Political Regime Characteristics and Transitions), and Freedom House.  At the current stage of this research, we can tentatively conclude that governance (as indicated by regulatory rule) and regime type (as indicated by civil liberties) constitute the most consistent predictors of political stability during the time period of 1996-2016 around the world. 
+
+The machine learning predictions using generalized linear regression with the caret package allow us to draw the conclusion that the following variables are the most significant predictors of poliltical stability: subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus.    
+
+However, the machine learning predictions using classification tree with the caret package lead to limit the list of predictors to two variables: regulatoryQuality, and to some extent civilLiberties.   
+
+
+
+## References   
+
+Aisen, Ari, and Francisco Jos? Veiga. "How Does Political Instability Affect Economic Growth?" IMF Working Paper WP/11/12. Washington, D.C.: International Monetary Fund, March 2011. https://doi.org/10.1016/j.ejpoleco.2012.11.001.   
+
+Alesina, Alberto, Sule ?zler, Nouriel Roubini, and Phillip Swagel. "Political Instability and Economic Growth." Journal of Economic Growth 1, no. 2 (June 1, 1996): 189-211. https://doi.org/10.1007/BF00138862.    
+
+Charmaz, Kathy. Constructing Grounded Theory:  A Practical Guide Through Qualitative Analysis. London, U.K.: Sage Publications, 2006.    
+
+Davies, James C. "The J-Curve and Power Struggle Theories of Collective Violence." American Sociological Review 39, no. 4 (1974): 607-10.    
+
+---. "The J-Curve of Rising and Declining Satisfactions as a Cause of Some Great Revolutions and a Contained Rebellion." In Violence in America, edited by H.D. Graham and Ted Robert Gurr, 690-730. New York, NY: Signet Books, 1969.    
+
+---. "Toward a Theory of Revolution." American Sociological Review 27, no. 1 (1962): 5-19.    
+
+Dowding, Keith M, and Richard Kimber. "The Meaning and Use of 'Political Stability''.'" European Journal of Political Research 11, no. 3 (1983): 229-43.    
+
+Hegre, H?vard, Tanja Ellingsen, Scott Gates, and Nils Petter Gleditsch. "Toward a Democratic Civil Peace? Democracy, Political Change, and Civil War, 1816-1992." American Political Science Review 95, no. 01 (March 2001): 33-48.    
+
+Hollway, Wendy, and Tony Jefferson. Doing Qualitative Research Differently: Free Association, Narrative and the Interview Method. 1 edition. London; Thousand Oaks, Calif: SAGE Publications Ltd, 2000.    
+
+Jong-A-Pin, Richard. "On the Measurement of Political Instability and Its Impact on Economic Growth." European Journal of Political Economy 25, no. 1 (2009): 15-29.    
+
+Kaufmann, Daniel, Aart Kraay, and Massimo Mastruzzi. "The Worldwide Governance Indicators: Methodology and Analytical Issues." Policy Research Working Paper 5430. Washington, DC: The World Bank, 2011. http://ssrn.com/abstract=1682130.    
+
+Kuhn, Max. "A Short Introduction to the Caret Package." URL: Https://Cran. r-Project. Org/Web/Packages/Caret/Vignettes/Caret. Pdf, 2016.    
+
+Lantz, Brett. Machine Learning with R: Discover How to Build Machine Learning Algorithms, Prepare Data, and Dig Deep into Data Prediction Techniques with R. Second edition. Community Experience Distilled. Birmingham Mumbai: Packt Publishing, 2015.    
+
+Pettersson, Ther?se, and Peter Wallensteen. "Armed Conflicts, 1946-2014." Journal of Peace Research 52, no. 4 (July 2015): 536-50. https://doi.org/10.1177/0022343315595927.    
+
+Ratsimbaharison, Adrien M. The Political Crisis of March 2009 in Madagascar: A Case Study of Conflict and Conflict Mediation. Lanham: Rowman & Littlefield Publishers, 2017.    
+
+Roe, Mark J., and Jordan I. Siegel. "Political Instability: Effects on Financial Development, Roots in the Severity of Economic Inequality." Journal of Comparative Economics 39, no. 3 (September 1, 2011): 279-309. https://doi.org/10.1016/j.jce.2011.02.001.    
+
+Tocqueville, Alexis de. The Ancien R?gime and the Revolution. Translated by Gerald Bevan. London; New York: Penguin Classics, 2008.    
+
+World Bank. "Madagascar: Measuring the Impact of the Political Crisis." News: Feature Story, 2013. https://www.worldbank.org/en/news/feature/2013/06/05/madagascar-measuring-the-impact-of-the-political-crisis.
+Zumel, Nina, and John Mount. Practical Data Science with R. Shelter Island, NY: Manning Publications Co, 2014.
+
+
+
+
+[^1]: Claude Ake,"A Definition of Political Stability," *Comparative Politics* 7, no. 2 (1975): 271-83.
+[^3]: Ther?se Pettersson and Peter Wallensteen, "Armed Conflicts, 1946-2014," *Journal of Peace Research* 52, no. 4 (July 2015): 536, https://doi.org/10.1177/0022343315595927.   
+[4]: Concerning the impacts of political instability on the economy, see among many others: Alberto Alesina et al., "Political Instability and Economic Growth," *Journal of Economic Growth* 1, no. 2 (June 1, 1996): 189-211, https://doi.org/10.1007/BF00138862; Ari Aisen and Francisco Jos? Veiga, "How Does Political Instability Affect Economic Growth?," IMF Working Paper WP/11/12 (Washington, D.C.: International Monetary Fund, March 2011), https://doi.org/10.1016/j.ejpoleco.2012.11.001; Mark J. Roe and Jordan I. Siegel, "Political Instability: Effects on Financial Development, Roots in the Severity of Economic Inequality," *Journal of Comparative Economics* 39, no. 3 (September 1, 2011): 279-309, https://doi.org/10.1016/j.jce.2011.02.001.   
+[^5]: The case study of Madagascar shows for instance that a country can move from stability to instability and crisis in just a few months. See: Adrien M. Ratsimbaharison, *The Political Crisis of March 2009 in Madagascar: A Case Study of Conflict and Conflict Mediation* (Lanham: Rowman & Littlefield Publishers, 2017).   
+[^6]: Richard Jong-A-Pin, "On the Measurement of Political Instability and Its Impact on Economic Growth," European Journal of Political Economy 25, no. 1 (2009): 15-29.
+[^7]: Keith M Dowding and Richard Kimber, "The Meaning and Use of 'Political Stability'," *European Journal of Political Research* 11, no. 3 (1983): 229-43.   
+[^8]: Alberto Alesina et al., "Political Instability and Economic Growth," *op. cit.*   
+[^9]: H?vard Hegre et al., "Toward a Democratic Civil Peace? Democracy, Political Change, and Civil War, 1816-1992," *American Political Science Review* 95, no. 01 (March 2001): 33-48.   
+[^10]: Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, "The Worldwide Governance Indicators: Methodology and Analytical Issues," Policy Research Working Paper 5430 (Washington, DC: The World Bank, 2011), http://ssrn.com/abstract=1682130.  
+[^11]: Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, "The Worldwide Governance Indicators: Methodology and Analytical Issues," *op. cit.*   
+[^12]: Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, "The Worldwide Governance Indicators: Methodology and Analytical Issues," *op. cit.*, p. 5.   
+[^13]: World Bank, "Worldwide Governance Indicators," The World Bank Databank, October 19, 2016, http://databank.worldbank.org/data/reports.aspx?source=worldwide-governance-indicators.  
+[^14]: Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, "The Worldwide Governance Indicators: Methodology and Analytical Issues," *op. cit.*, p. 9.  
+[^15]: Among many other references, see: Wendy Hollway and Tony Jefferson, *Doing Qualitative Research Differently: Free Association, Narrative and the Interview Method,* 1st edition (London???; Thousand Oaks, Calif: SAGE Publications Ltd, 2000); and Kathy Charmaz, *Constructing Grounded Theory:  A Practical Guide Through Qualitative Analysis,* (London, U.K.: Sage Publications, 2006).  
+[^16]: Alexis de Tocqueville, *The Ancien R?gime and the Revolution,* trans. Gerald Bevan (London; New York: Penguin Classics, 2008).   
+[^17]: James C. Davies, "Toward a Theory of Revolution," *American Sociological Review* 27, no. 1 (1962): 5.  
+[^18]: H?vard Hegre et al., "Toward a Democratic Civil Peace? Democracy, Political Change, and Civil War, 1816-1992," *American Political Science Review* 95, no. 01 (March 2001): 33-48.   
+[^19]: For more information about the R statistical and programming language and machine learning, see, among many other references: Nina Zumel and John Mount, *Practical Data Science with R* (Shelter Island, NY: Manning Publications Co, 2014); Brett Lantz, Machine Learning with R: Discover How to Build Machine Learning Algorithms, Prepare Data, and Dig Deep into Data Prediction Techniques with R, Second edition, Community Experience Distilled (Birmingham Mumbai: Packt Publishing, 2015); Max Kuhn, "A Short Introduction to the Caret Package," URL: Https://Cran. r-Project. Org/Web/Packages/Caret/Vignettes/Caret. Pdf, 2016.
+
