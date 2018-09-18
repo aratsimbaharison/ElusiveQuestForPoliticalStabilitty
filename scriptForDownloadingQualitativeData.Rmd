@@ -1,0 +1,23 @@
+---
+title: "Script for Downloading Qualitative Data from Webpages"
+author: "Adrien Ratsimbaharison"
+date: "9/18/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## First Approach: Using `download.file`
+
+We can directly download the webpage to a local repository using `download.file`, as shown in the example of the civil war in Sudan from Wikipedia:
+
+```{r}
+Url <- 'https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War'
+download.file(Url, destfile = "qualitativeData/Sudan1.html")
+
+```
+
+We can also directly download and convert the `html file` to `text file` with the following codes from Tony Breyal:
+
