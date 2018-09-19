@@ -16,7 +16,8 @@ This new r project was created with a new gitHub repository entitled "ElusiveQue
 
   . I will start the data collection and cleaning this week, at the same time, I will take a new course on this subject on DataCamp.
 
-
+- 9/18/2018: completed the course on data importing and cleaning on DataCamp.  
+Now I need to move to some serious stuff.  
 
 
 

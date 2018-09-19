@@ -14,10 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 We can directly download the webpage to a local repository using `download.file`, as shown in the example of the civil war in Sudan from Wikipedia:
 
 ```{r}
+library(rvest)
 Url <- 'https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War'
-download.file(Url, destfile = "qualitativeData/Sudan1.html")
+Sudan1 <- download.file(Url, destfile = "qualitativeData/Sudan1.html")
+
 
 ```
 
-We can also directly download and convert the `html file` to `text file` with the following codes from Tony Breyal:
 
