@@ -19,6 +19,9 @@ This new r project was created with a new gitHub repository entitled "ElusiveQue
 - 9/18/2018: completed the course on data importing and cleaning on DataCamp.  
 Now I need to move to some serious stuff.  
 
+- 9/19/2018: I realized that I still need to learn how to download, read and save qualitative data (news, reports and analysis on conflicts) in r. So I decided to take another course on "Working with Web Data in R" on DataCamp. I plan to comoplete this course in 3 to 4 days. At the same time, I need to start collecting and cleaning the quantitative data from the Word Bank.
+
+
 
 
 
