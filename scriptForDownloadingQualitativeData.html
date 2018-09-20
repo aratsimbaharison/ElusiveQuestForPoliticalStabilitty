@@ -313,11 +313,46 @@ $(document).ready(function () {
 </div>
 
 
-<div id="first-approach-using-download.file" class="section level2">
-<h2>First Approach: Using <code>download.file</code></h2>
-<p>We can directly download the webpage to a local repository using <code>download.file</code>, as shown in the example of the civil war in Sudan from Wikipedia:</p>
-<pre class="r"><code>Url &lt;- 'https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War'
-download.file(Url, destfile = &quot;qualitativeData/Sudan1.txt&quot;)</code></pre>
+<p><em>The following procedures are based on the instructions provided by Bradley Boehmke in <a href="http://bradleyboehmke.github.io/2015/12/scraping-html-text.html">Scraping HTML Text</a>:</em></p>
+<p>To extract text from a webpage of interest, we specify what HTML elements we want to select by using <code>html_nodes()</code>. For instance, if we want to scrape the primary heading for the Web Scraping Wikipedia webpage we simply identify the <code>h1 node</code> as the node we want to select. <code>html_nodes()</code> will identify all <code>h1 nodes</code> on the webpage and return the HTML element. In our example we see there is only one <code>h1</code> node on this webpage.</p>
+<pre class="r"><code>library(rvest)</code></pre>
+<pre><code>## Loading required package: xml2</code></pre>
+<pre class="r"><code>scraping_wiki &lt;- read_html(&quot;https://en.wikipedia.org/wiki/Web_scraping&quot;)
+
+scraping_wiki %&gt;%
+        html_nodes(&quot;h1&quot;)</code></pre>
+<pre><code>## {xml_nodeset (1)}
+## [1] &lt;h1 id=&quot;firstHeading&quot; class=&quot;firstHeading&quot; lang=&quot;en&quot;&gt;Web scraping&lt;/h1&gt;</code></pre>
+<p>To extract only the heading text for this <code>h1 node</code>, and not include all the <code>HTML syntax</code> we use <code>html_text()</code> which returns the heading text we see at the top of the Web Scraping Wikipedia page.</p>
+<pre class="r"><code>scraping_wiki %&gt;%
+        html_nodes(&quot;h1&quot;) %&gt;%
+        html_text()</code></pre>
+<pre><code>## [1] &quot;Web scraping&quot;</code></pre>
+<p>To extract much of the text on this webpage which is in paragraph form. We can follow the same process illustrated above but instead we’ll select all <code>p nodes</code>. This selects the 17 paragraph elements from the web page; which we can examine by subsetting the list <code>p_nodes</code> to see the first line of each paragraph along with the HTML syntax. Just as before, to extract the text from these nodes and coerce them to a character string we simply apply <code>html_text()</code>.</p>
+<pre class="r"><code>p_text &lt;- scraping_wiki %&gt;%
+        html_nodes(&quot;p&quot;) %&gt;%
+        html_text()
+
+p_text[1]</code></pre>
+<pre><code>## [1] &quot;Web scraping, web harvesting, or web data extraction is data scraping used for extracting data from websites.[1] Web scraping software may access the World Wide Web directly using the Hypertext Transfer Protocol, or through a web browser. While web scraping can be done manually by a software user, the term typically refers to automated processes implemented using a bot or web crawler. It is a form of copying, in which specific data is gathered and copied from the web, typically into a central local database or spreadsheet, for later retrieval or analysis.\n&quot;</code></pre>
+<div id="example-with-the-wikipedia-page-on-the-second-civil-war-in-sudan" class="section level3">
+<h3>Example with the wikipedia page on the second civil war in Sudan</h3>
+<pre class="r"><code>library(rvest)
+
+web_page &lt;- read_html(&quot;https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War&quot;)
+# extracting the header
+header &lt;- web_page %&gt;%
+        html_nodes(&quot;h1&quot;) %&gt;%
+        html_text()
+
+# extracting the text
+text &lt;- web_page %&gt;%
+        html_nodes(&quot;p&quot;) %&gt;%
+        html_text()
+
+# saving the text to a local repository
+
+Sudan2 &lt;- writeLines(c(header, text), &quot;qualitativeData/Sudan2.txt&quot;)</code></pre>
 </div>
 
 

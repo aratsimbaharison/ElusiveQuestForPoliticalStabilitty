@@ -9,16 +9,60 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## First Approach: Using `download.file`
 
-We can directly download the webpage to a local repository using `download.file`, as shown in the example of the civil war in Sudan from Wikipedia:
+*The following procedures are based on the instructions provided by Bradley Boehmke in [Scraping HTML Text](http://bradleyboehmke.github.io/2015/12/scraping-html-text.html):*
+
+
+To extract text from a webpage of interest, we specify what HTML elements we want to select by using `html_nodes()`. For instance, if we want to scrape the primary heading for the Web Scraping Wikipedia webpage we simply identify the `h1 node` as the node we want to select. `html_nodes()` will identify all `h1 nodes` on the webpage and return the HTML element. In our example we see there is only one `h1` node on this webpage.  
 
 ```{r}
 library(rvest)
-Url <- 'https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War'
-Sudan1 <- download.file(Url, destfile = "qualitativeData/Sudan1.html")
 
+scraping_wiki <- read_html("https://en.wikipedia.org/wiki/Web_scraping")
 
+scraping_wiki %>%
+        html_nodes("h1")
 ```
 
+To extract only the heading text for this `h1 node`, and not include all the `HTML syntax` we use `html_text()` which returns the heading text we see at the top of the Web Scraping Wikipedia page.
+
+```{r}
+scraping_wiki %>%
+        html_nodes("h1") %>%
+        html_text()
+```
+
+To extract much of the text on this webpage which is in paragraph form. We can follow the same process illustrated above but instead we’ll select all `p nodes`. This selects the 17 paragraph elements from the web page; which we can examine by subsetting the list `p_nodes` to see the first line of each paragraph along with the HTML syntax. Just as before, to extract the text from these nodes and coerce them to a character string we simply apply `html_text()`.
+
+```{r}
+p_text <- scraping_wiki %>%
+        html_nodes("p") %>%
+        html_text()
+
+p_text[1]
+```
+
+### Example with the wikipedia page on the second civil war in Sudan
+
+```{r}
+library(rvest)
+
+Url <- "Source: https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War"
+
+web_page <- read_html("https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War")
+# extracting the header
+header <- web_page %>%
+        html_nodes("h1") %>%
+        html_text()
+
+# extracting the text
+text <- web_page %>%
+        html_nodes("p") %>%
+        html_text()
+
+# saving the text to a local repository
+
+Sudan2 <- writeLines(c(header, Url, text), "qualitativeData/Sudan2.txt")
+
+```
 
