@@ -1,5 +1,5 @@
 ---
-title: "Script for Downloading the Quantitative Data"
+title: "Collecting and Cleaning the Quantitative Data Used in this Project"
 author: "Adrien Ratsimbaharison"
 date: "9/19/2018"
 output: html_document

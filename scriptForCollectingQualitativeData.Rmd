@@ -1,5 +1,5 @@
 ---
-title: "The Collection of Qualitative Data Used in this Project"
+title: "Collecting the Qualitative Data Used in this Project"
 author: "Adrien Ratsimbaharison"
 date: "9/18/2018"
 output: html_document
