@@ -21,6 +21,10 @@ Now I need to move to some serious stuff.
 
 - 9/19/2018: I realized that I still need to learn how to download, read and save qualitative data (news, reports and analysis on conflicts) in r. So I decided to take another course on "Working with Web Data in R" on DataCamp. I plan to comoplete this course in 3 to 4 days. At the same time, I need to start collecting and cleaning the quantitative data from the Word Bank.
 
+- 9/20&21/2018: I looked at different techniques to collect qualitative data available online. I was able to write a script on how to do that. See `scriptForDownloadingQualitativeData` and `scriptForCollectingQualiativeData`.
+
+- 9/21/2018: I will continue to learn about importing and cleaning data
+
 
 
 
