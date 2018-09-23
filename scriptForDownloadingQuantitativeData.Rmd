@@ -100,9 +100,9 @@ names(WGIbyCountryAndRegion)
 WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
 names(WGIbyCountryAndRegion)
 
-# making the data on WGI available in the local repository
-WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
-WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
+# # making the data on WGI available in the local repository
+# WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
+# WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
 
 
 ```
@@ -164,9 +164,9 @@ head(devIneqPovDF)
 devIneqPovDF$date <- as.integer(devIneqPovDF$date)
 names(devIneqPovDF)
 
-# making the data on development, social inequality and poverty available in the local repository
-devIneqPovDF <- write.csv(devIneqPovDF, "devIneqPovDF.csv")
-devIneqPovDF <- tbl_df(devIneqPovDF)
+# # making the data on development, social inequality and poverty available in the local repository
+# devIneqPovDF <- write.csv(devIneqPovDF, "devIneqPovDF.csv")
+# devIneqPovDF <- tbl_df(devIneqPovDF)
 
 
 # joining the data on WGI, development, social inequality, and poverty
@@ -178,10 +178,10 @@ WGIdevIneqPovDF$date <- as.integer(WGIdevIneqPovDF$date)
 head(WGIdevIneqPovDF)
 names(WGIdevIneqPovDF)
 
-# making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
-WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPovDF.csv")
-WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
-
+# # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
+# WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPovDF.csv")
+# WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
+# 
 
 ```
 
@@ -213,37 +213,38 @@ autocracyDf <- select(autocracyDf, country, iso2c, date, value)
 autocracyDf <- rename(autocracyDf, autocracyInst = value)
 head(autocracyDf)
 
-# downloadong the data on political right and civil liberty from Freedom house from the website of
-#Amanda B. Edgell, University of Florida
-library(readxl)
-url <- "https://acrowinghen.files.wordpress.com/2014/03/fh1972_20162.xlsx"
-destfile <- "fh1972_20162.xlsx"
-curl::curl_download(url, destfile)
-FHdf <- read_xlsx(destfile)
-FHdf <- tbl_df(FHdf)
-FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
-FHdf <- filter(FHdf, year>= 1996)
-FHdf <- rename(FHdf, date = year)
-FHdf$date <- as.character(FHdf$date)
-head(FHdf)
-
-#merging the data on political right and civil liberty with the data on region and subregion with iso2c
-FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
-FHDfByRegion <- tbl_df(FHDfByRegion)
-FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
-                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
-                       region, subregion)
-head(FHDfByRegion)
-str(FHDfByRegion)
-
-#joining the data on political stability and regime types indicators (regimeTypeDf)
-regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
-  right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
-regimeTypeDf <- tbl_df(regimeTypeDf)
-head(regimeTypeDf)
-str(regimeTypeDf)
+# # downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
+# library(readxl)
+# url <- "https://acrowinghen.files.wordpress.com/2018/05/fh_rankings_1973_2018.xlsx"
+# destfile <- "fh_rankings_1973_2018.xlsx"
+# download.file(url, destfile)
+# 
+# 
+# FHdf <- read_excel("fh_rankings_1973_2018.xlsx")
+# FHdf <- tbl_df(FHdf)
+# FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
+# FHdf <- filter(FHdf, year>= 1996)
+# FHdf <- rename(FHdf, date = year)
+# FHdf$date <- as.character(FHdf$date)
+# head(FHdf)
+# 
+# #merging the data on political right and civil liberty with the data on region and subregion with iso2c
+# FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
+# FHDfByRegion <- tbl_df(FHDfByRegion)
+# FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
+#                        civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
+#                        region, subregion)
+# head(FHDfByRegion)
+# str(FHDfByRegion)
+# 
+# #joining the data on political stability and regime types indicators (regimeTypeDf)
+# regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
+#   full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
+#   full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
+#   right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
+# regimeTypeDf <- tbl_df(regimeTypeDf)
+# head(regimeTypeDf)
+# str(regimeTypeDf)
 
 ```
 

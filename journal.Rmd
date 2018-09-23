@@ -25,7 +25,11 @@ Now I need to move to some serious stuff.
 
 - 9/22/2018: I continued learning and refreshing memory about importing, cleaning, and manipulating data in base r and dplyr.
 
-- Next: I need to continue downloading and cleaning data from the World Bank, Freedom House and Polity IV.
+- 9/23/2018: I started downloading and cleaning data from the World Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined file WGIdevIneqPov are available in the local repository.
+
+.  But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
+
+- Next: I will continue to collect the quantitative data.
 
 
 
