@@ -88,13 +88,100 @@ regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbahariso
 regionSubregionDf <- tbl_df(regionSubregionDf)
 regionSubregionDf <- select(regionSubregionDf, country = name, iso2c = `alpha-2`, iso3c = `alpha-3`, 
                             countryCode = `country-code`, region, subregion = `sub-region`)
-head(regionSubregionDf)                           
+head(regionSubregionDf)                          
 
-# merging WGI with UN classification by region and subregion
-WGIbyRegion <- merge(WGI, regionSubregionDf, by = "iso2c")
-WGIbyRegion <- tbl_df(WGIbyRegion)
-WGIbyRegion <- select(WGIbyRegion, country = country.x, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
-head(WGIbyRegion)
+#joining the data on WGI with the UN classification by region and subregion
+WGIbyCountryAndRegion <- full_join(WGI, regionSubregionDf, by = "iso2c")
+WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country = country.x, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+
+head(WGIbyCountryAndRegion)
+names(WGIbyCountryAndRegion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+names(WGIbyCountryAndRegion)
+
+# making the data on WGI available in the local repository
+WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
+WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
+
+
+```
+
+## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`
+
+
+```{r echo=FALSE, warning=FALSE, include=FALSE}
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(knitr)
+
+#data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
+GNIperCapitaDf <- wb(country = "countries_only", indicator = "NY.GNP.PCAP.KD", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GNIperCapitaDf <- tbl_df(GNIperCapitaDf)
+GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, value)
+GNIperCapitaDf <- rename(GNIperCapitaDf, GNIperCapita = value)
+head(GNIperCapitaDf)
+
+#data on human development index (UNDP.HDI.XD)
+HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+HDIDf <- tbl_df(HDIDf)
+HDIDf <- select(HDIDf, country, iso2c, date, value)
+HDIDf <- rename(HDIDf, HDI = value)
+head(HDIDf)
+
+#data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
+GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GINIDf <- tbl_df(GINIDf)
+GINIDf <- select(GINIDf, country, iso2c, date, value)
+GINIDf <- rename(GINIDf, GINI = value)
+head(GINIDf)
+
+
+# data on poverty measured in terms of the World Bank's Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population) (SI.POV.DDAY)
+
+povHeadCountDF <- wb(country = "countries_only", indicator = "SI.POV.DDAY", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+povHeadCountDF <- tbl_df(povHeadCountDF)
+povHeadCountDF <- select(povHeadCountDF, country, iso2c, date, value)
+povHeadCountDF <- rename(povHeadCountDF, povertyHeadCount = value)
+head(povHeadCountDF)
+
+# joining the data on development, social inequality, and poverty: devIneqPovDF
+devIneqPovDF <- full_join(GNIperCapitaDf, HDIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., GINIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., povHeadCountDF, by = c("country", "iso2c", "date"))
+  
+devIneqPovDF <- tbl_df(devIneqPovDF)
+head(devIneqPovDF)
+devIneqPovDF$date <- as.integer(devIneqPovDF$date)
+names(devIneqPovDF)
+
+# making the data on development, social inequality and poverty available in the local repository
+devIneqPovDF <- write.csv(devIneqPovDF, "devIneqPovDF.csv")
+devIneqPovDF <- tbl_df(devIneqPovDF)
+
+
+# joining the data on WGI, development, social inequality, and poverty
+# (WGIdevIneqPovDF)
+WGIbyCountryAndRegion <- read.csv("WGIbyCountryAndRegion.csv")
+WGIdevIneqPovDF <- full_join(WGIbyCountryAndRegion, devIneqPovDF, by = c("country", "iso2c", "date"))
+WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
+WGIdevIneqPovDF$date <- as.integer(WGIdevIneqPovDF$date)
+head(WGIdevIneqPovDF)
+names(WGIdevIneqPovDF)
+
+# making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
+WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPovDF.csv")
+WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
+
 
 ```
 

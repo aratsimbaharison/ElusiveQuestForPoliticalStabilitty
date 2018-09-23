@@ -23,7 +23,9 @@ Now I need to move to some serious stuff.
 
 - 9/20&21/2018: I looked at different techniques to collect qualitative data available online. I was able to write a script on how to do that. See `scriptForDownloadingQualitativeData` and `scriptForCollectingQualiativeData`.
 
-- 9/21/2018: I will continue to learn about importing and cleaning data
+- 9/22/2018: I continued learning and refreshing memory about importing, cleaning, and manipulating data in base r and dplyr.
+
+- Next: I need to continue downloading and cleaning data from the World Bank, Freedom House and Polity IV.
 
 
 
