@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Downloading and Cleaning the Data on World Governance Indicators (WGI) from the World Bank Website Using `webstats`
 
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
+```{r warning=FALSE}
 library(wbstats)
 library(readr)
 library(lubridate)
@@ -110,7 +110,7 @@ WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
 ## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`
 
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
+```{r warning=FALSE}
 library(wbstats)
 library(readr)
 library(lubridate)
@@ -184,4 +184,68 @@ WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
 
 
 ```
+
+## Downloading and Cleaning the Data on regime types from Freedom House, Polity IV and 
+
+```{r warning= FALSE}
+
+#data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
+polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
+                    startdate = 1996, enddate = 2018, POSIXct = TRUE)
+polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
+polityScoreDf <- rename(polityScoreDf, polityScore = value)
+head(polityScoreDf)
+
+# creating a new variable for polity category (polityCategory)
+polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
+head(polityScoreDf)
+
+#data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
+democracyDf <- wb(indicator = "UPP.INS.DEMO.XQ", startdate = 1996, enddate = 2018, POSIXct = TRUE)
+democracyDf <- select(democracyDf, country, iso2c, date, value)
+democracyDf <- rename(democracyDf, democracyInst = value)
+head(democracyDf)
+
+#data on political system, Institutionalized autocracy (UPP.INS.AUTO.XQ) - see Polity IV
+autocracyDf <- wb(country = "countries_only", indicator = "UPP.INS.AUTO.XQ", 
+                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
+autocracyDf <- select(autocracyDf, country, iso2c, date, value)
+autocracyDf <- rename(autocracyDf, autocracyInst = value)
+head(autocracyDf)
+
+# downloadong the data on political right and civil liberty from Freedom house from the website of
+#Amanda B. Edgell, University of Florida
+library(readxl)
+url <- "https://acrowinghen.files.wordpress.com/2014/03/fh1972_20162.xlsx"
+destfile <- "fh1972_20162.xlsx"
+curl::curl_download(url, destfile)
+FHdf <- read_xlsx(destfile)
+FHdf <- tbl_df(FHdf)
+FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
+FHdf <- filter(FHdf, year>= 1996)
+FHdf <- rename(FHdf, date = year)
+FHdf$date <- as.character(FHdf$date)
+head(FHdf)
+
+#merging the data on political right and civil liberty with the data on region and subregion with iso2c
+FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
+FHDfByRegion <- tbl_df(FHDfByRegion)
+FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
+                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
+                       region, subregion)
+head(FHDfByRegion)
+str(FHDfByRegion)
+
+#joining the data on political stability and regime types indicators (regimeTypeDf)
+regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
+  right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
+regimeTypeDf <- tbl_df(regimeTypeDf)
+head(regimeTypeDf)
+str(regimeTypeDf)
+
+```
+
+
 
