@@ -27,9 +27,14 @@ Now I need to move to some serious stuff.
 
 - 9/23/2018: I started downloading and cleaning data from the World Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined file WGIdevIneqPov are available in the local repository.
 
-.  But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
+ . But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
 
-- Next: I will continue to collect the quantitative data.
+- 9/24/2018: I was in the end able to download and read the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
+
+  . I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.
+
+  . Next: I need to standardize country names and codes.
+
 
 
 

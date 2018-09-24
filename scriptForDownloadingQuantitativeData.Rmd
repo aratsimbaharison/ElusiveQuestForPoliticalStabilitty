@@ -83,6 +83,7 @@ head(WGI)
 
 # downloading the data on country code with region and subregion from a github repository maintained by Lukes  
 # at: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
+# According to the author and contributors, "These lists are the result of merging data from two sources, the Wikipedia ISO 3166-1 article for alpha and numeric country codes, and the UN Statistics site for countries' regional, and sub-regional codes. In addition to countries, it includes dependent territories."
 
 regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbaharison/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
 regionSubregionDf <- tbl_df(regionSubregionDf)
@@ -189,6 +190,15 @@ names(WGIdevIneqPovDF)
 
 ```{r warning= FALSE}
 
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(knitr)
+
 #data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
 polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
@@ -214,29 +224,33 @@ autocracyDf <- rename(autocracyDf, autocracyInst = value)
 head(autocracyDf)
 
 # # downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
-# library(readxl)
-# url <- "https://acrowinghen.files.wordpress.com/2018/05/fh_rankings_1973_2018.xlsx"
-# destfile <- "fh_rankings_1973_2018.xlsx"
-# download.file(url, destfile)
-# 
-# 
-# FHdf <- read_excel("fh_rankings_1973_2018.xlsx")
-# FHdf <- tbl_df(FHdf)
-# FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
-# FHdf <- filter(FHdf, year>= 1996)
-# FHdf <- rename(FHdf, date = year)
-# FHdf$date <- as.character(FHdf$date)
-# head(FHdf)
-# 
-# #merging the data on political right and civil liberty with the data on region and subregion with iso2c
-# FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
-# FHDfByRegion <- tbl_df(FHDfByRegion)
-# FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
-#                        civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
-#                        region, subregion)
-# head(FHDfByRegion)
-# str(FHDfByRegion)
-# 
+ 
+library(readxl)
+url <- "https://acrowinghen.files.wordpress.com/2018/05/fh_rankings_1973_2018.xlsx"
+destfile <- "fh_rankings_1973_2018.xlsx"
+curl::curl_download(url, destfile)
+fh_rankings_1973_2018 <- read_excel(destfile, sheet = 3)
+freedomHouseDF <- read_excel("fh_rankings_1973_2018.xlsx", sheet = 3)
+freedomHouseDF <- tbl_df(freedomHouseDF)
+head(freedomHouseDF)
+
+freedomHouseDF <- select(freedomHouseDF, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
+
+freedomHouseDF <- filter(freedomHouseDF, year>= 1996)
+freedomHouseDF <- rename(freedomHouseDF, date = year)
+freedomHouseDF$date <- as.character(freedomHouseDF$date)
+head(freedomHouseDF)
+
+# joining the Freedom House data with the data on region and subregion with iso2c
+
+freedomHouseByRegionDF <- left_join(freedomHouseDF, regionSubregionDf, by = "country")
+freedomHouseByRegionDF <- tbl_df(freedomHouseByRegionDF)
+freedomHouseByRegionDF <- select(freedomHouseByRegionDF, country, iso2c, date, politicalRights = inverse_pr,
+                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status,
+                       region, subregion)
+head(freedomHouseByRegionDF)
+str(freedomHouseByRegionDF)
+
 # #joining the data on political stability and regime types indicators (regimeTypeDf)
 # regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
 #   full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
