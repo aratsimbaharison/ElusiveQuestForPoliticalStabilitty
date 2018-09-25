@@ -20,7 +20,12 @@ library(dplyr)
 library(Hmisc)
 library(caret)
 library(kernlab)
+library(stringr)
 library(knitr)
+
+# As we collected the data from the World Bank, we realized that the country names and codes were not consistent throughout the database and between the World Bank and other organization.
+# Thus, in order to be consistent throughout the data collection and analysis, we need decided to adopt the World Bank country names and codes as explained in the following webpage: [API: Country Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-api-country-queries)
+# The file `WBCountryIso2c_Iso3c_M49Code.csv` was made by hand based on the information provided by the World Bank.
 
 # downloading the data on World Governance Indicators
 #data on stability estimate
@@ -43,6 +48,9 @@ corruptionControlDf <- tbl_df(corruptionControlDf)
 corruptionControlDf <- select(corruptionControlDf, country, iso2c, date, corruptionControl = value)
 head(corruptionControlDf)
 
+# In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
+corruptionControlDf$country <- str_replace(corruptionControlDf$country, "Cape Verde", "Cabo Verde")
+
 
 #data on government effectiveness estimate
 governmentEffectivenessDf <- wb(country = "countries_only", indicator = "GV.GOVT.EF.ES", 
@@ -51,12 +59,20 @@ governmentEffectivenessDf <- tbl_df(governmentEffectivenessDf)
 governmentEffectivenessDf <- select(governmentEffectivenessDf, country, iso2c, date, governmentEffectiveness = value)
 head(governmentEffectivenessDf)
 
+# In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
+governmentEffectivenessDf$country <- str_replace(governmentEffectivenessDf$country, "Cape Verde", "Cabo Verde")
+
+
 #data on regulatory quality estimate
 regulatoryQualityDf <- wb(country = "countries_only", indicator = "RQ.EST", 
                           startdate = 1996, enddate = 2018, POSIXct = TRUE)
 regulatoryQualityDf <- tbl_df(regulatoryQualityDf)
 regulatoryQualityDf <- select(regulatoryQualityDf, country, iso2c, date, regulatoryQuality = value)
 head(regulatoryQualityDf)
+
+# In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
+regulatoryQualityDf$country <- str_replace(regulatoryQualityDf$country, "Cape Verde", "Cabo Verde")
+
 
 #data on rule of law estimate
 ruleOfLawDf <- wb(country = "countries_only", indicator = "GV.RULE.LW.ES", 
@@ -65,12 +81,18 @@ ruleOfLawDf <- tbl_df(ruleOfLawDf)
 ruleOfLawDf <- select(ruleOfLawDf, country, iso2c, date, ruleOfLaw = value)
 head(ruleOfLawDf)
 
+# In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
+ruleOfLawDf$country <- str_replace(ruleOfLawDf$country, "Cape Verde", "Cabo Verde")
+
 #data on voice and accountability estimate
 voiceAndAccountabilityDf <- wb(country = "countries_only", indicator = "GV.VOIC.AC.ES", 
                           startdate = 1996, enddate = 2018, POSIXct = TRUE)
 voiceAndAccountabilityDf <- tbl_df(voiceAndAccountabilityDf)
 voiceAndAccountabilityDf <- select(voiceAndAccountabilityDf, country, iso2c, date, voiceAndAccountability = value)
 head(voiceAndAccountabilityDf)
+
+# In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
+voiceAndAccountabilityDf$country <- str_replace(voiceAndAccountabilityDf$country, "Cape Verde", "Cabo Verde")
 
 # joining the data on WGI
 WGI <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
@@ -80,8 +102,11 @@ WGI <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "d
   full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
 WGI <- tbl_df(WGI)
 head(WGI)
+tail(WGI)
 
-# downloading the data on country code with region and subregion from a github repository maintained by Lukes  
+
+
+# downloading the data on country code with region and subregion from a github repository maintained by Luke Duncalfe   
 # at: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
 # According to the author and contributors, "These lists are the result of merging data from two sources, the Wikipedia ISO 3166-1 article for alpha and numeric country codes, and the UN Statistics site for countries' regional, and sub-regional codes. In addition to countries, it includes dependent territories."
 
@@ -89,7 +114,12 @@ regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbahariso
 regionSubregionDf <- tbl_df(regionSubregionDf)
 regionSubregionDf <- select(regionSubregionDf, country = name, iso2c = `alpha-2`, iso3c = `alpha-3`, 
                             countryCode = `country-code`, region, subregion = `sub-region`)
-head(regionSubregionDf)                          
+regionSubregionDf <- na.omit(regionSubregionDf) # this will get rid of some locations that does not have codes
+
+# In order to be consistent throughout the data collection and analysis we need to change the names of the following countries to align them with the list of countries in the World Bank dataframes.
+
+regionSubregionDf$country <- str_replace(regionSubregionDf$country, "Cape Verde", "Cabo Verde")
+                    
 
 #joining the data on WGI with the UN classification by region and subregion
 WGIbyCountryAndRegion <- full_join(WGI, regionSubregionDf, by = "iso2c")
@@ -119,6 +149,7 @@ library(dplyr)
 library(Hmisc)
 library(caret)
 library(kernlab)
+library(stringr)
 library(knitr)
 
 #data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
@@ -197,6 +228,7 @@ library(dplyr)
 library(Hmisc)
 library(caret)
 library(kernlab)
+library(stringr)
 library(knitr)
 
 #data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
