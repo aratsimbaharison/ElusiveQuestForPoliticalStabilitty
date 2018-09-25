@@ -23,7 +23,7 @@ library(kernlab)
 library(stringr)
 library(knitr)
 
-# As we collected the data from the World Bank, we realized that the country names and codes were not consistent throughout the database and between the World Bank and other organization.
+# As we collected the data from the World Bank, we realized that the country names and codes were not consistent throughout the database and between the World Bank and other organizations, such as the United Nations.
 # Thus, in order to be consistent throughout the data collection and analysis, we need decided to adopt the World Bank country names and codes as explained in the following webpage: [API: Country Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-api-country-queries)
 # The file `WBCountryIso2c_Iso3c_M49Code.csv` was made by hand based on the information provided by the World Bank.
 
@@ -118,17 +118,82 @@ regionSubregionDf <- na.omit(regionSubregionDf) # this will get rid of some loca
 
 # In order to be consistent throughout the data collection and analysis we need to change the names of the following countries to align them with the list of countries in the World Bank dataframes.
 
-regionSubregionDf$country <- str_replace(regionSubregionDf$country, "Cape Verde", "Cabo Verde")
-                    
+# The following country names have been changed:
+
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Bahamas", "Bahamas, The")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Bolivia (Plurinational State of)", "Bolivia")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Congo", "Congo, Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Congo (Democratic Republic of the)", "Congo, Dem. Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Côte d'Ivoire", "Cote d'Ivoire")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Egypt", "Egypt, Arab Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Gambia", "Gambia, The")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Hong Kong", "Hong Kong SAR, China")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Korea (Democratic People's Republic of)", "Korea, Dem. People's Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Korea (Republic of)", "Korea, Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Iran (Islamic Republic of)", "Iran, Islamic Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Lao People's Democratic Republic", "Lao PDR")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Macedonia (the former Yugoslav Republic of)", "Macedonia, FYR")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Kyrgyzstan", "Kyrgyz Republic")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Macao", "Macao SAR, China")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Micronesia (Federated States of)", "Micronesia, Fed. Sts")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Moldova (Republic of)", "Moldova")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Palestine, State of", "West Bank and Gaza")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Slovakia", "Slovakia Republic")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Taiwan, Province of China", "Taiwan, China")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Tanzania, United Republic of", "Tanzania")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "United States of America", "United States")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "United Kingdom of Great Britain and Northern Ireland", "United Kingdom")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Yemen", "Yemen, Rep.")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Viet Nam", "Vietnam")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Venezuela (Bolivarian Republic of)", "Venezuela")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Saint Kitts and Nevis", "St. Kitts and Nevis")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Saint Vincent and the Grenadines", "St. Vincent and the Grenadines")
+regionSubregionDf$country <- replace(regionSubregionDf$country, regionSubregionDf$country == "Saint Lucia", "St. Lucia")
+regionSubregionDf$iso3c <- replace(regionSubregionDf$iso3c, regionSubregionDf$iso3c == "COD", "ZAR")
+
+# The following country names have been deleted:
+
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Bonaire, Sint Eustatius and Saba",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Åland Islands",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Anguilla",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Falkland Islands (Malvinas)",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "French Guiana",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "French Polynesia",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Gibraltar",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Guadeloupe",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Holy See",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Isle of Man",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Guernsey",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Jersey",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Martinique",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Mayotte",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Montserrat",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Northern Mariana Islands",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Réunion",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Barthélemy",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Helena, Ascension and Tristan da Cunha",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Martin (French part)",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Sint Maarten (Dutch part)",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Tokelau",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Turks and Caicos Islands",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Wallis and Futuna",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Svalbard and Jan Mayen",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "New Caledonia",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Norfolk Island",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Pitcairn",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Barthélemy",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Pierre and Miquelon",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Western Sahara",]
+regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Virgin Islands (British)",]
+
+View(regionSubregionDf)             
 
 #joining the data on WGI with the UN classification by region and subregion
-WGIbyCountryAndRegion <- full_join(WGI, regionSubregionDf, by = "iso2c")
+WGIbyCountryAndRegion <- left_join(WGI, regionSubregionDf, by = c("country", "iso2c"))
 WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
-WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country = country.x, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
-
 head(WGIbyCountryAndRegion)
 names(WGIbyCountryAndRegion)
-WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code = countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
 names(WGIbyCountryAndRegion)
 
 # # making the data on WGI available in the local repository
