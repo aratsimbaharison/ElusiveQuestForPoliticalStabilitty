@@ -33,17 +33,19 @@ Now I need to move to some serious stuff.
 
   . I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.
 
-  . Next: I need to standardize country names and codes.
+  . Standardization of country names and codes.
   
   . Step 1: I created the file `WBcountryIso2c_Iso3c_M49Code.csv` which combines the World Bank's country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.
   
-  . Step 2: I reviewed Luke's country names and codes on regions and subregions. I changed or deleted some country names and codes to make Luke's country names and codes consistent with the World Bank's country names and codes.
+  . Step 2: I reviewed Luke's country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke's country names and codes consistent with the World Bank's country names and codes.
   
-  . Step 3: I verified that Freedom House country names correspond to the World Bank country names, 
-  
-  Next: I need to change or delete some country names and codes to make Freedom House's country names and codes consistent with the World Bank's country names and codes.
+  . Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House's country names and codes consistent with the World Bank's country names and codes.
   
   
+- 9/26/2018: I am done with the script to download the quantitative data.
+
+- I will still need to clean the data before analysis.
+
 
 
 

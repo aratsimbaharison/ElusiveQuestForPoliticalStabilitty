@@ -113,7 +113,7 @@ tail(WGI)
 regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbaharison/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
 regionSubregionDf <- tbl_df(regionSubregionDf)
 regionSubregionDf <- select(regionSubregionDf, country = name, iso2c = `alpha-2`, iso3c = `alpha-3`, 
-                            countryCode = `country-code`, region, subregion = `sub-region`)
+                            M49Code = `country-code`, region, subregion = `sub-region`)
 regionSubregionDf <- na.omit(regionSubregionDf) # this will get rid of some locations that does not have codes
 
 # In order to be consistent throughout the data collection and analysis we need to change the names of the following countries to align them with the list of countries in the World Bank dataframes.
@@ -266,7 +266,7 @@ names(devIneqPovDF)
 # devIneqPovDF <- tbl_df(devIneqPovDF)
 
 
-# joining the data on WGI, development, social inequality, and poverty
+# joining the data on WGI by country and region, development, social inequality, and poverty
 # (WGIdevIneqPovDF)
 WGIbyCountryAndRegion <- read.csv("WGIbyCountryAndRegion.csv")
 WGIdevIneqPovDF <- full_join(WGIbyCountryAndRegion, devIneqPovDF, by = c("country", "iso2c", "date"))
@@ -320,7 +320,7 @@ autocracyDf <- select(autocracyDf, country, iso2c, date, value)
 autocracyDf <- rename(autocracyDf, autocracyInst = value)
 head(autocracyDf)
 
-# # downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
+# downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
  
 library(readxl)
 url <- "https://acrowinghen.files.wordpress.com/2018/05/fh_rankings_1973_2018.xlsx"
@@ -330,32 +330,94 @@ fh_rankings_1973_2018 <- read_excel(destfile, sheet = 3)
 freedomHouseDF <- read_excel("fh_rankings_1973_2018.xlsx", sheet = 3)
 freedomHouseDF <- tbl_df(freedomHouseDF)
 head(freedomHouseDF)
+names(freedomHouseDF)
 
-freedomHouseDF <- select(freedomHouseDF, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
-
+freedomHouseDF <- select(freedomHouseDF, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean, sum)
 freedomHouseDF <- filter(freedomHouseDF, year>= 1996)
 freedomHouseDF <- rename(freedomHouseDF, date = year)
 freedomHouseDF$date <- as.character(freedomHouseDF$date)
 head(freedomHouseDF)
 
+
+# In order to be consistent throughout the data collection and analysis we need to change the names of the following countries to align them with the list of countries in the World Bank dataframes.
+
+# The following country names have been changed:
+
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Bahamas", "Bahamas, The")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Brunei", "Brunei Darussalam")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Cape Verde", "Cabo Verde")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Congo (Brazzaville)", "Congo, Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Congo (Kinshasa)", "Congo, Dem. Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Egypt", "Egypt, Arab Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Iran", "Iran, Islamic Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Kyrgyzstan", "Kyrgyz Republic")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Lao", "Lao PDR")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Macedonia", "Macedonia, FYR")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Micronesia", "Micronesia, Fed. Sts")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "North Korea", "Korea, Dem. People's Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Russia", "Russian Federation")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Slovakia", "Slovak Republic")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "South Korea", "Korea, Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Syria", "Syrian Arab Republic")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Yemen", "Yemen, Rep.")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Taiwan", "Taiwan, China")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Trinidad & Tobago", "Trinidad and Tobago")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Vincent & Grenadines", "St. Vincent and Grenadines")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Antigua & Barbuda", "Antigua and Barbuda")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Kitts and Nevis", "St. Kitts and Nevis")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Sao Tome & Principe", "Sao Tome and Principe")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Lucia", "St. Lucia")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Bosnia-Herzegovina", "Bosnia and Herzegovina")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "East Timor", "Timor-Leste")
+
+
+
+# The following country names have been deleted:
+
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Germany, W.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Germany, E.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Czechoslovakia",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Yugoslavia (Serbia & Montenegro)",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "USSR",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Yemen, N.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Yemen, S.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Vietnam, N.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Vietnam, S.",]
+freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Northern Cyprus",]
+
+
+# The country status have been spelled out as follows: "F" = "Free", "PF" = "Partly Free", "NF" = "Not Free"
+
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "F", "Free")
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "PF", "Partly Free")
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "NF", "Not Free")
+
+head(freedomHouseDF)
+freedomHouseDF <- tbl_df(freedomHouseDF)
+
+
 # joining the Freedom House data with the data on region and subregion with iso2c
 
 freedomHouseByRegionDF <- left_join(freedomHouseDF, regionSubregionDf, by = "country")
 freedomHouseByRegionDF <- tbl_df(freedomHouseByRegionDF)
-freedomHouseByRegionDF <- select(freedomHouseByRegionDF, country, iso2c, date, politicalRights = inverse_pr,
-                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status,
-                       region, subregion)
+names(freedomHouseByRegionDF)
+freedomHouseByRegionDF <- select(freedomHouseByRegionDF, country, iso2c, iso3c, M49Code, date, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, region, subregion)
 head(freedomHouseByRegionDF)
 str(freedomHouseByRegionDF)
 
-# #joining the data on political stability and regime types indicators (regimeTypeDf)
-# regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
-#   full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
-#   full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
-#   right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
-# regimeTypeDf <- tbl_df(regimeTypeDf)
-# head(regimeTypeDf)
-# str(regimeTypeDf)
+
+#joining the data on political stability and regime types indicators (regimeTypeDf)
+WGIregimeTypeByRegionDF <- left_join(WGIbyCountryAndRegion, polityScoreDf, by = c("country", "date")) %>%
+  left_join(., democracyDf, by = c("country", "date")) %>%
+  left_join(., autocracyDf, by = c("country", "date")) %>%
+  left_join(., freedomHouseDF, by = c("country", "date"))
+
+WGIregimeTypeByRegionDF <- tbl_df(WGIregimeTypeByRegionDF)
+WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, iso3c, M49Code, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, democracyInst, autocracyInst, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, region, subregion)
+
+head(WGIregimeTypeByRegionDF)
+names(WGIregimeTypeByRegionDF)
+str(WGIregimeTypeByRegionDF)
 
 ```
 
