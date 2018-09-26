@@ -1,0 +1,88 @@
+---
+title: "Cameroon Case Study"
+author: "Adrien Ratsimbaharison"
+date: "9/26/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+
+# Downloading the data on World Governance Indicators for Cameroon
+
+# data on stability estimate
+
+stabilityDf <- wb(country = "CMR", indicator = "PV.EST",
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+stabilityDf <- tbl_df(stabilityDf)
+stabilityDf <- select(stabilityDf, country, iso2c, date, stability = value)
+head(stabilityDf)
+
+
+# creating a variable for stability category with dplyr
+stabilityDf <- stabilityDf %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
+head(stabilityDf)
+str(stabilityDf)
+
+#data on control of corruption estimate
+corruptionControlDf <- wb(country = "CMR", indicator = "GV.CONT.CO.ES", 
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+corruptionControlDf <- tbl_df(corruptionControlDf)
+corruptionControlDf <- select(corruptionControlDf, country, iso2c, date, corruptionControl = value)
+head(corruptionControlDf)
+
+#data on government effectiveness estimate
+governmentEffectivenessDf <- wb(country = "CMR", indicator = "GV.GOVT.EF.ES", 
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+governmentEffectivenessDf <- tbl_df(governmentEffectivenessDf)
+governmentEffectivenessDf <- select(governmentEffectivenessDf, country, iso2c, date, governmentEffectiveness = value)
+head(governmentEffectivenessDf)
+
+#data on regulatory quality estimate
+regulatoryQualityDf <- wb(country = "CMR", indicator = "RQ.EST", 
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+regulatoryQualityDf <- tbl_df(regulatoryQualityDf)
+regulatoryQualityDf <- select(regulatoryQualityDf, country, iso2c, date, regulatoryQuality = value)
+head(regulatoryQualityDf)
+
+
+#data on rule of law estimate
+ruleOfLawDf <- wb(country = "CMR", indicator = "GV.RULE.LW.ES", 
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+ruleOfLawDf <- tbl_df(ruleOfLawDf)
+ruleOfLawDf <- select(ruleOfLawDf, country, iso2c, date, ruleOfLaw = value)
+head(ruleOfLawDf)
+
+#data on voice and accountability estimate
+voiceAndAccountabilityDf <- wb(country = "CMR", indicator = "GV.VOIC.AC.ES", 
+                          startdate = 1996, enddate = 2018, POSIXct = TRUE)
+voiceAndAccountabilityDf <- tbl_df(voiceAndAccountabilityDf)
+voiceAndAccountabilityDf <- select(voiceAndAccountabilityDf, country, iso2c, date, voiceAndAccountability = value)
+head(voiceAndAccountabilityDf)
+
+# joining the data on WGI
+WGIcameroon <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., governmentEffectivenessDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., regulatoryQualityDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
+WGIcameroon <- tbl_df(WGIcameroon)
+head(WGIcameroon)
+tail(WGIcameroon)
+
+```
+
