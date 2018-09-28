@@ -308,7 +308,8 @@ polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks
 head(polityScoreDf)
 
 #data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
-democracyDf <- wb(indicator = "UPP.INS.DEMO.XQ", startdate = 1996, enddate = 2018, POSIXct = TRUE)
+democracyDf <- wb(country = "countries_only", indicator = "UPP.INS.DEMO.XQ", 
+                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
 democracyDf <- select(democracyDf, country, iso2c, date, value)
 democracyDf <- rename(democracyDf, democracyInst = value)
 head(democracyDf)

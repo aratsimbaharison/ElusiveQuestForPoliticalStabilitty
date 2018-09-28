@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+## Downloading the data on World Governance Indicators for Cameroon
 
 ```{r}
 library(wbstats)
@@ -22,9 +23,7 @@ library(kernlab)
 library(stringr)
 library(knitr)
 
-# Downloading the data on World Governance Indicators for Cameroon
-
-# data on stability estimate
+# data on political stability estimate
 
 stabilityDf <- wb(country = "CMR", indicator = "PV.EST",
                           startdate = 1996, enddate = 2018, POSIXct = TRUE)
@@ -75,26 +74,188 @@ voiceAndAccountabilityDf <- select(voiceAndAccountabilityDf, country, iso2c, dat
 head(voiceAndAccountabilityDf)
 
 # joining the data on WGI
-WGIcameroon <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
+CameroonWGI.DF <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
   full_join(., governmentEffectivenessDf, by = c("country", "iso2c", "date")) %>%
   full_join(., regulatoryQualityDf, by = c("country", "iso2c", "date")) %>%
   full_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
   full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
-WGIcameroon <- tbl_df(WGIcameroon)
-WGIcameroon$date <- as.numeric(as.character(WGIcameroon$date))
-head(WGIcameroon)
-str(WGIcameroon)
+CameroonWGI.DF <- tbl_df(CameroonWGI.DF)
+CameroonWGI.DF$date <- as.numeric(as.character(CameroonWGI.DF$date))
+head(CameroonWGI.DF)
+str(CameroonWGI.DF)
 
+# making WGIcameroonDF available in the local repository
+# CameroonWGIDF <- write.csv(CameroonWGIDF, "CameroonWGIDF.csv")
 
 ```
 
 
-```{r}
+## Downloading the data on economic and social indicators for Cameroon
+
+
+
+```{r warning=FALSE}
+library(wbstats)
+library(readr)
 library(lubridate)
-library(ggplot2)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
 
-ggplot(WGIcameroon, aes(x= date, y = stability), xlim = c(1996, 2016), ylim = c(-2, 2)) +
-  geom_line(size = 1.5)
+#data on GDP growth (annual %) (NY.GDP.MKTP.KD.ZG)
+GDPannualGrowthDF <- wb(country = "CMR", indicator = "NY.GDP.MKTP.KD.ZG", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GDPannualGrowthDF <- tbl_df(GDPannualGrowthDF)
+GDPannualGrowthDF <- select(GDPannualGrowthDF, country, iso2c, date, value)
+GDPannualGrowthDF <- rename(GDPannualGrowthDF, GDPannualGrowthRate = value)
+head(GDPannualGrowthDF)
+
+
+#data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
+GNIperCapitaDf <- wb(country = "CMR", indicator = "NY.GNP.PCAP.KD", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GNIperCapitaDf <- tbl_df(GNIperCapitaDf)
+GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, value)
+GNIperCapitaDf <- rename(GNIperCapitaDf, GNIperCapita = value)
+head(GNIperCapitaDf)
+
+#data on human development index (UNDP.HDI.XD)
+HDIDf <- wb(country = "CMR", indicator = "UNDP.HDI.XD", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+HDIDf <- tbl_df(HDIDf)
+HDIDf <- select(HDIDf, country, iso2c, date, value)
+HDIDf <- rename(HDIDf, HDI = value)
+head(HDIDf)
+
+#data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
+GINIDf <- wb(country = "CMR", indicator = "SI.POV.GINI", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GINIDf <- tbl_df(GINIDf)
+GINIDf <- select(GINIDf, country, iso2c, date, value)
+GINIDf <- rename(GINIDf, GINI = value)
+head(GINIDf)
+
+
+# data on poverty measured in terms of the World Bank's Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population) (SI.POV.DDAY)
+
+povHeadCountDF <- wb(country = "CMR", indicator = "SI.POV.DDAY", 
+            startdate = 1996, enddate = 2018, POSIXct = TRUE)
+povHeadCountDF <- tbl_df(povHeadCountDF)
+povHeadCountDF <- select(povHeadCountDF, country, iso2c, date, value)
+povHeadCountDF <- rename(povHeadCountDF, povertyHeadCount = value)
+head(povHeadCountDF)
+
+# joining the data on development, social inequality, and poverty: devIneqPovDF
+CameroonDevIneqPovDF <- full_join(GDPannualGrowthDF, GNIperCapitaDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., HDIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., GINIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., povHeadCountDF, by = c("country", "iso2c", "date"))
+  
+CameroonDevIneqPovDF <- tbl_df(CameroonDevIneqPovDF)
+head(CameroonDevIneqPovDF)
+CameroonDevIneqPovDF$date <- as.numeric(as.character(CameroonDevIneqPovDF$date))
+names(CameroonDevIneqPovDF)
+
+# # making the data on development, social inequality and poverty available in the local repository
+# CameroonDevIneqPovDF <- write.csv(CameroonDevIneqPovDF, "CameroonDevIneqPovDF.csv")
+# CameroonDevIneqPovDF <- tbl_df(CameroonDevIneqPovDF)
 
 ```
+
+## Downloading and cleaning the data on regime type for Cameroon
+
+```{r warning= FALSE}
+
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+
+#data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
+polityScoreDf <- wb(country = "CMR", indicator = "UPP.REV.POL.XQ", 
+                    startdate = 1996, enddate = 2018, POSIXct = TRUE)
+polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
+polityScoreDf <- rename(polityScoreDf, polityScore = value)
+polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
+head(polityScoreDf)
+
+# creating a new variable for polity category (polityCategory)
+polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
+head(polityScoreDf)
+
+#data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
+democracyDf <- wb(country = "CMR", indicator = "UPP.INS.DEMO.XQ", 
+                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
+democracyDf <- select(democracyDf, country, iso2c, date, value)
+democracyDf <- rename(democracyDf, democracyInst = value)
+democracyDf$date <- as.numeric(as.character(democracyDf$date))
+head(democracyDf)
+
+#data on political system, Institutionalized autocracy (UPP.INS.AUTO.XQ) - see Polity IV
+autocracyDf <- wb(country = "CMR", indicator = "UPP.INS.AUTO.XQ", 
+                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
+autocracyDf <- select(autocracyDf, country, iso2c, date, value)
+autocracyDf <- rename(autocracyDf, autocracyInst = value)
+autocracyDf$date <- as.numeric(as.character(autocracyDf$date))
+head(autocracyDf)
+
+# downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
+ 
+library(readxl)
+url <- "https://acrowinghen.files.wordpress.com/2018/05/fh_rankings_1973_2018.xlsx"
+destfile <- "fh_rankings_1973_2018.xlsx"
+curl::curl_download(url, destfile)
+fh_rankings_1973_2018 <- read_excel(destfile, sheet = 3)
+freedomHouseDF <- read_excel("fh_rankings_1973_2018.xlsx", sheet = 3)
+freedomHouseDF <- tbl_df(freedomHouseDF)
+head(freedomHouseDF)
+names(freedomHouseDF)
+
+freedomHouseDF <- select(freedomHouseDF, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean, sum)
+freedomHouseDF <- filter(freedomHouseDF, year>= 1996)
+freedomHouseDF <- rename(freedomHouseDF, date = year)
+freedomHouseDF$date <- as.numeric(as.character(freedomHouseDF$date))
+head(freedomHouseDF)
+
+# Filtering the data on pr and cl on Cameroon
+
+freedomHouseDF <- filter(freedomHouseDF, country == "Cameroon")
+head(freedomHouseDF)
+
+# The country status have been spelled out as follows: "F" = "Free", "PF" = "Partly Free", "NF" = "Not Free"
+
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "F", "Free")
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "PF", "Partly Free")
+freedomHouseDF$status <- replace(freedomHouseDF$status, freedomHouseDF$status == "NF", "Not Free")
+
+head(freedomHouseDF)
+freedomHouseDF <- tbl_df(freedomHouseDF)
+
+
+#joining the data on political stability and regime type indicators for Cameroon
+
+CameroonWGIandRegimeTypeDF <- left_join(CameroonWGI.DF, polityScoreDf, by = c("country", "date")) %>%
+  left_join(., democracyDf, by = c("country", "date")) %>%
+  left_join(., autocracyDf, by = c("country", "date")) %>%
+  left_join(., freedomHouseDF, by = c("country", "date"))
+
+CameroonWGIandRegimeTypeDF <- tbl_df(CameroonWGIandRegimeTypeDF)
+CameroonWGIandRegimeTypeDF <- select(WGIregimeTypeByRegionDF, country, iso3c, M49Code, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, democracyInst, autocracyInst, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean)
+CameroonWGIandRegimeTypeDF$date <- as.numeric(as.character(CameroonWGIandRegimeTypeDF$date))
+head(CameroonWGIandRegimeTypeDF)
+names(CameroonWGIandRegimeTypeDF)
+str(CameroonWGIandRegimeTypeDF)
+
+```
+
+
+
 

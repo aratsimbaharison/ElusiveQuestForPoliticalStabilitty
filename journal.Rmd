@@ -46,6 +46,18 @@ Now I need to move to some serious stuff.
 
 - I will still need to clean the data before analysis.
 
+CAMEROON RESEARCH PROJECT
+
+- 9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.
+
+  . I downloaded tge WGI for Cameroon
+  
+  . I downloaded the economic and social indicators from the World Bank
+  
+  . I downloaded the regime type indicators
+  
+- Next : I need to rerun and verify the script on downloading the quantitative indicators on Cameroon
+
 
 
 

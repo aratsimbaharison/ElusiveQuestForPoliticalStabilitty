@@ -1,0 +1,35 @@
+---
+title: 'Cameroon Case Study: Script for Data Analysis'
+author: "Adrien Ratsimbaharison"
+date: "9/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Political Stability Average and General Trend
+
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+
+WGIcameroonDF <- read.csv("WGIcameroonDF.csv")
+head(WGIcameroonDF)
+WGIcameroonDF <- tbl_df(WGIcameroonDF)
+
+# Average
+
+boxplot(WGIcameroonDF$stability)
+
+
+# General Trend since 1996
+
+ggplot(WGIcameroonDF, aes(x= date, y = stability), xlim = c(1996, 2016), ylim = c(-2, 2)) +
+  geom_line(size = 1.5)
+
+```
