@@ -1,5 +1,5 @@
 ---
-title: "Cameroon Case Study"
+title: "Cameroon Case Study: Script for Downloading Quantitative Data"
 author: "Adrien Ratsimbaharison"
 date: "9/26/2018"
 output: html_document
@@ -81,8 +81,20 @@ WGIcameroon <- full_join(stabilityDf, corruptionControlDf, by = c("country", "is
   full_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
   full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
 WGIcameroon <- tbl_df(WGIcameroon)
+WGIcameroon$date <- as.numeric(as.character(WGIcameroon$date))
 head(WGIcameroon)
-tail(WGIcameroon)
+str(WGIcameroon)
+
+
+```
+
+
+```{r}
+library(lubridate)
+library(ggplot2)
+
+ggplot(WGIcameroon, aes(x= date, y = stability), xlim = c(1996, 2016), ylim = c(-2, 2)) +
+  geom_line(size = 1.5)
 
 ```
 
