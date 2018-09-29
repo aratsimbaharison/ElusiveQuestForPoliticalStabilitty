@@ -9,20 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Collecting Qualitative Data from Webpages Using the `rvest package`
 
-For the most part, I use the `rvest package` for collecting the qualitative data used in this project. These qualitative data are the saved in the folder `qualitativeData` and then analyzed with the `RQDA package`.
+<!-- For the most part, I use the `rvest package` for collecting the qualitative data used in this project. These qualitative data are the saved in a folder `qualitativeData` and then analyzed with the `RQDA package`. -->
 
 
-### Example: text on the second civil war in Sudan from Wikipedia
+## Basic information on Cameroon
 
 ```{r}
 library(rvest)
 library(xml2)
 
-Url <- "Source: https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War"
+# From Wikipedia
 
-web_page <- read_html("https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War")
+Url <- "Source: https://en.wikipedia.org/wiki/Cameroon"
+
+web_page <- read_html("https://en.wikipedia.org/wiki/Cameroon")
 # extracting the header
 header <- web_page %>%
         html_nodes("h1") %>%
@@ -35,8 +36,28 @@ text <- web_page %>%
 
 # saving the text to a local repository
 
-Sudan2 <- writeLines(c(header, Url, text), "qualitativeData/Sudan2.txt")
+cameroonBasicInfo1 <- writeLines(c(header, Url, text), "cameroonBasicInfo1.txt")
 
+
+# From BBC's country profile
+
+
+Url <- "Source: https://www.bbc.com/news/world-africa-13146029"
+
+web_page <- read_html("https://www.bbc.com/news/world-africa-13146029")
+# extracting the header
+header <- web_page %>%
+        html_nodes("h1") %>%
+        html_text()
+
+# extracting the text
+text <- web_page %>%
+        html_nodes("p") %>%
+        html_text()
+
+# saving the text to a local repository
+
+cameroonBasicInfo2 <- writeLines(c(header, Url, text), "cameroonBasicInfo2.txt")
 ```
 
 
