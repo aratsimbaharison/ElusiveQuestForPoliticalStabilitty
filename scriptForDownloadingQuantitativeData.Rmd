@@ -311,15 +311,34 @@ library(kernlab)
 library(stringr)
 library(knitr)
 
-#data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
+# data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
 polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+polityScoreDf <- tbl_df(polityScoreDf)
 polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
 polityScoreDf <- rename(polityScoreDf, polityScore = value)
+polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
 head(polityScoreDf)
 
 # creating a new variable for polity category (polityCategory)
 polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
+head(polityScoreDf)
+
+# creating a new variable for political change: either "democratization" if the polityScore increase from year1 to year1 + 1, "autocratization" if the polityScore decreas, or "no change" if it
+
+
+polityScoreDf <- polityScoreDf %>% 
+  group_by(country) %>% 
+  mutate(politicalChange = if_else(polityScore > lag(polityScore), "democratization", 
+                                  ifelse(polityScore < lag(polityScore), "autocratization", "no change")))
+head(polityScoreDf)
+
+# alternative coding
+polityScoreDf <- polityScoreDf %>% 
+  group_by(country) %>% 
+  mutate(politicalChange = case_when(polityScore > lag(polityScore) ~ "democratization", 
+                                     polityScore < lag(polityScore) ~ "autocratization",
+                                     TRUE ~ "no change"))
 head(polityScoreDf)
 
 #data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
