@@ -1,0 +1,46 @@
+---
+title: "Script for Data Analysis"
+author: "Adrien Ratsimbaharison"
+date: "9/29/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Descriptive statistics on political stability around the world:
+
+```{r}
+# reading the data in r
+
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+library(VIM)
+
+WGIbyCountryAndRegion <- read.csv("WGIbyCountryAndRegion.csv")
+WGIbyCountryAndRegion$date <- as.numeric(WGIbyCountryAndRegion$date)
+head(WGIbyCountryAndRegion)
+glimpse(WGIbyCountryAndRegion)
+
+# Instability of the whole world
+
+# instability average for the period of 1996-2017
+
+summary(WGIbyCountryAndRegion$stability)
+
+boxplot(WGIbyCountryAndRegion$stability)
+
+
+# instabiility trend
+
+
+
+```
+

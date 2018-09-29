@@ -56,10 +56,15 @@ CAMEROON RESEARCH PROJECT
   
   . I downloaded the regime type indicators
   
-- Next : I need to rerun and verify the script on downloading the quantitative indicators on Cameroon
+  . I rerun and verify the script on downloading the quantitative indicators on Cameroon
 
 
+- 9/29/2018: I am back to the main project: I reviewed the script for downloading quantitative data and initiated a script for quantitative data analysis.
 
+  . the data analysis starts with the stability average and stability trend around the world for the period of 1996 to 2016.
+  
+  . Next: the stability averages and trends by region
+  
 
 
 

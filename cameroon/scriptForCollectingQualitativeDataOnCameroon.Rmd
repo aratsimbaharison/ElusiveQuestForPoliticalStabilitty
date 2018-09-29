@@ -1,0 +1,43 @@
+---
+title: "Collecting the Qualitative Data on the Cameroon Case Study"
+author: "Adrien Ratsimbaharison"
+date: "9/18/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Collecting Qualitative Data from Webpages Using the `rvest package`
+
+For the most part, I use the `rvest package` for collecting the qualitative data used in this project. These qualitative data are the saved in the folder `qualitativeData` and then analyzed with the `RQDA package`.
+
+
+### Example: text on the second civil war in Sudan from Wikipedia
+
+```{r}
+library(rvest)
+library(xml2)
+
+Url <- "Source: https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War"
+
+web_page <- read_html("https://en.wikipedia.org/wiki/Second_Sudanese_Civil_War")
+# extracting the header
+header <- web_page %>%
+        html_nodes("h1") %>%
+        html_text()
+
+# extracting the text
+text <- web_page %>%
+        html_nodes("p") %>%
+        html_text()
+
+# saving the text to a local repository
+
+Sudan2 <- writeLines(c(header, Url, text), "qualitativeData/Sudan2.txt")
+
+```
+
+
+ 

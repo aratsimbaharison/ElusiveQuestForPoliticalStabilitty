@@ -1,5 +1,5 @@
 ---
-title: "Collecting and Cleaning the Quantitative Data Used in this Project"
+title: "Scripts for Collecting and Cleaning the Quantitative Data"
 author: "Adrien Ratsimbaharison"
 date: "9/19/2018"
 output: html_document
@@ -22,6 +22,7 @@ library(caret)
 library(kernlab)
 library(stringr)
 library(knitr)
+library(VIM)
 
 # As we collected the data from the World Bank, we realized that the country names and codes were not consistent throughout the database and between the World Bank and other organizations, such as the United Nations.
 # Thus, in order to be consistent throughout the data collection and analysis, we need decided to adopt the World Bank country names and codes as explained in the following webpage: [API: Country Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-api-country-queries)
@@ -34,12 +35,15 @@ stabilityDf <- wb(country = "countries_only", indicator = "PV.EST",
 stabilityDf <- tbl_df(stabilityDf)
 stabilityDf <- select(stabilityDf, country, iso2c, date, stability = value)
 head(stabilityDf)
+summary(stabilityDf)
+
+# the summary function shows that there are some outliers (stability < -2.5) in the data set. Since the authors of the WGI used the scale for -2.5 to 2.5, we considered these outliers as mistakes of data entries and we decided to reduce them to the minimum value of -.25:
 
 
 # creating a variable for stability category with dplyr
 stabilityDf <- stabilityDf %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
 head(stabilityDf)
-str(stabilityDf)
+summary(stabilityDf)
 
 #data on control of corruption estimate
 corruptionControlDf <- wb(country = "countries_only", indicator = "GV.CONT.CO.ES", 
@@ -95,14 +99,14 @@ head(voiceAndAccountabilityDf)
 voiceAndAccountabilityDf$country <- str_replace(voiceAndAccountabilityDf$country, "Cape Verde", "Cabo Verde")
 
 # joining the data on WGI
-WGI <- full_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., governmentEffectivenessDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., regulatoryQualityDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
+WGI <- left_join(stabilityDf, corruptionControlDf, by = c("country", "iso2c", "date")) %>%
+  left_join(., governmentEffectivenessDf, by = c("country", "iso2c", "date")) %>%
+  left_join(., regulatoryQualityDf, by = c("country", "iso2c", "date")) %>%
+  left_join(., ruleOfLawDf, by = c("country", "iso2c", "date")) %>%
+  left_join(., voiceAndAccountabilityDf, by = c("country", "iso2c", "date"))
 WGI <- tbl_df(WGI)
 head(WGI)
-tail(WGI)
+summary(WGI)
 
 
 
@@ -191,12 +195,23 @@ View(regionSubregionDf)
 #joining the data on WGI with the UN classification by region and subregion
 WGIbyCountryAndRegion <- left_join(WGI, regionSubregionDf, by = c("country", "iso2c"))
 WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
+WGIbyCountryAndRegion$date <- as.numeric(as.character(WGIbyCountryAndRegion$date))
 head(WGIbyCountryAndRegion)
 names(WGIbyCountryAndRegion)
-WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code = countryCode, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
 names(WGIbyCountryAndRegion)
+summary(WGIbyCountryAndRegion)
 
-# # making the data on WGI available in the local repository
+# cleaning the dataset: 
+# the summary function shows that more than 80% of the data are missing in the following variables. So we decided to exclude these variables from this research project: corruptionControl, governmentEffectiveness, ruleOfLaw, voiceAndAccountability.
+# here is the clean data on WGI by country and region:
+
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory, regulatoryQuality, region, subregion)
+WGIbyCountryAndRegion <- na.omit(WGIbyCountryAndRegion)
+names(WGIbyCountryAndRegion)
+summary(WGIbyCountryAndRegion)
+
+# # making the clean data on WGI available in the local repository
 # WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
 # WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
 
