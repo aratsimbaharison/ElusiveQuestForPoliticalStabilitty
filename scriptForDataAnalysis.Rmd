@@ -2,7 +2,10 @@
 title: "Script for Data Analysis"
 author: "Adrien Ratsimbaharison"
 date: "9/29/2018"
-output: html_document
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Descriptive statistics on political stability around the world:
 
-```{r}
+```{r, echo=FALSE, include=FALSE}
 # reading the data in r
 
 library(readr)
@@ -25,22 +28,162 @@ library(knitr)
 library(VIM)
 
 WGIbyCountryAndRegion <- read.csv("WGIbyCountryAndRegion.csv")
+WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
 WGIbyCountryAndRegion$date <- as.numeric(WGIbyCountryAndRegion$date)
-head(WGIbyCountryAndRegion)
 glimpse(WGIbyCountryAndRegion)
 
-# Instability of the whole world
+```
 
-# instability average for the period of 1996-2017
+### Political Stability Average and Trend for the Period of 1996-2017
 
+- Political stability average 
+
+```{r, echo=FALSE}
 summary(WGIbyCountryAndRegion$stability)
 
+```
+
+
+```{r, echo=FALSE, fig.cap= "The Political Stability Average of the World for the Period of 1996-2017"}
 boxplot(WGIbyCountryAndRegion$stability)
+abline(h = 0, lwd= 1.5)
+
+```
+
+```{r echo=FALSE}
+
+hist(WGIbyCountryAndRegion$stability, main= "", xlab = "Political Stability Estimate")
+abline(v = median(WGIbyCountryAndRegion$stability, na.rm = TRUE), lwd = 2)
+text(x = -1, y = 650, "Median= 0.06886")
+
+```
+
+```{r echo=FALSE}
+#Proportion of stability and instability for the whole world
+
+stabilityProp <- table(WGIbyCountryAndRegion$stabilityDummy)
+prop.table(stabilityProp)
+```
 
 
-# instabiility trend
+- Political stability by categories:
+
+```{r echo=FALSE}
+
+kable(table(WGIbyCountryAndRegion$stabilityCategory))
+
+```
+
+- Political stability trend
 
 
+```{r echo=FALSE}
+# generating the stability trend of the world
 
+stabilityTrend <- WGIbyCountryAndRegion %>%
+  group_by(date) %>%
+  summarise(stabilityAnnualAverage = mean(stability, na.rm=TRUE))
+
+
+```
+
+```{r echo=FALSE, fig.height=5, fig.width=5, message=FALSE, warning=FALSE}
+library(ggplot2)
+# plotting the stability trend of the world
+
+plot(stabilityTrend$date, stabilityTrend$stabilityAnnualAverage, type="o", lwd = 2,
+     ylim=range( -0.25,0.25),
+     main="Fig. 1.1 - Trend of the Political Stability of the World for the Period of 1996-2016",
+     xlab = "Years", ylab = "Political Stability Estimate (Annual Average)")
+abline(h = 0, lwd = 1.5)
+
+
+ggplot(stabilityTrend, aes(date, stabilityAnnualAverage)) +
+  geom_line() + ylim(-0.25, 0.25)
+```
+
+### Political Stability by Region and Subregion
+
+- Political stability average by region
+
+```{r echo= FALSE}
+#Proportion of stability by region
+
+stabilityPropByRegion <- table(WGIbyCountryAndRegion$stabilityDummy, WGIbyCountryAndRegion$region)
+kable(stabilityPropByRegion)
+prop.table(stabilityPropByRegion)
+
+```
+
+```{r echo=FALSE}
+
+# Boxplot of Political Stability by Region
+boxplot(stability~region,data=WGIbyCountryAndRegion, main="",
+        xlab="Regions", ylab="Political Stability Estimate")
+abline(h = 0, lwd = 2)
+
+
+ggplot(WGIbyCountryAndRegion, aes(x = date, y = stability)) +
+  geom_boxplot() + 
+  facet_grid(cols = vars(region))
+```
+
+
+- Political stability trends by region
+
+```{r echo=FALSE}
+# stability scater plot by region
+
+ggplot(WGIbyCountryAndRegion, aes(x = date, y = stability)) +
+  geom_point() + 
+  facet_grid(cols = vars(region))
+
+```
+
+```{r echo=FALSE}
+# stability trend for Africa
+africaDF <- filter(WGIbyCountryAndRegion, region == "Africa")
+stabilityTrendAf <- africaDF %>%
+  group_by(date) %>% 
+  summarise(stabilityAnnualAverage = mean(stability, na.rm=TRUE))
+head(stabilityTrendAf)
+```
+
+
+```{r echo=FALSE}
+# plotting the stability trend in Africa
+plot(stabilityTrendAf$date, stabilityTrendAf$stabilityAnnualAverage, type="o", lwd = 2,
+     ylim=range(-1, 1),
+     main="Fig. 1.3 - Trend of the Political Stability in Africa for the Period of 1996-2016",
+     xlab = "Years", ylab = "Political Stability Estimate (Annual Average)")
+abline(h = 0, lwd = 1.5)
+
+
+ggplot(stabilityTrendAf, aes(date, stabilityAnnualAverage)) +
+  geom_line() + ylim(-1, 1)
+```
+
+
+```{r echo=FALSE}
+# stability trend for the rest of the world
+restOfWorldDF <- filter(WGIbyCountryAndRegion, region != "Africa")
+stabilityTrendRoW <- restOfWorldDF %>%
+  group_by(date) %>% 
+  summarise(stabilityAnnualAverage = mean(stability, na.rm=TRUE))
+head(stabilityTrendRoW)
+```
+
+
+```{r echo=FALSE}
+# plotting the stability trend for the rest of the world
+plot(stabilityTrendRoW$date, stabilityTrendRoW$stabilityAnnualAverage, type="o", lwd = 2,
+     ylim=range(-1, 1),
+     main="Fig. 1.3 - Trend of the Political Stability for the Rest of the World for the Period of 1996-2016",
+     xlab = "Years", ylab = "Political Stability Estimate (Annual Average)")
+abline(h = 0, lwd = 1.5)
+
+
+ggplot(stabilityTrendRoW, aes(date, stabilityAnnualAverage)) +
+  geom_line() + ylim(-1, 1)
 ```
 

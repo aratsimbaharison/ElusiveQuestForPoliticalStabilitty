@@ -39,11 +39,19 @@ summary(stabilityDf)
 
 # the summary function shows that there are some outliers (stability < -2.5) in the data set. Since the authors of the WGI used the scale for -2.5 to 2.5, we considered these outliers as mistakes of data entries and we decided to reduce them to the minimum value of -.25:
 
+# creating a dummy variable for stability category with dplyr: "1" for stable country, "0" for unstable country
+stabilityDf <- mutate(stabilityDf, 
+                      stabilityDummy = if_else(stabilityDf$stability < 0, "0", "1"))
+select(country, iso2c, date, stability, stabilityDummy, stabilityCategory)  
+head(stabilityDf)
+summary(stabilityDf)
+table(stabilityDf$stabilityDummy)
 
-# creating a variable for stability category with dplyr
+# creating a variable with four categories of stability with dplyr
 stabilityDf <- stabilityDf %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
 head(stabilityDf)
 summary(stabilityDf)
+table(stabilityDf$stabilityCategory)
 
 #data on control of corruption estimate
 corruptionControlDf <- wb(country = "countries_only", indicator = "GV.CONT.CO.ES", 
@@ -333,7 +341,7 @@ polityScoreDf <- polityScoreDf %>%
                                   ifelse(polityScore < lag(polityScore), "autocratization", "no change")))
 head(polityScoreDf)
 
-# alternative coding
+# alternative coding working well and produced the new variable
 polityScoreDf <- polityScoreDf %>% 
   group_by(country) %>% 
   mutate(politicalChange = case_when(polityScore > lag(polityScore) ~ "democratization", 
