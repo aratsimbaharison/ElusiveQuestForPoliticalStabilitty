@@ -40,9 +40,8 @@ summary(stabilityDf)
 # the summary function shows that there are some outliers (stability < -2.5) in the data set. Since the authors of the WGI used the scale for -2.5 to 2.5, we considered these outliers as mistakes of data entries and we decided to reduce them to the minimum value of -.25:
 
 # creating a dummy variable for stability category with dplyr: "1" for stable country, "0" for unstable country
-stabilityDf <- mutate(stabilityDf, 
-                      stabilityDummy = if_else(stabilityDf$stability < 0, "0", "1"))
-select(country, iso2c, date, stability, stabilityDummy, stabilityCategory)  
+stabilityDf <- mutate(stabilityDf,
+                      stabilityDummy = if_else(stabilityDf$stability > 0, "1", "0"))
 head(stabilityDf)
 summary(stabilityDf)
 table(stabilityDf$stabilityDummy)
@@ -206,7 +205,7 @@ WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
 WGIbyCountryAndRegion$date <- as.numeric(as.character(WGIbyCountryAndRegion$date))
 head(WGIbyCountryAndRegion)
 names(WGIbyCountryAndRegion)
-WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
 names(WGIbyCountryAndRegion)
 summary(WGIbyCountryAndRegion)
 
@@ -214,7 +213,7 @@ summary(WGIbyCountryAndRegion)
 # the summary function shows that more than 80% of the data are missing in the following variables. So we decided to exclude these variables from this research project: corruptionControl, governmentEffectiveness, ruleOfLaw, voiceAndAccountability.
 # here is the clean data on WGI by country and region:
 
-WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory, regulatoryQuality, region, subregion)
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion)
 WGIbyCountryAndRegion <- na.omit(WGIbyCountryAndRegion)
 names(WGIbyCountryAndRegion)
 summary(WGIbyCountryAndRegion)
@@ -222,7 +221,7 @@ summary(WGIbyCountryAndRegion)
 # # making the clean data on WGI available in the local repository
 # WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
 # WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
-
+# 
 
 ```
 
@@ -240,28 +239,39 @@ library(kernlab)
 library(stringr)
 library(knitr)
 
+
+#data on GDP growth (annual %) (NY.GDP.MKTP.KD.ZG)
+GDPannualGrowthDF <- wb(country = "countries_only", indicator = "NY.GDP.MKTP.KD.ZG", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+GDPannualGrowthDF <- tbl_df(GDPannualGrowthDF)
+GDPannualGrowthDF <- select(GDPannualGrowthDF, country, iso2c, date, GDPannualGrowthRate = value)
+GDPannualGrowthDF$date <- as.numeric(as.character(GDPannualGrowthDF$date))
+head(GDPannualGrowthDF)
+summary(GDPannualGrowthDF)
+
+
 #data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
 GNIperCapitaDf <- wb(country = "countries_only", indicator = "NY.GNP.PCAP.KD", 
                      startdate = 1996, enddate = 2018, POSIXct = TRUE)
 GNIperCapitaDf <- tbl_df(GNIperCapitaDf)
-GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, value)
-GNIperCapitaDf <- rename(GNIperCapitaDf, GNIperCapita = value)
+GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, GNIperCapita = value)
+GNIperCapitaDf$date <- as.numeric(as.character(GNIperCapitaDf$date))
 head(GNIperCapitaDf)
 
 #data on human development index (UNDP.HDI.XD)
 HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
             startdate = 1996, enddate = 2018, POSIXct = TRUE)
 HDIDf <- tbl_df(HDIDf)
-HDIDf <- select(HDIDf, country, iso2c, date, value)
-HDIDf <- rename(HDIDf, HDI = value)
+HDIDf <- select(HDIDf, country, iso2c, date, HDI = value)
+HDIDf$date <- as.numeric(as.character(HDIDf$date))
 head(HDIDf)
 
 #data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
 GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
             startdate = 1996, enddate = 2018, POSIXct = TRUE)
 GINIDf <- tbl_df(GINIDf)
-GINIDf <- select(GINIDf, country, iso2c, date, value)
-GINIDf <- rename(GINIDf, GINI = value)
+GINIDf <- select(GINIDf, country, iso2c, date, GINI = value)
+GINIDf$date <- as.numeric(as.character(GINIDf$date))
 head(GINIDf)
 
 
@@ -270,18 +280,19 @@ head(GINIDf)
 povHeadCountDF <- wb(country = "countries_only", indicator = "SI.POV.DDAY", 
             startdate = 1996, enddate = 2018, POSIXct = TRUE)
 povHeadCountDF <- tbl_df(povHeadCountDF)
-povHeadCountDF <- select(povHeadCountDF, country, iso2c, date, value)
-povHeadCountDF <- rename(povHeadCountDF, povertyHeadCount = value)
+povHeadCountDF <- select(povHeadCountDF, country, iso2c, date, povertyHeadCount = value)
+povHeadCountDF$date <- as.numeric(as.character(povHeadCountDF$date))
 head(povHeadCountDF)
 
 # joining the data on development, social inequality, and poverty: devIneqPovDF
-devIneqPovDF <- full_join(GNIperCapitaDf, HDIDf, by = c("country", "iso2c", "date")) %>%
+devIneqPovDF <- full_join(GDPannualGrowthDF, GNIperCapitaDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., HDIDf, by = c("country", "iso2c", "date")) %>%
   full_join(., GINIDf, by = c("country", "iso2c", "date")) %>%
   full_join(., povHeadCountDF, by = c("country", "iso2c", "date"))
   
 devIneqPovDF <- tbl_df(devIneqPovDF)
 head(devIneqPovDF)
-devIneqPovDF$date <- as.integer(devIneqPovDF$date)
+devIneqPovDF$date <- as.numeric(as.character(devIneqPovDF$date))
 names(devIneqPovDF)
 
 # # making the data on development, social inequality and poverty available in the local repository
@@ -292,11 +303,21 @@ names(devIneqPovDF)
 # joining the data on WGI by country and region, development, social inequality, and poverty
 # (WGIdevIneqPovDF)
 WGIbyCountryAndRegion <- read.csv("WGIbyCountryAndRegion.csv")
-WGIdevIneqPovDF <- full_join(WGIbyCountryAndRegion, devIneqPovDF, by = c("country", "iso2c", "date"))
+WGIdevIneqPovDF <- left_join(WGIbyCountryAndRegion, devIneqPovDF, by = c("country", "iso2c", "date"))
 WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
-WGIdevIneqPovDF$date <- as.integer(WGIdevIneqPovDF$date)
+WGIdevIneqPovDF$date <- as.numeric(as.character(WGIdevIneqPovDF$date))
 head(WGIdevIneqPovDF)
 names(WGIdevIneqPovDF)
+
+# cleaning the dataframe WGIdevIneqPovDF
+library(VIM)
+summary(WGIdevIneqPovDF)
+WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, GINI, povertyHeadCount)
+# the first step in the data cleaning is to drop the observations without GDP growth (NAs = 136)
+missingGDPgrowth <- WGIdevIneqPovDF[WGIdevIneqPovDF$GDPannualGrowthRate == NA,]
+
+WGIdevIneqPovDF <- WGIdevIneqPovDF[- missingGDPgrowth, ]
+summary(WGIdevIneqPovDF)
 
 # # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
 # WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPovDF.csv")

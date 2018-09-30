@@ -187,3 +187,33 @@ ggplot(stabilityTrendRoW, aes(date, stabilityAnnualAverage)) +
   geom_line() + ylim(-1, 1)
 ```
 
+## Why Political Stability Matters: Simple Correlations Between Political Stability and Other Variables
+
+### Political Stability and Economic Performance
+
+```{r echo= FALSE}
+
+WGIdevIneqPovDF <- read.csv("WGIdevIneqPovDF.csv")
+WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
+
+# scaterplot of political stability and GDP annual growth
+plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$GDPannualGrowthRate)
+
+```
+
+
+
+```{r echo= FALSE}
+
+# scaterplot of political stability and GNI per capita
+
+plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$GNIperCapita)
+```
+
+
+
+
+```{r echo= FALSE}
+
+
+```
