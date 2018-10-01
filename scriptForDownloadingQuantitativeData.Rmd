@@ -238,6 +238,7 @@ library(caret)
 library(kernlab)
 library(stringr)
 library(knitr)
+library(tidyr)
 
 
 #data on GDP growth (annual %) (NY.GDP.MKTP.KD.ZG)
@@ -265,6 +266,11 @@ HDIDf <- tbl_df(HDIDf)
 HDIDf <- select(HDIDf, country, iso2c, date, HDI = value)
 HDIDf$date <- as.numeric(as.character(HDIDf$date))
 head(HDIDf)
+
+# # alternative dataset for HDI, downloaded directly from the UNDP Website (http://hdr.undp.org/en/data#), but it needs to be transformed and merged to World Bank data:
+# UNDP_HDI <- read_csv("UNDP.HDI.csv")
+# head(UNDP_HDI)
+
 
 #data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
 GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
@@ -312,17 +318,24 @@ names(WGIdevIneqPovDF)
 # cleaning the dataframe WGIdevIneqPovDF
 library(VIM)
 summary(WGIdevIneqPovDF)
-WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, GINI, povertyHeadCount)
-# the first step in the data cleaning is to drop the observations without GDP growth (NAs = 136)
-missingGDPgrowth <- WGIdevIneqPovDF[WGIdevIneqPovDF$GDPannualGrowthRate == NA,]
 
-WGIdevIneqPovDF <- WGIdevIneqPovDF[- missingGDPgrowth, ]
-summary(WGIdevIneqPovDF)
+# the first step in the data cleaning is to drop the columns with too much NAs: HDI 3085 out of 3471 obs, GINI 2432 out of 3471 obs, povertyHeadCount 2404 out of 3471 obs
+WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita)
+
+# the second step is to imput GNI per capita using knn (It is reasonable to consider that GNI per capita does not dramatically increase or decrease with a span of 5 years)
+
+WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF, variable = "GNIperCapita", k = 5)
+WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita)
+
+
+# the last step is to drop the observations with missing GDPgrowthRate (136)
+WGIdevIneqPovDF2 <- na.omit(WGIdevIneqPovDF2)
+summary(WGIdevIneqPovDF2)
 
 # # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
-# WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPovDF.csv")
+# WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPovDF.csv")
 # WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
-# 
+
 
 ```
 
