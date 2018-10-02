@@ -64,6 +64,14 @@ CAMEROON RESEARCH PROJECT
   . the data analysis starts with the stability average and stability trend around the world for the period of 1996 to 2016.
   
   . Next: the stability averages and trends by region
+
+
+
+## October 2018
+
+- 10/2/2018: I realized that the data on HDI and polity IV from the World Bank have a lot of missing values. Therefore, I decided to download directly the HDI data from the UNDP website and the data on polityScore directly from the Center for Systemic Peace. I took the whole day to do that and I couldn't continue the data analysis.
+
+
   
 
 

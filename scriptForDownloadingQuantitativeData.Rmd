@@ -259,18 +259,31 @@ GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, GNIperCapita = va
 GNIperCapitaDf$date <- as.numeric(as.character(GNIperCapitaDf$date))
 head(GNIperCapitaDf)
 
-#data on human development index (UNDP.HDI.XD)
-HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
-            startdate = 1996, enddate = 2018, POSIXct = TRUE)
-HDIDf <- tbl_df(HDIDf)
-HDIDf <- select(HDIDf, country, iso2c, date, HDI = value)
-HDIDf$date <- as.numeric(as.character(HDIDf$date))
-head(HDIDf)
+# #data on human development index (UNDP.HDI.XD)
+# HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
+#             startdate = 1996, enddate = 2018, POSIXct = TRUE)
+# HDIDf <- tbl_df(HDIDf)
+# HDIDf <- select(HDIDf, country, iso2c, date, HDI = value)
+# HDIDf$date <- as.numeric(as.character(HDIDf$date))
+# head(HDIDf)
+# summary(HDIDf)
 
-# # alternative dataset for HDI, downloaded directly from the UNDP Website (http://hdr.undp.org/en/data#), but it needs to be transformed and merged to World Bank data:
-# UNDP_HDI <- read_csv("UNDP.HDI.csv")
-# head(UNDP_HDI)
+# alternative dataset for HDI, downloaded directly from the UNDP Website (http://hdr.undp.org/en/data#), but it needs to be transformed and merged to World Bank data:
+UNDP_HDI <- read_csv("UNDP.HDI.csv")
+head(UNDP_HDI)
 
+UNDP_HDI <- UNDP_HDI %>% 
+  gather("1990",    "1991",    "1992",    "1993",    "1994",   "1995",  "1996",    "1997",    "1998",    "1999",    "2000",   "2001",    "2002",    "2003",    "2004",    "2005",    "2006",   "2007",    "2008",    "2009",    "2010",    "2011",    "2012",   "2013",    "2014",    "2015",    "2016", "2017", key = "year", value = "HDI")
+summary(UNDP_HDI)
+
+UNDP_HDI <- tbl_df(UNDP_HDI)
+UNDP_HDI <- filter(UNDP_HDI, year > 1995 & year < 2017)
+UNDP_HDI <- rename(UNDP_HDI, date = year)
+UNDP_HDI$date <- as.numeric(as.character(UNDP_HDI$date))
+UNDP_HDI2 <- arrange(UNDP_HDI, country, date)
+summary(UNDP_HDI2)
+
+unique(UNDP_HDI2$country)
 
 #data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
 GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
@@ -292,7 +305,7 @@ head(povHeadCountDF)
 
 # joining the data on development, social inequality, and poverty: devIneqPovDF
 devIneqPovDF <- full_join(GDPannualGrowthDF, GNIperCapitaDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., HDIDf, by = c("country", "iso2c", "date")) %>%
+  full_join(., UNDP_HDI2, by = c("country", "date")) %>%
   full_join(., GINIDf, by = c("country", "iso2c", "date")) %>%
   full_join(., povHeadCountDF, by = c("country", "iso2c", "date"))
   
@@ -319,17 +332,19 @@ names(WGIdevIneqPovDF)
 library(VIM)
 summary(WGIdevIneqPovDF)
 
-# the first step in the data cleaning is to drop the columns with too much NAs: HDI 3085 out of 3471 obs, GINI 2432 out of 3471 obs, povertyHeadCount 2404 out of 3471 obs
-WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita)
+# the first step in the data cleaning is to drop the columns with too much NAs: GINI 2432 out of 3471 obs, povertyHeadCount 2404 out of 3471 obs
+WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, HDI)
 
-# the second step is to imput GNI per capita using knn (It is reasonable to consider that GNI per capita does not dramatically increase or decrease with a span of 5 years)
+# the second step is to drop the observations with missing GDPgrowthRate (136), and then missing HDI (267)
+WGIdevIneqPovDF <- subset(WGIdevIneqPovDF, WGIdevIneqPovDF$GDPannualGrowthRate != "NA")
+WGIdevIneqPovDF <- subset(WGIdevIneqPovDF, WGIdevIneqPovDF$HDI != "NA")
+summary(WGIdevIneqPovDF)
+
+
+# the last step is to imput GNI per capita using kNN (It is reasonable to consider that GNI per capita does not dramatically increase or decrease with a span of 5 years)
 
 WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF, variable = "GNIperCapita", k = 5)
-WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita)
-
-
-# the last step is to drop the observations with missing GDPgrowthRate (136)
-WGIdevIneqPovDF2 <- na.omit(WGIdevIneqPovDF2)
+WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, HDI)
 summary(WGIdevIneqPovDF2)
 
 # # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
@@ -362,20 +377,32 @@ polityScoreDf <- rename(polityScoreDf, polityScore = value)
 polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
 head(polityScoreDf)
 
+# alternative dataset is Polity IV which can be directly downloaded from the Center for Systemic Peace website at: http://www.systemicpeace.org/inscrdata.html
+
+library(readxl)
+url <- "http://www.systemicpeace.org/inscr/p4v2017.xls"
+destfile <- "p4v2017.xls"
+curl::curl_download(url, destfile)
+polityIV2017 <- read_excel(destfile)
+View(polityIV2017)
+names(polityIV2017)
+
+# manipulating the data: selecting the variables of interest and filtering the years under consideration
+polityIV2017 <- polityIV2017 %>%
+  select("country",  "year", "democ", "autoc", "polity2", "durable", "xrreg", "xrcomp", "xropen", "xconst", "parreg", "parcomp", "exrec", "exconst", "polcomp", "prior", "emonth", "eday", "eyear", "eprec", "interim", "bmonth", "bday", "byear", "bprec", "post", "change", "d4", "sf", "regtrans") %>%
+  filter(year > 1995)
+
+polityScoreDf <- polityIV2017
+polityScoreDf <- tbl_df((polityScoreDf))
+polityScoreDf <- rename(polityScoreDf, polityScore = polity2, date = year)
+polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
+
 # creating a new variable for polity category (polityCategory)
 polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
 head(polityScoreDf)
 
-# creating a new variable for political change: either "democratization" if the polityScore increase from year1 to year1 + 1, "autocratization" if the polityScore decreas, or "no change" if it
+# creating a new variable for politicalChange: either "democratization" if the polityScore increases from year1 to year1 + 1, "autocratization" if the polityScore decreases, or "no change" if the polityScore stays the same from year1 to year1 + 1.
 
-
-polityScoreDf <- polityScoreDf %>% 
-  group_by(country) %>% 
-  mutate(politicalChange = if_else(polityScore > lag(polityScore), "democratization", 
-                                  ifelse(polityScore < lag(polityScore), "autocratization", "no change")))
-head(polityScoreDf)
-
-# alternative coding working well and produced the new variable
 polityScoreDf <- polityScoreDf %>% 
   group_by(country) %>% 
   mutate(politicalChange = case_when(polityScore > lag(polityScore) ~ "democratization", 
@@ -383,19 +410,52 @@ polityScoreDf <- polityScoreDf %>%
                                      TRUE ~ "no change"))
 head(polityScoreDf)
 
-#data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
-democracyDf <- wb(country = "countries_only", indicator = "UPP.INS.DEMO.XQ", 
-                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
-democracyDf <- select(democracyDf, country, iso2c, date, value)
-democracyDf <- rename(democracyDf, democracyInst = value)
-head(democracyDf)
+# In order to be consistent throughout the data collection and analysis we need to change the names of the following countries to align them with the list of countries in the World Bank dataframes.
 
-#data on political system, Institutionalized autocracy (UPP.INS.AUTO.XQ) - see Polity IV
-autocracyDf <- wb(country = "countries_only", indicator = "UPP.INS.AUTO.XQ", 
-                  startdate = 1996, enddate = 2018, POSIXct = TRUE)
-autocracyDf <- select(autocracyDf, country, iso2c, date, value)
-autocracyDf <- rename(autocracyDf, autocracyInst = value)
-head(autocracyDf)
+# The following country names have been changed:
+
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Sudan-North", "Sudan")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Ivory Coast", "Cote d'Ivoire")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Cote D'Ivoire", "Cote d'Ivoire")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Gambia", "Gambia, The")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Cape Verde", "Cabo Verde")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Congo Brazzaville", "Congo, Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Congo Kinshasa", "Congo, Dem. Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Egypt", "Egypt, Arab Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Syria", "Syrian Arab Republic")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Iran", "Iran, Islamic Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Kyrgyzstan", "Kyrgyz Republic")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Korea North", "Korea, Dem. People's Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Russia", "Russian Federation")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Korea South", "Korea, Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "UAE", "United Arab Emirates")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Yemen", "Yemen, Rep.")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Taiwan", "Taiwan, China")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "East Timor", "Timor-Leste")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Timor Leste", "Timor-Leste")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Myanmar (Burma)", "Myanmar")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Taiwan", "Taiwan, China")
+
+# The following country names have been deleted:
+
+polityScoreDf <- polityScoreDf[! polityScoreDf$country == "Yugoslavia",]
+polityScoreDf <- polityScoreDf[! polityScoreDf$country == "Serbia and Montenegro",]
+polityScoreDf <- polityScoreDf[! polityScoreDf$country == "Czechoslovakia",]
+
+head(polityScoreDf)
+
+# joining the Freedom House data with the data on region and subregion with iso2c
+
+polityScoreByRegionDF <- left_join(polityScoreDf, regionSubregionDf, by = "country")
+polityScoreByRegionDF <- tbl_df(polityScoreByRegionDF)
+names(polityScoreByRegionDF)
+
+polityScoreByRegionDF <- select(polityScoreByRegionDF, country, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, prior, emonth, eday, eyear, eprec, interim, bmonth, bday, byear, bprec, post, change, d4, sf, regtrans, polityCategory, politicalChange, region, subregion)
+
+head(polityScoreByRegionDF)
+str(polityScoreByRegionDF)
+
+
 
 # downloadong the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
  
@@ -412,7 +472,7 @@ names(freedomHouseDF)
 freedomHouseDF <- select(freedomHouseDF, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean, sum)
 freedomHouseDF <- filter(freedomHouseDF, year>= 1996)
 freedomHouseDF <- rename(freedomHouseDF, date = year)
-freedomHouseDF$date <- as.character(freedomHouseDF$date)
+freedomHouseDF$date <- as.numeric(as.character(freedomHouseDF$date))
 head(freedomHouseDF)
 
 
@@ -482,19 +542,29 @@ freedomHouseByRegionDF <- select(freedomHouseByRegionDF, country, iso2c, iso3c, 
 head(freedomHouseByRegionDF)
 str(freedomHouseByRegionDF)
 
+# creating a new variable for politicalChangeFH: either "democratization" if the inverse_mean increases from year1 to year1 + 1, "autocratization" if the inverse_mean decreases, or "no change" if the inverse_mean stays the same from year1 to year1 + 1.
+
+freedomHouseByRegionDF <- freedomHouseByRegionDF %>% 
+  group_by(country) %>% 
+  mutate(politicalChangeFH = case_when(inverse_mean > lag(inverse_mean) ~ "democratization", 
+                                     inverse_mean < lag(inverse_mean) ~ "autocratization",
+                                     TRUE ~ "no change"))
+head(freedomHouseByRegionDF)
+
 
 #joining the data on political stability and regime types indicators (regimeTypeDf)
 WGIregimeTypeByRegionDF <- left_join(WGIbyCountryAndRegion, polityScoreDf, by = c("country", "date")) %>%
   left_join(., democracyDf, by = c("country", "date")) %>%
   left_join(., autocracyDf, by = c("country", "date")) %>%
-  left_join(., freedomHouseDF, by = c("country", "date"))
+  left_join(., freedomHouseByRegionDF, by = c("country", "date"))
 
 WGIregimeTypeByRegionDF <- tbl_df(WGIregimeTypeByRegionDF)
-WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, iso3c, M49Code, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, democracyInst, autocracyInst, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, region, subregion)
+WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, polityScore, polityCategory, democracyInst, autocracyInst, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
 
 head(WGIregimeTypeByRegionDF)
 names(WGIregimeTypeByRegionDF)
 str(WGIregimeTypeByRegionDF)
+summary(WGIregimeTypeByRegionDF)
 
 ```
 
