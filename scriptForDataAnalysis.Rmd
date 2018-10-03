@@ -226,6 +226,34 @@ abline(h = 0, lwd = 1.5)
 
 ```
 
+
+
+```{r}
+# plotting the trend of political stability of the world using ggplot
+stabilityAnAv <- WGIbyCountryAndRegion %>%
+  group_by(date) %>%
+  summarise(stabilityAnnualAverage = mean(stability))
+            
+ggplot(stabilityAnAv, aes(x = date, y = stabilityAnnualAverage)) +
+  geom_line() +
+  xlim(1995, 2016) + 
+  ylim(-0.5, .5)
+
+
+```
+
+```{r}
+# plotting the trend of political stability by region using ggplot
+stabilityTrendByRegion <- WGIbyCountryAndRegion %>%
+  group_by(region, date) %>%
+  summarise(stabilityTrend = mean(stability))
+            
+ggplot(stabilityTrendByRegion, aes(x = date, y = stabilityTrend, color = region)) +
+  geom_line() +
+  geom_hline(yintercept=0) 
+
+```
+
 ## Why Political Stability Matters: Simple Correlations Between Political Stability and Other Variables
 
 ### Political Stability and Economic Performance
@@ -235,11 +263,30 @@ abline(h = 0, lwd = 1.5)
 WGIdevIneqPovDF <- read.csv("WGIdevIneqPovDF.csv")
 WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
 
-# scaterplot of political stability and GDP annual growth
+```
+
+```{r}
+
+# scaterplot of political stability and GDP annual growth average
+
 plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$GDPannualGrowthRate)
+abline(h = 0, lwd = 1.5)
 
 ```
 
+
+```{r}
+
+# scaterplot of political stability and GDP annual growth average by country using ggplot
+
+gdpGrowth <- WGIdevIneqPovDF %>%
+  group_by(country, date) %>%
+  summarise(gdpGrowthAverage = mean(GDPannualGrowthRate),
+            stabilitAverage = mean(stability))
+
+ggplot(gdpGrowth, aes(x=stabilitAverage, y=gdpGrowthAverage)) +
+  geom_point()
+```
 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -247,6 +294,41 @@ plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$GDPannualGrowthRate)
 # scaterplot of political stability and GNI per capita
 
 plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$GNIperCapita)
+
+
 ```
 
 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# scaterplot of political stability and GNI per capita using ggplot
+
+ggplot(WGIdevIneqPovDF, aes(stability, y = GNIperCapita)) +
+  geom_point() +
+  geom_smooth()
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# scaterplot of political stability and HDI
+
+plot(WGIdevIneqPovDF$stability, WGIdevIneqPovDF$HDI)
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# scaterplot of political stability and HDI using ggplot
+
+ggplot(WGIdevIneqPovDF, aes(stability, y = HDI)) +
+  geom_point() +
+  geom_smooth()
+
+
+```
