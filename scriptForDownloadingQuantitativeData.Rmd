@@ -211,7 +211,7 @@ summary(WGIbyCountryAndRegion)
 
 # cleaning the dataset: 
 # the summary function shows that more than 80% of the data are missing in the following variables. So we decided to exclude these variables from this research project: corruptionControl, governmentEffectiveness, ruleOfLaw, voiceAndAccountability.
-# here is the clean data on WGI by country and region:
+# here is the clean data on WGI by country and region which is available in the local repository under "WGIbyCountryAndRegion.csv"
 
 WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion)
 WGIbyCountryAndRegion <- na.omit(WGIbyCountryAndRegion)
@@ -343,14 +343,16 @@ summary(WGIdevIneqPovDF)
 
 # the last step is to imput GNI per capita using kNN (It is reasonable to consider that GNI per capita does not dramatically increase or decrease with a span of 5 years)
 
+# clean data on WGI and development, inequality and poverty = WGIregimeTypeByRegionDF2, which is available in the local repository under "WGIdevIneqPov.csv"
+
 WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF, variable = "GNIperCapita", k = 5)
 WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, HDI)
 summary(WGIdevIneqPovDF2)
 
 # # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
-# WGIdevIneqPovDF <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPovDF.csv")
-# WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
-
+# 
+# WGIdevIneqPov <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPov.csv")
+# 
 
 ```
 
@@ -368,14 +370,14 @@ library(kernlab)
 library(stringr)
 library(knitr)
 
-# data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
-polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
-                    startdate = 1996, enddate = 2018, POSIXct = TRUE)
-polityScoreDf <- tbl_df(polityScoreDf)
-polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
-polityScoreDf <- rename(polityScoreDf, polityScore = value)
-polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
-head(polityScoreDf)
+# # data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
+# polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
+#                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+# polityScoreDf <- tbl_df(polityScoreDf)
+# polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
+# polityScoreDf <- rename(polityScoreDf, polityScore = value)
+# polityScoreDf$date <- as.numeric(as.character(polityScoreDf$date))
+# head(polityScoreDf)
 
 # alternative dataset is Polity IV which can be directly downloaded from the Center for Systemic Peace website at: http://www.systemicpeace.org/inscrdata.html
 
@@ -384,7 +386,7 @@ url <- "http://www.systemicpeace.org/inscr/p4v2017.xls"
 destfile <- "p4v2017.xls"
 curl::curl_download(url, destfile)
 polityIV2017 <- read_excel(destfile)
-View(polityIV2017)
+head(polityIV2017)
 names(polityIV2017)
 
 # manipulating the data: selecting the variables of interest and filtering the years under consideration
@@ -443,6 +445,7 @@ polityScoreDf <- polityScoreDf[! polityScoreDf$country == "Serbia and Montenegro
 polityScoreDf <- polityScoreDf[! polityScoreDf$country == "Czechoslovakia",]
 
 head(polityScoreDf)
+names(polityScoreDf)
 
 # joining the Freedom House data with the data on region and subregion with iso2c
 
@@ -453,7 +456,7 @@ names(polityScoreByRegionDF)
 polityScoreByRegionDF <- select(polityScoreByRegionDF, country, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, prior, emonth, eday, eyear, eprec, interim, bmonth, bday, byear, bprec, post, change, d4, sf, regtrans, polityCategory, politicalChange, region, subregion)
 
 head(polityScoreByRegionDF)
-str(polityScoreByRegionDF)
+names(polityScoreByRegionDF)
 
 
 
@@ -553,20 +556,95 @@ head(freedomHouseByRegionDF)
 
 
 #joining the data on political stability and regime types indicators (regimeTypeDf)
-WGIregimeTypeByRegionDF <- left_join(WGIbyCountryAndRegion, polityScoreDf, by = c("country", "date")) %>%
-  left_join(., democracyDf, by = c("country", "date")) %>%
-  left_join(., autocracyDf, by = c("country", "date")) %>%
+WGIregimeTypeByRegionDF <- left_join(WGIbyCountryAndRegion, polityScoreByRegionDF, by = c("country", "date")) %>%
   left_join(., freedomHouseByRegionDF, by = c("country", "date"))
 
 WGIregimeTypeByRegionDF <- tbl_df(WGIregimeTypeByRegionDF)
-WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, polityScore, polityCategory, democracyInst, autocracyInst, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
+
+WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, M49Code = M49Code.x, iso3c = iso3c.x, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
 
 head(WGIregimeTypeByRegionDF)
 names(WGIregimeTypeByRegionDF)
 str(WGIregimeTypeByRegionDF)
 summary(WGIregimeTypeByRegionDF)
 
+# clean data on regime type
+
+# step 1: remove 210 rows with NAs for Freedom House data
+WGIregimeTypeByRegionDF <- WGIregimeTypeByRegionDF %>%
+  filter(pr != "NA")
+
+# Step 2: remove 456 rows with NAs for polity IV data
+WGIregimeTypeByRegionDF <- WGIregimeTypeByRegionDF %>%
+  filter(polityScore != "NA")
+
+# clean WGIregimeTypeByRegionDF = WGIregimeTypeByRegionDF2 which is available in the local repository under "WGIregimeTypeByRegion.csv"
+
+WGIregimeTypeByRegionDF2 <- WGIregimeTypeByRegionDF
+head(WGIregimeTypeByRegionDF2)
+summary(WGIregimeTypeByRegionDF2)
+
+# # making the data on regime type available in the local repository
+# 
+# WGIregimeTypeByRegion <- write.csv(WGIregimeTypeByRegionDF2, "WGIregimeTypeByRegion.csv")
+
+
 ```
 
+## Joining all dataframes on WGI, econimic and social indicators and regime types
 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+
+# reading the clean data on WGI: "WGIbyCountryAndRegion.csv" 
+WGIbyCountryAndRegion <- read_csv("WGIbyCountryAndRegion.csv")
+head(WGIbyCountryAndRegion)
+summary(WGIbyCountryAndRegion)
+
+# reading the clean data on economic and social indicators: "WGIdevIneqPov.csv"
+WGIdevIneqPov <- read_csv("WGIdevIneqPov.csv")
+head(WGIdevIneqPov)
+summary(WGIdevIneqPov)
+
+# reading the clean data on regime type WGIregimeTypeByRegion: "WGIregimeTypeByRegion.csv"
+WGIregimeTypeByRegion <- read_csv("WGIregimeTypeByRegion.csv")
+head(WGIregimeTypeByRegion)
+summary(WGIregimeTypeByRegion)
+
+# joining WGI with devIneqPov and regimeType:
+WGIdevRegimeType <- left_join(WGIbyCountryAndRegion, WGIdevIneqPov, by = c("country", "date")) %>%
+  left_join(., WGIregimeTypeByRegion, by = c("country", "date"))
+
+WGIdevRegimeType <- select(WGIdevRegimeType, country, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, GDPannualGrowthRate, GNIperCapita, HDI, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+
+# clean the complete dataset
+
+# step 1: remove 403 rows with NAs for GNI per capita and HDI
+WGIdevRegimeType <- WGIdevRegimeType %>%
+  filter(GNIperCapita != "NA")
+
+# Step 2: remove 422 rows with NAs for polity IV and Freedom House data
+WGIdevRegimeType <- WGIdevRegimeType %>%
+  filter(polityScore != "NA")
+
+head(WGIdevRegimeType)
+names(WGIdevRegimeType)
+summary(WGIdevRegimeType)
+
+# clean WGIdevRegimeType is available in the local repository under "WGIdevRegimeType.csv"
+
+WGIdevRegimeType <- write.csv(WGIdevRegimeType, "WGIdevRegimeType.csv")
+
+
+
+```
 
