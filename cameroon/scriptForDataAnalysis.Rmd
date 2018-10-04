@@ -1,35 +1,226 @@
 ---
-title: 'Cameroon Case Study: Script for Data Analysis'
+title: 'Case Study on Cameroon'
 author: "Adrien Ratsimbaharison"
 date: "9/28/2018"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Political Stability Average and General Trend
-
-
-```{r}
+```{r message=FALSE, warning=FALSE, include=FALSE}
+# reading the data on Cameroon
+library(readr)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 
-
-WGIcameroonDF <- read.csv("WGIcameroonDF.csv")
-head(WGIcameroonDF)
-WGIcameroonDF <- tbl_df(WGIcameroonDF)
-
-# Average
-
-boxplot(WGIcameroonDF$stability)
-
-
-# General Trend since 1996
-
-ggplot(WGIcameroonDF, aes(x= date, y = stability), xlim = c(1996, 2016), ylim = c(-2, 2)) +
-  geom_line(size = 1.5)
+WGIdevRegimeType <- read_csv("WGIdevRegimeType.csv")
+cameroon <- WGIdevRegimeType %>%
+  filter(country == "Cameroon")
+head(cameroon)
+summary(cameroon)
 
 ```
+### Abstract
+
+
+## Introduction
+
+
+### Literature Review
+
+
+
+### Research Questions
+
+1) The regime has been unstable since the mid-1990s, but how did it manage to survive and prevent the escalation of conflict to crisis and civil war for so long?
+
+2) The figure on stability trend shows two clear tendencies: first, a tendency toward stabilization between 1995 and 2005, second, a tendency toward destabilization since 2005, with a period of high instability and crisis (stability score lower than -1) in 2014-2015. So how can  we explain these two tendencies? What did the regime or the opposition do during the stabilization period? What did the regime or the opposition do during the destabilization period?
+
+### Methodology
+
+This research project combine both quantitative research and qualitative research methods.
+
+The quantitative data are collected from available data online provided by different organization such as the World Bank, The United Nations Development Progammes (UNDP), the Center for Systemic Peace (Polity IV Project), Freedom House. The data are managed and analyzed in R with different packages.
+
+The qualitative data consist of new reports and analysis provided by different organizations, new agencies and various analysts and scholars. The data are mostly available online.They are managed and analyzed coded using `RQDA` software,  following the "grounded theory" methodology.
+
+
+## Political Stability Average and Trend for Cameroon
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Summary statistics
+summary(cameroon$stability)
+
+
+# Boxplot of the political stability
+boxplot(cameroon$stability)
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# General trend of political stability since 1996
+
+stabilityTrend <- ggplot(cameroon, aes(x= date, y = stability)) +
+  geom_line(color = "blue", size = 1.5) +
+  geom_hline(yintercept=0, linetype="dashed", color = "red", size=2) +
+  geom_hline(yintercept=-1.0, linetype="dotted", color = "black", size=2) +
+  xlim(1996, 2016) +
+  ylim(-1.5, 1)
+
+stabilityTrend
+```
+
+## Correlations between Political Stability and the Economic and Social Indicators
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# summary statistics of the GNI per capita
+
+summary(cameroon$GNIperCapita)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# General trend of GNI per capita since 1996
+
+ggplot(cameroon, aes(x= date, y = GNIperCapita)) +
+  geom_line(color = "blue", size = 1.5) +
+  ylim(0, 1500)
+
+```
+
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# summary statistics of the HDI
+
+summary(cameroon$HDI)
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# General trend of HDI since 1996
+
+ggplot(cameroon, aes(x= date, y = HDI)) +
+  geom_line(color = "red", linetype="dashed", size = 1.5) +
+  ylim(0.0, 0.9)
+
+```
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# correlation test between stability and GNI per capita and HDI
+
+cameroonEcoSoc <- cameroon %>%
+  select(stability, GNIperCapita, HDI)
+
+cor.test(cameroon$stability, cameroon$GNIperCapita)
+
+cor.test(cameroon$stability, cameroon$HDI)
+
+
+```
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# plotting the correlation between stability and GNI per capita and HDI
+
+cameroonEcoSoc <- cameroon %>%
+  select(stability, GNIperCapita, HDI)
+
+
+plot(cameroonEcoSoc)
+
+```
+
+
+
+## Correlations between Political Stability and the Regime Type Indicators
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# summary statistics of the polityScore
+
+summary(cameroon$polityScore)
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# General trend of polityScore since 1996
+
+ggplot(cameroon, aes(x= date, y = polityScore)) +
+  geom_line(color = "blue", size = 1.5) +
+  ylim(-10, 10)
+
+```
+
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# summary statistics of the Freedom House reversed combined score
+
+summary(cameroon$inverse_mean)
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# General trend of the Freedom House reversed combined score
+
+ggplot(cameroon, aes(x= date, y = inverse_mean)) +
+  geom_line(color = "red", linetype="dashed", size = 1.5) +
+  ylim(0.0, 7)
+
+```
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# correlation test between stability and polityScore and Freedom House's inversed combined scores of political rights and civil liberty
+
+cor.test(cameroon$stability, cameroon$polityScore)
+
+cor.test(cameroon$stability, cameroon$inverse_mean)
+
+
+```
+
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Scatterplot of the correlations between stability and regime type indicators
+
+cameroonRegimeType <- cameroon %>%
+  select(stability, polityScore, democ, autoc, inverse_pr, inverse_cl, inverse_mean)
+
+plot(cameroonRegimeType)
+
+```
+
+
+
+
+
+
