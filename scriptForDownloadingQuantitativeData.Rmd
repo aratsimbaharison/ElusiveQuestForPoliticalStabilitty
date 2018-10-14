@@ -640,10 +640,10 @@ head(WGIdevRegimeType)
 names(WGIdevRegimeType)
 summary(WGIdevRegimeType)
 
-# clean WGIdevRegimeType is available in the local repository under "WGIdevRegimeType.csv"
-
-WGIdevRegimeType <- write.csv(WGIdevRegimeType, "WGIdevRegimeType.csv")
-
+# # clean WGIdevRegimeType is available in the local repository under "WGIdevRegimeType.csv"
+# 
+# WGIdevRegimeType <- write.csv(WGIdevRegimeType, "WGIdevRegimeType.csv")
+# 
 
 
 ```

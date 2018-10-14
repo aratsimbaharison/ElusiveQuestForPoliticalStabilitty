@@ -1,0 +1,42 @@
+---
+title: 'Chapter 1 - Introduction: \ 
+
+Political Stability, Instability and Crisis: What Are They and
+  Why Do They Matter?'
+author: "Adrien Ratsimbaharison"
+date: "10/14/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Political Stability, Instability and Crisis: Some Elusive Definitions
+
+- Some Early Attempts to Assess the Stability of Political Systems
+
+what is supposed to be stable? the **political system** or **regime** or the **government** or **leadership**?
+
+
+
+- Some Competing Concepts: "political order/disorder", "rogue state" and "failed state", "fragile state"
+
+
+
+- "Political Stability" as "Likelihood of Regime Survival"
+
+
+
+## Why Do Political Stability, Instability and Crisis Matter?
+
+
+
+## The Purpose and Argument of the Book
+
+
+
+## The Plan of the Book
+
+
+

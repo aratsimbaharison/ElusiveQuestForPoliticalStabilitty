@@ -80,9 +80,9 @@ CAMEROON RESEARCH PROJECT
 
 3) the clean data on regime type WGIregimeTypeByRegion: "WGIregimeTypeByRegion.csv"
 
+- 10/5 to 10/14/2018: I read John Creswell's textbook on mixed methods research (A Concise Introduction to Mixed Methods Research, 2015) and decided to write the introduction following his guidelines. I also completed some basic courses on machine learning with DataCamp, especially the Machine Learning Toolbox with Max Khun (the author of the caret package in r).
 
-- Next step: continue the data analysis and start writing Chapter 1 and 2:
-
+- Next: during the week of 10/15, I will start writing Chapter 1, following the guideline of John Creswell.
 
 
 
