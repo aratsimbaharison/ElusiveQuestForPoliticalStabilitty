@@ -3,11 +3,11 @@ title: "Quantitative Data Analysis"
 author: "Adrien Ratsimbaharison"
 date: "9/29/2018"
 output:
+  html_document: default
+  pdf_document: default
   word_document: 
     fig_caption: yes
     toc: yes
-  pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -260,7 +260,7 @@ ggplot(stabilityTrendByRegion, aes(x = date, y = stabilityTrend, color = region)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
-WGIdevIneqPovDF <- read.csv("WGIdevIneqPovDF.csv")
+WGIdevIneqPovDF <- read.csv("WGIdevIneqPov.csv")
 WGIdevIneqPovDF <- tbl_df(WGIdevIneqPovDF)
 
 ```

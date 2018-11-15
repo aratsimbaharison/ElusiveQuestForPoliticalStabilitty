@@ -46,11 +46,11 @@ Now I need to move to some serious stuff.
 
 - I will still need to clean the data before analysis.
 
-CAMEROON RESEARCH PROJECT
+CAMEROON RESEARCH PROJECT (with Ben Bongang)
 
 - 9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.
 
-  . I downloaded tge WGI for Cameroon
+  . I downloaded the WGI for Cameroon
   
   . I downloaded the economic and social indicators from the World Bank
   
@@ -84,5 +84,20 @@ CAMEROON RESEARCH PROJECT
 
 - Next: during the week of 10/15, I will start writing Chapter 1, following the guideline of John Creswell.
 
+## November 2018
+
+- Between 10/ and 11/15, I read the following books and articles:
+
+1) Creswell, J. W. (2015). A Concise Introduction to Mixed Methods Research. Los Angeles, CA: SAGE.
+2) Woodward, S. L. (2017). The Ideology of Failed States: Why Intervention Fails. Cambridge, UK: Cambridge University Press.
+3) Ezrow, N. M., & Frantz, E. (2013). Failed States and Institutional Decay: Understanding Instability and Poverty in the Developing World. New York, NY: Bloomsbury Academic.
+4) Kaufmann, D., Kraay, A., & Mastruzzi, M. (2011). The Worldwide Governance Indicators: Methodology and Analytical Issues (Policy Research Working Paper 5430 No. 1876–4053). Washington, DC: The World Bank. Retrieved from http://ssrn.com/abstract=1682130
+5) Goldstone, J. A., Bates, R. H., Epstein, D. L., Gurr, T. R., Lustik, M. B., Marshall, M. G., … Woodward, M. (2010). A Global Model for Forecasting Political Instability. American Journal of Political Science, 54(1), 190–208.
+6) Gates, S., Hegre, H., Jones, M. P., & Strand, H. (2006). Institutional Inconsistency and Political Instability: Polity Duration, 1800–2000. American Journal of Political Science, 50(4), 893–908. https://doi.org/10.1111/j.1540-5907.2006.00222.x
+
+- 11/15/2018: I go back to writing Chapter 1, focusing particularly on literature review:
+
+  *  on how "political stability" has been defined and operationalized by previous authors
+  *  on why "political stability" is important for African political leaders and people, as well as for the international community, starting with the African Union, the United Nations, and the international donors
 
 
