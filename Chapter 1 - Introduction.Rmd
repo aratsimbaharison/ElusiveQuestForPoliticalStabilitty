@@ -6,6 +6,7 @@ Political Stability, Instability and Crisis: What Are They and
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output: html_document
+bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Political Stability in Contemporary African Politics
 
+Political stability is a situation or environment that almost all actors involved in anything related to Africa desire for the continent. Indeed, political stability is assumed to be a favorable condition for the economic development of any country in the world. It is also an ideal condition for a healthy and prosperous life of any citizen of any country.
 
+Thus, in the preamble of its Constitutive Charter, the African Union cites as a major motivation for the creation of the organization: "the fact that the scourge of conflicts in Africa constitutes a major impediment to the socio-economic development of the continent and of the need to promote peace, security and stability as a prerequisite for the implementation of our development and integration agend" [@africanunionConstitutiveActAfrican2000, Preamble]. Consequently, one of the main objectives of the African Union is "to promote peace, security, and stability on the continent" [@africanunionConstitutiveActAfrican2000, Article 3.f]. For the African people in general, political stability can be considered one of the public goods that they need to live a decent life, free from the attacks of terrorists, and free from the uncertainty of national and international markets.   
+
+For the international donors, political stability in Africa has been also a major concern since the end of the Cold War. Particularly, international organizations, such as the World Bank and the United Nations Development Programme, convinced that Africa would not develop without political stability, have undertaken and supported countless research projects and publications on this issue.   
+
+Yet, as of today, Africa is still the most unstable region of the world, and stability appears to be more elusive than ever on the continent. 
 
 
 ## Political Stability, Instability and Crisis: Some Elusive Definitions
@@ -38,9 +45,12 @@ what is supposed to be stable? the **political system** or **regime** or the **g
 
 ## The Purpose and Argument of the Book
 
+The main objective of this book is to identify the conditions or determinants of political instability, along with the actors behaviors that trigger or escalate conflicts, considered to be the main source of political instability.
+
 
 
 ## The Plan of the Book
 
 
+## References
 
