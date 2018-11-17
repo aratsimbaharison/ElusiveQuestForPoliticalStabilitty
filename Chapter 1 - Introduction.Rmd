@@ -1,29 +1,41 @@
 ---
-title: 'Chapter 1 - Introduction: \ 
-
-Political Stability, Instability and Crisis: What Are They and
-  Why Do They Matter?'
+title: "Chapter 1 - Political Stability: What Is It and Why Does It Matter?"
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## Political Stability in Contemporary African Politics
+## Political Stability and the African Development
 
-Political stability is a situation or environment that almost all actors involved in anything related to Africa desire for the continent. Indeed, political stability is assumed to be a favorable condition for the economic development of any country in the world. It is also an ideal condition for a healthy and prosperous life of any citizen of any country.
+No matter how it is defined and measured, it is now widely accepted that political stability (or, its opposite, political instability) has tremendous impacts on the economic growth and the general wellbeing of the people in any country in the world. [@aisenHowDoesPolitical2011; @alesinaPoliticalInstabilityEconomic1996; and @roePoliticalInstabilityEffects2011] Given these tremendous impacts, any actor at any level (local, national, and international), involved in any aspect of development in Africa, is seeking political stability for the continent.  
 
-Thus, in the preamble of its Constitutive Charter, the African Union cites as a major motivation for the creation of the organization: "the fact that the scourge of conflicts in Africa constitutes a major impediment to the socio-economic development of the continent and of the need to promote peace, security and stability as a prerequisite for the implementation of our development and integration agend" [@africanunionConstitutiveActAfrican2000, Preamble]. Consequently, one of the main objectives of the African Union is "to promote peace, security, and stability on the continent" [@africanunionConstitutiveActAfrican2000, Article 3.f]. For the African people in general, political stability can be considered one of the public goods that they need to live a decent life, free from the attacks of terrorists, and free from the uncertainty of national and international markets.   
+Thus, in the preamble of its Constitutive Charter, the African Union points out as a major motivation for the creation of the organization: "the fact that the scourge of conflicts in Africa constitutes a major impediment to the socio-economic development of the continent and of the need to promote peace, security and stability as a prerequisite for the implementation of our development and integration agend" [@africanunionConstitutiveActAfrican2000, Preamble]. Consequently, one of the main objectives of the African Union is "to promote peace, security, and stability on the continent" [@africanunionConstitutiveActAfrican2000, Article 3.f]. For the international donors, political stability in Africa has been also a major concern since the end of the Cold War. Particularly, international organizations, such as the World Bank and the United Nations Development Programme, convinced that Africa would not develop without political stability, have undertaken and supported countless research projects and publications on this issue. Some of the major research projects sponsored by the World Bank were those undertaken by Paul Collier and his associates on "Understanding Civil War" [@collierUnderstandingCivilWar2005] and "Breaking the Conflict Trap: Civil War and Development Policy" [@collierBreakingConflictTrap2003a]. Particularly, the World Development Report for the year 2011 was devoted to "Conflict, Security, and Development." [@worldbankWorldDevelopmentReport2011a]
 
-For the international donors, political stability in Africa has been also a major concern since the end of the Cold War. Particularly, international organizations, such as the World Bank and the United Nations Development Programme, convinced that Africa would not develop without political stability, have undertaken and supported countless research projects and publications on this issue.   
-
-Yet, as of today, Africa is still the most unstable region of the world, and stability appears to be more elusive than ever on the continent. 
+Yet, as of the writing of this book, Africa is still the most unstable region of the world, and stability appears to be more elusive than ever on the continent. 
 
 
-## Political Stability, Instability and Crisis: Some Elusive Definitions
+## Political Stability: An Elusive Definition
+
+What exactly is political stability (or instability)? The definition and measurement of the concept of political stability (or instability) has become controversial over the years, and no one seems to be able to come up with a consensual definition and measurement yet at this time. Thus, while some authors simply identify political instability with "different types of conflicts" [See, for instance, @goldstoneGlobalModelForecasting2010] and political stability with lack of conflict or the ability of political systems to "prevent conflict" [@reynal-querolPoliticalSystemsStability2002, p. 465]; an early formal definition proposed by Claude Ake simply states that "political stability is the regularity of the flow of political exchanges" [@akeDefinitionPoliticalStability1975, p. 273]. Furthermore, a more recent examination of the concept of political instability "using 25 political instability indicators in an Exploratory Factor Analysis," allowed Richard Jong-A-Pin to suggest four dimensions of political instability:  "(1) politically motivated violence, (2) mass civil protest, (3) instability within the political regime, and (4) instability of the political regime." [@jong-a-pinMeasurementPoliticalInstability2009, p. 16] 
+
+
+Nevertheless, despite the lack of a consensual definition, and despite the believe held by some authors that "stability cannot be quantified and that there are thus no degrees of stability."[@dowdingMeaningUsePolitical1983], various authors try to operationalize the concept of political stability (or instability) use different types of measurement.  Thus, some of the most commonly used measurements of political stability or instability are the frequencies of cabinet changes and regime change or durability.  The long list of various authors who took this route include, for instance, Alberto Alesina and his associates in their investigation of "the relationship between political instability and per capita GDP growth,"[^8] H?vard Hegre and his associates in the study on the association between regime type and national security.[^9] 
+
+More recently, however, Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi, working on the World Governance Indicators (WGI) project for the World Bank, suggest a direct measurement of the concept of political stability using agent perception.[^10] Without specifically defining the concept of political stability, the authors consider it as one of the "six dimensions of governance," which include: "Voice and Accountability, Political Stability and Absence of Violence/Terrorism, Government Effectiveness, Regulatory Quality, Rule of Law, and Control of Corruption."[^11] Moreover, they state that the "Political Stability and Absence of Violence/Terrorism" indicator captures "perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically-motivated violence and terrorism." Furthermore, concerning the measurement of this concept and the other concepts used as "dimensions of governance," they provide the following explanation:
+
+> In the WGI project we rely exclusively on perceptions-based governance data sources. Our data sources include surveys of firms and households, as well as the subjective assessments of a variety of commercial business information providers, non-governmental organizations, and a number of multilateral organizations and other public-sector bodies.[^12] 
+
+After comparing Kaufmann et al.'s definition and measurement of political stability with those of other scholars, I decide to adopt the former's definition and measurement in this paper and in my research project on political stability in Africa for two main reasons. First, since the concept of stability is highly subjective, it makes sense to use the measurement technique based on intersubjectivity, which is commonly used in qualitative research methods.[^15] Second, Kaufmann et al. were able to build a consistent data set on political stability for most countries in the world since 1996, that can be accessed through the World Bank's database.[^13]   
+
+Concerning the conditions associated with political stability and conflict in general, James C. Davies revived in the 1960s the theory of rising expectation, which was already formulated since the 1800s by Alexis de Toqueville and others.[^16] Thus, according to Davies, "revolutions [as symptoms par excellence of political instability] are most likely to occur when a prolonged period of objective economic and social development is followed by a short period of sharp reversal."[^17] With regard to the political conditions, Hegre and his associates established recently that "semidemocracies [or partly free countries] are more likely to experience civil war [or violent political conflict in general] than either democracies or autocracies."[^18] We will explore in this paper the governance, socioeconomic, and political, conditions that may be associated with politica stability (or instability).    
+
+
 
 - Some Early Attempts to Assess the Stability of Political Systems
 
@@ -50,6 +62,7 @@ The main objective of this book is to identify the conditions or determinants of
 
 
 ## The Plan of the Book
+
 
 
 ## References
