@@ -37,9 +37,29 @@ After comparing Kaufmann et al.'s definition and measurement of political stabil
 
 ## Why Does Political Stability Matter?
 
+Political scientists and policy makers' concern with "political stability/instability," also described as "political order/disorder," started in the 1950s and 1960s, in the context of what Francis Fukuyama depicts as the "heydey of modernization theory" (Foreward in @huntingtonPoliticalOrderChanging1968, p. xi). However, it was the dramatic increase of conflicts at the end of Cold War that made "political stability/instablity" a major concern of many scholars, policy makers, and development agencies. By this time, the concept of "political stability/instability" was widely adopted and that of "political order/disorder" dropped. But soon, other concepts, such as "failed state" or "state failure", and "weak state" were also used and competed for awhile with that of "political stability/instability."
+
+- Early studies on "political stability" (1990s - early 2000s):
 
 
-## The Purpose and Argument of the Book
+
+
+- More recents studies (since 2010s):
+
+
+
+
+## Approach and Research Methods
+
+### Conflict approach to political stability, instability, and crisis
+
+
+
+### A mixed methods research
+
+
+
+## The Argument of the Book
 
 The main objective of this book is to identify the conditions or determinants of political instability, along with the actors behaviors that trigger or escalate conflicts, considered to be the main source of political instability.
 
