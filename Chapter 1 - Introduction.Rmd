@@ -1,10 +1,11 @@
 ---
-title: "Chapter 1 - Political Stability: What Is It and Why Does It Matter?"
+title: 'Chapter 1 - Political Stability: What Is It and Why Does It Matter?'
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output:
-  html_document: default
+  word_document: default
   pdf_document: default
+  html_document: default
 bibliography: bibliography.bib
 ---
 
@@ -37,25 +38,47 @@ After comparing Kaufmann et al.'s definition and measurement of political stabil
 
 ## Why Does Political Stability Matter?
 
-Political scientists and policy makers' concern with "political stability/instability," also described as "political order/disorder," started in the 1950s and 1960s, in the context of what Francis Fukuyama depicts as the "heydey of modernization theory" (Foreward in @huntingtonPoliticalOrderChanging1968, p. xi). However, it was the dramatic increase of conflicts at the end of Cold War that made "political stability/instablity" a major concern of many scholars, policy makers, and development agencies. By this time, the concept of "political stability/instability" was widely adopted and that of "political order/disorder" dropped. But soon, other concepts, such as "failed state" or "state failure", and "weak state" were also used and competed for awhile with that of "political stability/instability."
+Political scientists and policy makers' concern with "political stability/instability," also described as "political order/disorder," started in the 1950s and 1960s, in the context of what Francis Fukuyama depicts as the "heydey of modernization theory" (Foreward in @huntingtonPoliticalOrderChanging1968, p. xi). However, it was the dramatic increase of conflicts at the end of Cold War that made "political stability/instablity" a major concern of many scholars, policy makers, and development agencies. By this time, the concept of "political stability/instability" was widely adopted and that of "political order/disorder" dropped. But soon, other concepts, such as "failed state" or "state failure", and "weak state" were also used and competed for awhile with that of "political stability/instability."   
 
-- Early studies on "political stability" (1990s - early 2000s):
+With a very few exceptions, every study on the relationship between political stability and economic performance finds a positive effect of the former on the latter. In other words, lack of political stability or political instability (with its different forms and degrees, including political crisis and armed conflicts) is associated with poor economic and social development. The only exception we find in the literature so far is that of Campos and Nugent who assert that there is no evidence of a "causal and negative long-run relation between political instability and economic growth" [@camposWhoAfraidPolitical2002, p. 157]
 
+In this sense, most of the early studies establish the negative consequences of political instability on economic growth. According to Alesina et al.'s classical study, "political instability defined as a propensity for government change had a negative impact on growth." [@alesinaPoliticalInstabilityEconomic1996] In the same vein, Aisen and Veiga also find "higher degrees of political instability are associated with lower growth rates of GDP per capita." [@aisenHowDoesPolitical2011, p. 1] In addition, with regard to the "channels of transmissions," they specify that "political instability adversely affects growth by lowering the rates of productivity growth and, to a smaller degree, physical and human capital accumulation." [@aisenHowDoesPolitical2011, p. 1]   
 
+Recent studies expand the negative impacts of political instability on other economic and social indicators, such as foreign direct investment (FDI) [See for instance @bradaEffectsTransitionPolitical2006; @phungImpactInstitutionalPolitical2017; and @gedaDeterminantsForeignDirect2018], inflation [@aisenDoesPoliticalInstability2006], food security [@deatonPoliticalInstabilityFood2015], social inequality and poverty [@roePoliticalInstabilityEffects2011]. All of the authors who investigate the relationships between political stability and inflows of FDI agree with Brada et al. that while political stability "increase the volume of FDI inflows," political instability reduce their inflows [@bradaEffectsTransitionPolitical2006, p. 649]. Furthermore, Aisen and Veiga find that "a higher degree of political instability is associated with higher inflation," which in turn "generates inefficiencies that reduce society's welfare and economic growth." [@aisenDoesPoliticalInstability2006, p. 1379]
 
+Other recent studies also show the important role of political stability as an enabling factor that helps other economic factors to be more efficient. Thus, investigating the effects of foreign development assistance on African economies, Cai et al. find that "international aid can promote economic growth in Africa, but the effectiveness of aid depends on countries’ political stability." [@caiHasInternationalAid2018, p. 239]   
 
-- More recents studies (since 2010s):
-
-
+In sum, political stability is very important, because its absence is generally associated with a poor economic and social development in different countries.
 
 
 ## Approach and Research Methods
 
-### Conflict approach to political stability, instability, and crisis
+
+- The Challenges in analyzing political stability
+
+1) We need to analyze political stability, instability and crisis in terms of conflict, i.e. as different stages in the "curve of conflict" within a given society.
+
+2) As a stage of conflict, and in application of what we have learned for the analysis of conflict (See my book, The Political Crisis of March 2009), the escalations and deescalations from political stability to instability and crisis depend on two factors:
+
+- conditions (or contexts of the conflict), 
+- triggers (which include behaviors, tactics and strategies of the actors in the conflict)
+
+- The need to use a "mixed methods research" as defined by John Creswell
 
 
 
-### A mixed methods research
+
+- The design of the "mixed methods research"
+
+
+- A quantitative research method to identify the major factors influencing political stability, instability and crisis
+
+
+- A qualitative research method to identify the major triggers leading to the escalation (or deescalation) from political stability, instability and crisis
+
+
+
+- Case study methods to illustrate how conditions and triggers contribute to the escalation (or deescalation) from political stability, instability and crisis in some countries
 
 
 
@@ -63,11 +86,54 @@ Political scientists and policy makers' concern with "political stability/instab
 
 The main objective of this book is to identify the conditions or determinants of political instability, along with the actors behaviors that trigger or escalate conflicts, considered to be the main source of political instability.
 
+In a nuttshell, the argument that will be developped throughout the book is that:
+- Political stability is elusive for most African countries, because of the existence of persistent conditions that are favorable for the emergence and escalation of conflicts in those countries.
+- In addition, instead of descalting conflicts the behaviors of most actors on these African countries contribute also to the emergence and escalation of conflicts.
+
+The conditions of the emergence and escalation of conflicts include mixed or inconsistent regimes combining the features of democracy and autocracy, low level of development,
+
+The most common actors' behaviors that create and escalate conflicts are the adoption of competitive conflict strategy, 
+
 
 
 ## The Plan of the Book
 
+Part I - Introduction
 
+Chapter 1 - Political Stability: What is it and Why it Matters?
+
+
+Chapter 2 - Political Stability and Instability Around the World Since the End of the Cold War: Descriptive Statistics
+
+
+
+Part II - The Conditions of Political Stability, Instability and Crisis in Post-Cold War Africa
+
+Chapter 3 - Governance and Political Instability and Crisis
+
+Chapter 4 - Political Conditions of Political Instability and Crisis
+
+Chapter 5 - Economic and Social Conditions of Political Instability and Crisis
+
+Chapter 6 - Cultural, Religious, and Geographic Conditions Political Instability and Crisis
+
+
+Part III - The Triggers of Political Instability and Crisis in Post-Cold War Africa
+
+Chapter 7 - Electoral Processes and Political Instability and Crisis
+
+Chapter 8 - Politics of Exclusion and Political Instability and Crisis
+
+Chapter 9 - Autocratization and Political Instability and Crisis
+
+
+Part IV - Case Studies and Conclusion
+
+Chapter 10 - Madagascar
+
+Chapter 11 - Mali
+
+Chapter 12 - Botswana
 
 ## References
 
