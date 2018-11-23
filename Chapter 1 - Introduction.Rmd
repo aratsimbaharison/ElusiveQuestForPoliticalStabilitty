@@ -3,9 +3,9 @@ title: 'Chapter 1 - Political Stability: What Is It and Why Does It Matter?'
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output:
-  word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  word_document: default
 bibliography: bibliography.bib
 ---
 
@@ -14,97 +14,68 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Political Stability and the African Development
 
-No matter how it is defined and measured, it is now widely accepted that political stability (or, its opposite, political instability) has tremendous impacts on the economic growth and the general wellbeing of the people in any country in the world. [@aisenHowDoesPolitical2011; @alesinaPoliticalInstabilityEconomic1996; and @roePoliticalInstabilityEffects2011] Given these tremendous impacts, any actor at any level (local, national, and international), involved in any aspect of development in Africa, is seeking political stability for the continent.  
+Political stability (or, its opposite, political instability) can be defined and measured in many different ways by different authors. However, no matter how it is defined and measured, it is now generally accepted that political stability has tremendous impacts on the economy and the wellbeing of the population of any country in the world. [@aisenHowDoesPolitical2011; @alesinaPoliticalInstabilityEconomic1996; and @roePoliticalInstabilityEffects2011] Given these tremendous impacts, anyone involved in any aspect of development in Africa is looking for political stability for the continent.  
 
-Thus, in the preamble of its Constitutive Charter, the African Union points out among the important motivations for the creation of the organization: "the fact that the scourge of conflicts in Africa constitutes a major impediment to the socio-economic development of the continent and of the need to promote peace, security and stability as a prerequisite for the implementation of our development and integration agend" [@africanunionConstitutiveActAfrican2000, Preamble]. Consequently, one of the main objectives of the African Union is "to promote peace, security, and stability on the continent" [@africanunionConstitutiveActAfrican2000, Article 3.f].   
+In line with this, the African Union points out in the preamble of its Constitutive Charter "the fact that the scourge of conflicts in Africa constitutes a major impediment to the socio-economic development of the continent and of the need to promote peace, security and stability as a prerequisite for the implementation of our development and integration agenda" [@africanunionConstitutiveActAfrican2000, Preamble]. Consequently, one of the main objectives of the African Union is "to promote peace, security, and stability on the continent" [@africanunionConstitutiveActAfrican2000, Article 3.f].   
 
-For the international donors, political stability in Africa has been also a major concern since the end of the Cold War. Particularly, international organizations, such as the World Bank and the United Nations Development Programme, convinced that Africa would not develop without political stability, have undertaken and supported countless research projects and publications on this issue. Some of the major research projects sponsored by the World Bank were those undertaken by Paul Collier and his associates on "Understanding Civil War" [@collierUnderstandingCivilWar2005] and "Breaking the Conflict Trap: Civil War and Development Policy" [@collierBreakingConflictTrap2003a]. Specifically, the *World Development Report* for the year 2011 was devoted to "Conflict, Security, and Development." [@worldbankWorldDevelopmentReport2011a]
+For the international donors, political stability in Africa has been a major concern since the end of the Cold War. Particularly, the World Bank and the International Monetary Fund (IMF) have undertaken and supported countless research projects and publications on this issue. In this sense, the major research projects sponsored by the World Bank include those undertaken by Paul Collier and his associates on "Understanding Civil War" [@collierUnderstandingCivilWar2005] and "Breaking the Conflict Trap: Civil War and Development Policy" [@collierBreakingConflictTrap2003a]. More specifically, the *World Development Report* for the year 2011 was devoted to "Conflict, Security, and Development." [@worldbankWorldDevelopmentReport2011a]
 
-Yet, as of the writing of this book, Africa is still the most unstable region of the world, and stability appears to be more elusive than ever on the continent. 
+Nevertheless, despite all of these efforts undertaken by different actors, as we will see in this book, Africa is still the most unstable region of the world. Political stability appears to be more an elusive quest for many African countries.   
 
 
-## Political Stability: An Elusive Definition
+## Political Stability: An Elusive Definition and Measurement
 
-What exactly is political stability (or instability)? The definition and measurement of the concept of political stability (and/or its opposite, instability) remain controversial despite the great efforts deployed by different scholars and international organizations on this issue over the years, and no one seems to be able to come up with a consensual definition and measurement yet. This situation led some authors to believe that "stability cannot be quantified and that there are thus no degrees of stability"[@dowdingMeaningUsePolitical1983].   
+What exactly is political stability (or instability)? The definition and measurement of the concept of political stability (and/or its opposite, instability) remain controversial and elusive, despite the great efforts deployed by different scholars and international organizations over the years to come up with a consensual definition and measurement. This situation led some authors to believe that "stability cannot be quantified and that there are thus no degrees of stability" [@dowdingMeaningUsePolitical1983]. In fact, the definition and measurement of this concept have evolved over the years.   
 
-An early formal definition proposed by Claude Ake in the 1970s simply states that "political stability is the regularity of the flow of political exchanges" [@akeDefinitionPoliticalStability1975, p. 273]. Unfortunately, no one (including the author himself) was able to build a cross-national and longitudinal database on political stability based on this definition. Thus, several scholars simply identify political stability with lack of conflict or the ability of a political system to "prevent conflict" [@reynal-querolPoliticalSystemsStability2002, p. 465], and use "conflicts" from the existing databases as the main indicators of "political instability" [See, for instance, @goldstoneGlobalModelForecasting2010]. Furthermore, other common measurements of political stability or instability are the frequencies of cabinet changes and regime duration (or regime change). The long list of authors who use this method include Alesina et al. [-@alesinaPoliticalInstabilityEconomic1996] in their investigation of the impacts of political instability economic growth, Hegre et al. [-@hegreDemocraticCivilPeace2001] in their study on the association between regime type and national security, and Gates et al. [-@gatesInstitutionalInconsistencyPolitical2006a] in their examination of "how political institutional structures affect political instability." Still, a closer look at the concept of political instability "using 25 political instability indicators in an Exploratory Factor Analysis," allow Richard Jong-A-Pin to suggest four dimensions of political instability:  "(1) politically motivated violence, (2) mass civil protest, (3) instability within the political regime, and (4) instability of the political regime." [@jong-a-pinMeasurementPoliticalInstability2009, p. 16]   
+An early formal definition proposed by Claude Ake in the 1970s states that "political stability is the regularity of the flow of political exchanges" [@akeDefinitionPoliticalStability1975, p. 273]. Unfortunately, no one (including the author himself) was able to build a cross-national and longitudinal database on political stability based on this definition. Since then, several scholars simply identify political stability with lack of conflict or the ability of a political system to "prevent conflict" [@reynal-querolPoliticalSystemsStability2002, p. 465], and use "conflict" from the existing databases as the main indicators of political instability [@goldstoneGlobalModelForecasting2010]. Furthermore, a fairly common measurement of political stability (or instability) is the frequency of cabinet change and regime change (or regime duration). The long list of authors who use this measurement includes Alesina et al. [-@alesinaPoliticalInstabilityEconomic1996] in their investigation of the impacts of political instability economic growth, Hegre et al. [-@hegreDemocraticCivilPeace2001] in their study on the association between regime type and national security, and Gates et al. [-@gatesInstitutionalInconsistencyPolitical2006a] in their examination of "how political institutional structures affect political instability." Moreover, a closer look at the concept of political instability "using 25 political instability indicators in an Exploratory Factor Analysis," allow Richard Jong-A-Pin to suggest four dimensions of political instability:  "(1) politically motivated violence, (2) mass civil protest, (3) instability within the political regime, and (4) instability of the political regime." [@jong-a-pinMeasurementPoliticalInstability2009, p. 16]   
 
-More recently, however, the World Bank and different authors adopt the definition and measurement of "Political Stability and Absence of Violence/Terrorism (PV)" by Kaufmann, Kraay, and Mastruzzi, as part of their work on the World Governance Indicators (WGI). [See @worldbankWorldwideGovernanceIndicators2016; and @kaufmannWorldwideGovernanceIndicators2011] "Political Stability and Absence of Violence/Terrorism (PV)" or simply "political stability" is here defined as "the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically-motivated violence and terrorism. [@kaufmannWorldwideGovernanceIndicators2011, p. 4] Most importantly, Kaufman et al.'s innovation in this project is to "rely exclusively on perceptions-based governance data sources." [@kaufmannWorldwideGovernanceIndicators2011, p. 5] As they explain, "Our data sources include surveys of firms and households, as well as the subjective assessments of a variety of commercial business information providers, non-governmental organizations, and a number of multilateral organizations and other public-sector bodies." [@kaufmannWorldwideGovernanceIndicators2011, p. 5]   
+In recent years, the World Bank and different authors adopt the definition and measurement of "Political Stability and Absence of Violence/Terrorism (PV)" proposed by Kaufmann, Kraay, and Mastruzzi, as part of their work on the World Governance Indicators (WGI). [See @worldbankWorldwideGovernanceIndicators2016; and @kaufmannWorldwideGovernanceIndicators2011] "Political Stability and Absence of Violence/Terrorism (PV)" or simply "political stability" is here defined as "the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically-motivated violence and terrorism. It is considered as one of the "six dimensions of governance," which include: "Voice and Accountability, Political Stability and Absence of Violence/Terrorism, Government Effectiveness, Regulatory Quality, Rule of Law, and Control of Corruption." [@kaufmannWorldwideGovernanceIndicators2011, p. 4] More importantly, Kaufman et al.'s innovation in this research project is to "rely exclusively on perceptions-based governance data sources." [@kaufmannWorldwideGovernanceIndicators2011, p. 5] As they explain, "Our data sources include surveys of firms and households, as well as the subjective assessments of a variety of commercial business information providers, non-governmental organizations, and a number of multilateral organizations and other public-sector bodies." [@kaufmannWorldwideGovernanceIndicators2011, p. 5]   
 
-It is also worth noting that "political stability" is considered by the authors as one of the "six dimensions of governance," which include: "Voice and Accountability, Political Stability and Absence of Violence/Terrorism, Government Effectiveness, Regulatory Quality, Rule of Law, and Control of Corruption." [@kaufmannWorldwideGovernanceIndicators2011, p. 4]   
-
-After comparing Kaufmann et al.'s definition and measurement of political stability with those of other scholars, we also decide to adopt the former's definition and measurement in this book for two main reasons. First, since the concept of stability is highly subjective, it makes sense to use the measurement technique based on intersubjectivity, which is commonly used in qualitative research methods.[Among many other references, see @hollwayDoingQualitativeResearch2000; @charmazConstructingGroundedTheory2006] Second, using these definition and measurement, Kaufmann et al. are able to build and maintain a consistent database on political stability for most countries in the world since 1996, that can be accessed through the World Bank's databank website.[@worldbankWorldwideGovernanceIndicators2016]   
+After comparing Kaufmann et al.'s definition and measurement of political stability with those of other authors, we decide to adopt theirs in this book for two reasons. First, since the concept of political stability is highly subjective, it would make more sense to use a measurement technique based on intersubjectivity, like the "Lickert Scale," commonly used as a valid measurement technique in various social science disciplines.[@joshiLikertScaleExplored2015; see also @hollwayDoingQualitativeResearch2000; @charmazConstructingGroundedTheory2006] Second, based on their definition and measurement, Kaufmann et al. are able to build and maintain a consistent database on political stability for most countries in the world since 1996. This database is easily accessible through the World Bank's databank website.[@worldbankWorldwideGovernanceIndicators2016]   
 
 
 ## Why Does Political Stability Matter?
 
-Political scientists and policy makers' concern with "political stability/instability," also described as "political order/disorder," started in the 1950s and 1960s, in the context of what Francis Fukuyama depicts as the "heydey of modernization theory" (Foreward in @huntingtonPoliticalOrderChanging1968, p. xi). However, it was the dramatic increase of conflicts at the end of Cold War that made "political stability/instablity" a major concern of many scholars, policy makers, and development agencies. By this time, the concept of "political stability/instability" was widely adopted and that of "political order/disorder" dropped. But soon, other concepts, such as "failed state" or "state failure", and "weak state" were also used and competed for awhile with that of "political stability/instability."   
+Political scientists and policy makers' concerns with political stability (and/or political instability) started in the 1970s, but it was the dramatic increase of armed conflicts at the end of Cold War that made it a major focus of many scholars, policy makers, and development and security agencies. In the meantime, other concepts, such as "failed state," "state failure", "weak state," and "fragile state," were also used simulatneously with that of political stability (and/or political instability). Nevertheless, it appears that the latter concept is the most usefull to describe the political situation in most countries in the world. In fact, as Susan Woodward reports, "the State Failure Task Force funded by the CIA [since 1994] had changed its title to the Political Instability Task Force in 2003, and the National Intelligence Council (the policy think tank for the CIA) decided in 2005 to establish a semi-annual Political Instability Watch List." [@woodwardIdeologyFailedStates2017a, p. 48] Meanwhile, even though Fund for Peace is promoting since 2014 its "Fragile State Index" in replacement of the flawed "Failed State Index" [@woodwardIdeologyFailedStates2017a, p. 22], this new index and the related database [@thefundforpeaceFragileStatesIndex2017] are not as popular and useful as those of Kaufman et al.'s WGI [See @worldbankWorldwideGovernanceIndicators2016; and @kaufmannWorldwideGovernanceIndicators2011]. This is also a reason why we stick with the concept of political stability and use Kaufman et al.'s measurement and database.  
 
-With a very few exceptions, every study on the relationship between political stability and economic performance finds a positive effect of the former on the latter. In other words, lack of political stability or political instability (with its different forms and degrees, including political crisis and armed conflicts) is associated with poor economic and social development. The only exception we find in the literature so far is that of Campos and Nugent who assert that there is no evidence of a "causal and negative long-run relation between political instability and economic growth" [@camposWhoAfraidPolitical2002, p. 157]
+With a very few exceptions, every study on the relationship between political stability and economic performance finds a positive effect of the former on the latter. In other words, lack of political stability (or political instability, with its different forms and degrees, including political crisis and armed conflicts) is associated with poor economic and social development. The only exception we find in the literature so far is that of Campos and Nugent who assert that there is no evidence of a "causal and negative long-run relation between political instability and economic growth" [@camposWhoAfraidPolitical2002, p. 157]
 
-In this sense, most of the early studies establish the negative consequences of political instability on economic growth. According to Alesina et al.'s classical study, "political instability defined as a propensity for government change had a negative impact on growth." [@alesinaPoliticalInstabilityEconomic1996] In the same vein, Aisen and Veiga also find "higher degrees of political instability are associated with lower growth rates of GDP per capita." [@aisenHowDoesPolitical2011, p. 1] In addition, with regard to the "channels of transmissions," they specify that "political instability adversely affects growth by lowering the rates of productivity growth and, to a smaller degree, physical and human capital accumulation." [@aisenHowDoesPolitical2011, p. 1]   
+Most of the early studies also reveal the negative consequence of political instability on economic growth. According to Alesina et al.'s classical study, "political instability defined as a propensity for government change had a negative impact on growth." [@alesinaPoliticalInstabilityEconomic1996] In the same vein, Aisen and Veiga also find "higher degrees of political instability are associated with lower growth rates of GDP per capita." [@aisenHowDoesPolitical2011, p. 1] In addition, they specify that "political instability adversely affects growth by lowering the rates of productivity growth and, to a smaller degree, physical and human capital accumulation." [@aisenHowDoesPolitical2011, p. 1]   
 
-Recent studies expand the negative impacts of political instability on other economic and social indicators, such as foreign direct investment (FDI) [See for instance @bradaEffectsTransitionPolitical2006; @phungImpactInstitutionalPolitical2017; and @gedaDeterminantsForeignDirect2018], inflation [@aisenDoesPoliticalInstability2006], food security [@deatonPoliticalInstabilityFood2015], social inequality and poverty [@roePoliticalInstabilityEffects2011]. All of the authors who investigate the relationships between political stability and inflows of FDI agree with Brada et al. that while political stability "increase the volume of FDI inflows," political instability reduce their inflows [@bradaEffectsTransitionPolitical2006, p. 649]. Furthermore, Aisen and Veiga find that "a higher degree of political instability is associated with higher inflation," which in turn "generates inefficiencies that reduce society's welfare and economic growth." [@aisenDoesPoliticalInstability2006, p. 1379]
+More recent studies expand the negative impacts of political instability on other economic and social indicators, such as foreign direct investment (FDI) [See, for instance, @bradaEffectsTransitionPolitical2006; @phungImpactInstitutionalPolitical2017; and @gedaDeterminantsForeignDirect2018], inflation [@aisenDoesPoliticalInstability2006], food security [@deatonPoliticalInstabilityFood2015], social inequality and poverty [@roePoliticalInstabilityEffects2011]. Everyone who investigates the relationships between political stability and inflows of FDI agrees with Brada et al. that while political stability "increase the volume of FDI inflows," political instability reduce their inflows [@bradaEffectsTransitionPolitical2006, p. 649]. Furthermore, Aisen and Veiga find that "a higher degree of political instability is associated with higher inflation," which in turn "generates inefficiencies that reduce society's welfare and economic growth." [@aisenDoesPoliticalInstability2006, p. 1379]
 
-Other recent studies also show the important role of political stability as an enabling factor that helps other economic factors to be more efficient. Thus, investigating the effects of foreign development assistance on African economies, Cai et al. find that "international aid can promote economic growth in Africa, but the effectiveness of aid depends on countries’ political stability." [@caiHasInternationalAid2018, p. 239]   
+Moreover, other recent studies also show the important role of political stability as an enabling factor that helps other economic factors to be more efficient. In connection with this, investigating the effects of foreign development assistance on African economies, Cai et al. find that "international aid can promote economic growth in Africa, but the effectiveness of aid depends on countries’ political stability." [@caiHasInternationalAid2018, p. 239]   
 
-In sum, political stability is very important, because its absence is generally associated with a poor economic and social development in different countries.
-
-
-## Approach and Research Methods
+In sum, political stability is very crucial for the economic and social development of any country in the world. Its absence is generally associated with a poor economic and social development in different countries.
 
 
-- The Challenges in analyzing political stability
+## Approach to Political Stability and Research Methodology
 
-1) We need to analyze political stability, instability and crisis in terms of conflict, i.e. as different stages in the "curve of conflict" within a given society.
+The main purpose of this study is to understand why most African countries are mired in political instability or, in other words, why the quest of political stability is elusive for many of them. Our previous work on the political crisis in March 2009 in Madagascar shows that a conflict approach is an appropriate way to understand the emergence of a political crisis, which is an escalation of conflict from the stage of political instability [@ratsimbaharisonPoliticalCrisisMarch2017]. In line with this, we also want to  use the same conflict approach to understand the emergence of political instability in defferent African countries since the end of the Cold War.   
 
-2) As a stage of conflict, and in application of what we have learned for the analysis of conflict (See my book, The Political Crisis of March 2009), the escalations and deescalations from political stability to instability and crisis depend on two factors:
+Following Micheal Lund's "curve of conflict" [@lundPreventingViolentConflicts1996], political instability is considered as the result of the escalation of conflict from the stage of political stability to that of political crisis. Just as in our previous work on the political crisis in Madagascar, our approach to conflict analysis is also based on that of Levinger [-@levingerConflictAnalysisUnderstanding2013], which specifically focuses on the "condition of instability" and "triggering events" (or triggers) in his analysis of conflict. In this sense, we agree with Levinger's analogy, according to which "the condition of instability provides the tinder for conflict, which needs only a spark [or trigger] to burst into flame." [@levingerConflictAnalysisUnderstanding2013, p. 32] Furthoremore, Levinger states that: "The escalation from peace [or political stability] to instability, and ultimately to violent conflict and war, is never inevitable. Without a spark, or triggering event, an unstable situation may persist without erupting to violence -- just as dry and hot conditions in a forest do not always result in a forest fire."[@levingerConflictAnalysisUnderstanding2013, pp. 32-33]
 
-- conditions (or contexts of the conflict), 
-- triggers (which include behaviors, tactics and strategies of the actors in the conflict)
-
-- The need to use a "mixed methods research" as defined by John Creswell
-
-
-
-
-- The design of the "mixed methods research"
-
-
-- A quantitative research method to identify the major factors influencing political stability, instability and crisis
-
-
-- A qualitative research method to identify the major triggers leading to the escalation (or deescalation) from political stability, instability and crisis
-
-
-
-- Case study methods to illustrate how conditions and triggers contribute to the escalation (or deescalation) from political stability, instability and crisis in some countries
-
+In addition to the application of this conflict approach, we also intend to use a "mixed methods research" in this study. In line with Creswell agreement, the use of this particular research method is justfied in this case for the following reasons: "It is appropriate to use mixed methods when the use of quantitative research or qualitative research alone is insufficient for gaining an understanding of the problem." [@creswellConciseIntroductionMixed2015, pp. 14-15] Specifically, the quantitative research method will be used to determine the political, economic, social, and cultural conditions of conflict across the African continent. Existing quantitative data from different sources, particularly the World Bank, Freedom House, and the Center for Systemic Peace, will be collected and analyzed using various packages from the "R Project for Statistical Computing." Next, existing qualitative data from different sources are also collected and analyzed using the same "R Project for Statistical Computing," and particularly the RQDA package for qualitative data analysis.
 
 
 ## The Argument of the Book
 
-The main objective of this book is to identify the conditions or determinants of political instability, along with the actors behaviors that trigger or escalate conflicts, considered to be the main source of political instability.
+As mentioned earlier, the main objective of this book is to identify the conditions (or determinants) of political instability, along with the actors' behaviors that trigger the escalation of conflicts from the stage of political stability to that of political instability. In a nuttshell, the argument that will be developped throughout the book is that the existence of persistent conditions that are favorable for the emergence and escalation of conflicts makes political stability precarious in many African countries. In addition to these conditions, the behaviors of most actors on these African countries are also most likely to contribute to the emergence and escalation of conflicts in these countries.
 
-In a nuttshell, the argument that will be developped throughout the book is that:
-- Political stability is elusive for most African countries, because of the existence of persistent conditions that are favorable for the emergence and escalation of conflicts in those countries.
-- In addition, instead of descalting conflicts the behaviors of most actors on these African countries contribute also to the emergence and escalation of conflicts.
+The conditions of the emergence and escalation of conflicts include mixed or inconsistent regimes combining the features of democracy and autocracy, low level of development,...
 
-The conditions of the emergence and escalation of conflicts include mixed or inconsistent regimes combining the features of democracy and autocracy, low level of development,
-
-The most common actors' behaviors that create and escalate conflicts are the adoption of competitive conflict strategy, 
+The most common actors' behaviors that create and escalate conflicts are the adoption of competitive conflict strategy,...
 
 
 
 ## The Plan of the Book
 
+
 Part I - Introduction
 
 Chapter 1 - Political Stability: What is it and Why it Matters?
 
-
-Chapter 2 - Political Stability and Instability Around the World Since the End of the Cold War: Descriptive Statistics
-
+Chapter 2 - Political Stability Around the World Since the End of the Cold War: Descriptive Statistics
 
 
 Part II - The Conditions of Political Stability, Instability and Crisis in Post-Cold War Africa
@@ -127,13 +98,16 @@ Chapter 8 - Politics of Exclusion and Political Instability and Crisis
 Chapter 9 - Autocratization and Political Instability and Crisis
 
 
-Part IV - Case Studies and Conclusion
+Part IV - Case Studies
 
 Chapter 10 - Madagascar
 
 Chapter 11 - Mali
 
 Chapter 12 - Botswana
+
+
+Part V - Conclusion
 
 ## References
 
