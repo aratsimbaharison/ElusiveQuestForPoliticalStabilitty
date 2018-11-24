@@ -3,6 +3,7 @@ title: "Chapter 2 - Political Stability Around the World Since the End of the Co
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output: html_document
+bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -15,23 +16,43 @@ Outline:
 
 2.2 - Exploratory Data Analysis
 
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(readr)
+library(lubridate)
+library(dplyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+library(VIM)
+
+# reading the dataset to r
+WGIdevRegimeType <- read_csv("WGIdevRegimeType.csv")
+
+```
+
 
 ## 2.1 - Descriptive Statistics
 
 **General Stability of the World Since the End of the Cold War**
 
-Generally, speaking the world as a whole was not stable since the end of the Cold War.
+Following Kaufman et al.'s methodology [see @worldbankWorldwideGovernanceIndicators2016; and @kaufmannWorldwideGovernanceIndicators2011], the political stability estimate of a given country for a given year is based on the aggregation of the perceptions (or assessments) from several survey respondents, including the following so-called five representative sources: Economist Intelligence Unit Riskwire & Democracy Index (EIU), World Economic Forum Global Competitiveness Report (GCS), Cingranelli Richards Human Rights Database and Political Terror Scale (HUM), Institutional Profiles Database (IPD), Political Risk Services International Country Risk Guide (PRS), and Global Insight Business Conditions and Risk Indicators (WMO). The annual political stability estimate ranges from approximately -2.5 to 2.5, with some extreme values less than -2.5. Using the dataset on the political stability estimate of all countries in the world for the period of 1996 to 2016, we can compute the stability of the world for the entire period and the annual stability trend from 1996 to 2016. Furthemore, we can compare the stability of the different regions in the world.
 
-As shown in Table 1 and Figure 1 below, the summary statistics of political stability during the time period of 1996-2016 around the world produces an average of -0.0199 with standard deviation of 1.00, which seems to indicate that the whole world has been slightly unstable during this time period. One can also notice that whereas the maximum value of political stability is 1.96, the minimum value is -3.31. This minimum value seems abnormal, since the scale used by Kaufmann and his associates was -2.5 to 2.5.[^14] But this does not seem to affect our data analysis.   
+Thus, based on the dataset on the political stability estimate of all countries in the world, we can state that the whole world was not stable since the end of the Cold War. Indeed, as shown in Table 1 and Figure 1 below, the summary statistics of political stability during the time period of 1996-2016 around the world produces an average of -0.0199 with standard deviation of 1.00, which seems to indicate that the whole world has been slightly unstable during this time period. One can also notice that whereas the maximum value of political stability is 1.96, the minimum value is -3.31.
+
+
 
 Furthermore, Figure 2 shows that the data on political stability is not normally distributed, but skweed to the left, which indicates the existence of outliers with negative values. Figure 2 also shows that the mode is between 0.5 and 1.   
 
 
 ```{r echo=TRUE, warning=FALSE, include=TRUE}
+# a clean dataset including WGI, development indicators, and RegimeType indicators, is available in the local repository under "WGIdevRegimeType.csv"
 
-# Table 1 - Summary statistics
 
-summary(WGIbyRegion$stability, na.rm = TRUE)
+# Table 1 - Summary statistics of the political stability estimate
+
+summary(WGIdevRegimeType$stability, na.rm = TRUE)
 
 ```
 
@@ -40,7 +61,7 @@ summary(WGIbyRegion$stability, na.rm = TRUE)
 
 #Figure 1 - Political Stability: Summary Statistics
 
-boxplot(WGIbyRegion$stability, main = "")
+boxplot(WGIdevRegimeType$stability, main = "")
 
 ```
 
@@ -49,8 +70,8 @@ boxplot(WGIbyRegion$stability, main = "")
 
 #Figure 2 - Political Stability: Frequency
 
-hist(WGIbyRegion$stability, main= "", xlab = "Political Stability Estimate")
-abline(v = median(WGIbyRegion$stability, na.rm = TRUE), lwd = 2)
+hist(WGIdevRegimeType$stability, main= "", xlab = "Political Stability Estimate")
+abline(v = median(WGIdevRegimeType$stability, na.rm = TRUE), lwd = 2)
 text(x = -1, y = 650, "Median= 0.089")
 
 ```
@@ -65,7 +86,7 @@ As shown in Table 2 and Figure 3, the annual average of politial stability has r
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 
 # Political Stability Trend: Annual Average Around the World
-PoliticalStabilityTrendWorld <- WGIbyRegion %>%
+PoliticalStabilityTrendWorld <- WGIdevRegimeType %>%
   group_by(date) %>%
   summarise(AnnualAverage = mean(stability, na.rm=TRUE))
 PoliticalStabilityTrendWorld <- tbl_df(PoliticalStabilityTrendWorld)
@@ -75,7 +96,7 @@ PoliticalStabilityTrendWorld <- tbl_df(PoliticalStabilityTrendWorld)
 
 
 ```{r echo=FALSE, warning=FALSE, include=TRUE, results= 'asis'}
-
+library(knitr)
 #Table 2 - Political Stability Trend: Annual Average Around the World
 
 kable(PoliticalStabilityTrendWorld, caption = "Table 2 - Political Stability Trend: Annual Average Around the World")
@@ -110,7 +131,7 @@ Table 3 and Figure 4 clearly show that the regions of Africa and Asia, with resp
 
 #Political Stability summary for each region
 
-politicalStabilityByRegion <- summarise(group_by(WGIbyRegion, region),
+politicalStabilityByRegion <- summarise(group_by(WGIdevRegimeType, region),
           mean=mean(stability, na.rm = TRUE), sd=sd(stability, na.rm = TRUE))
 
 ```
@@ -129,7 +150,7 @@ kable(politicalStabilityByRegion, caption = "Table 3 - Political Stability: Aver
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 4 - Political Stability: Average by Region"}
 
 # Boxplot of Political Stability by Region
-boxplot(stability~region,data=WGIbyRegion, main="",
+boxplot(stability~region,data=WGIdevRegimeType, main="",
         xlab="Regions", ylab="Political Stability Estimate")
 abline(h = 0, lwd = 2)
 
@@ -146,8 +167,10 @@ This result allows us to include all world governance indicators in our predicti
 
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 5 - Correlation between Political Stability and the other World Governance Indicators (WGI)"}
 
+# reading the data on WGI
+
 # Scatterplot Matrix
-pairs(~ stability + ruleOfLaw + governmentEffectiveness + corruptionControl + regulatoryQuality +  voiceAndAccountability,data=WGI,
+pairs(~ stability + regulatoryQuality,data=WGIdevRegimeType,
    main="")
 
 ```
@@ -156,8 +179,8 @@ pairs(~ stability + ruleOfLaw + governmentEffectiveness + corruptionControl + re
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 # Correlation between Political Stability and the other World Governance Indicators (WGI)
-WGI2 <- select(WGI, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw,              voiceAndAccountability)
-correlationWGI2 <- rcorr(as.matrix(WGI2))
+WGI <- select(WGIdevRegimeType, stability, regulatoryQuality)
+correlationWGI <- rcorr(as.matrix(WGI))
 
 
 ```
@@ -167,7 +190,7 @@ correlationWGI2 <- rcorr(as.matrix(WGI2))
 
 #Table 4 - Correlation Matrix between Political Stability and the other World Governance Indicators (WGI)
 
-correlationWGI2
+correlationWGI
 
 
 ```
@@ -179,46 +202,9 @@ In this section, we plot political stability against the indicators of socioecon
 
 Nevertheless, since all of these correlations are statistically significant (with p-values close to zero), we can still include these indicators of socioeconomic developmentin and social inequality in our prediction models.
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-
-#data on GNI per capita (constant 2010 US$) (NY.GNP.PCAP.KD)
-GNIperCapitaDf <- wb(country = "countries_only", indicator = "NY.GNP.PCAP.KD", 
-                     startdate = 1996, enddate = 2017, POSIXct = TRUE)
-GNIperCapitaDf <- tbl_df(GNIperCapitaDf)
-GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, value)
-GNIperCapitaDf <- rename(GNIperCapitaDf, GNIperCapita = value)
-head(GNIperCapitaDf)
-
-#data on human development index (UNDP.HDI.XD)
-HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
-            startdate = 1996, enddate = 2017, POSIXct = TRUE)
-HDIDf <- tbl_df(HDIDf)
-HDIDf <- select(HDIDf, country, iso2c, date, value)
-HDIDf <- rename(HDIDf, HDI = value)
-head(HDIDf)
-
-#data on social inequality measured in terms of the World Bank's GINI index (SI.POV.GINI)
-GINIDf <- wb(country = "countries_only", indicator = "SI.POV.GINI", 
-            startdate = 1996, enddate = 2017, POSIXct = TRUE)
-GINIDf <- tbl_df(GINIDf)
-GINIDf <- select(GINIDf, country, iso2c, date, value)
-GINIDf <- rename(GINIDf, GINI = value)
-head(GINIDf)
-
-# joining the data on political stability and data on development and social inequality 
-# (devIneqStab)
-devIneqStabDf <- full_join(stabilityDf, GNIperCapitaDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., HDIDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., GINIDf, by = c("country", "iso2c", "date")) 
-devIneqStabDf <- tbl_df(devIneqStabDf)
-head(devIneqStabDf)
-names(devIneqStabDf)
-
-```
-
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 6 - Correlation between Political Stability, Development, and Social Inequality"}
 # Scatterplot Matrix of Political Stability, Development, and Social Inequality
-pairs(~ stability + GNIperCapita + HDI + GINI, data=devIneqStabDf,
+pairs(~ stability + GNIperCapita + HDI, data=WGIdevRegimeType,
    main=" ")
 
 ```
@@ -226,8 +212,8 @@ pairs(~ stability + GNIperCapita + HDI + GINI, data=devIneqStabDf,
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 # Correlation Matrix between Political Stability and the Indicators of Development and Social Inequality
-devIneqAndStab2 <- select(devIneqStabDf, stability, GNIperCapita, HDI, GINI)
-correlationDevIneqStab2 <- rcorr(as.matrix(devIneqAndStab2))
+devStability <- select(WGIdevRegimeType, stability, GNIperCapita, HDI)
+correlation.devStability <- rcorr(as.matrix(devStability))
 
 
 ```
@@ -237,7 +223,7 @@ correlationDevIneqStab2 <- rcorr(as.matrix(devIneqAndStab2))
 
 #Table 5 - Correlation Matrix between Political Stability and the Indicators of Development and Social Inequality
 
-correlationDevIneqStab2
+correlation.devStability
 
 
 ```
@@ -249,79 +235,17 @@ In this section, we plot political stability against the indicators of regime ty
 
 Nevertheless, since all of these correlations are statistically significant (with p-values close to zero), we can still include these indicators of socioeconomic developmentin and social inequality in our prediction models.
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-
-#data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
-polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 
-                    startdate = 1996, enddate = 2017, POSIXct = TRUE)
-polityScoreDf <- select(polityScoreDf, country, iso2c, date, value)
-polityScoreDf <- rename(polityScoreDf, polityScore = value)
-head(polityScoreDf)
-
-# creating a new variable for polity category (polityCategory)
-polityScoreDf <- polityScoreDf %>% mutate(polityCategory=cut(polityScore, breaks=c(-Inf, -6, 6, Inf), labels=c("Autocracy","Anocracy","Democracy")))
-head(polityScoreDf)
-
-#data on political system, Institutionalized democracy (UPP.INS.DEMO.XQ) - see Polity IV
-democracyDf <- wb(indicator = "UPP.INS.DEMO.XQ", startdate = 1996, enddate = 2017, POSIXct = TRUE)
-democracyDf <- select(democracyDf, country, iso2c, date, value)
-democracyDf <- rename(democracyDf, democracyInst = value)
-head(democracyDf)
-
-#data on political system, Institutionalized autocracy (UPP.INS.AUTO.XQ) - see Polity IV
-autocracyDf <- wb(country = "countries_only", indicator = "UPP.INS.AUTO.XQ", 
-                  startdate = 1996, enddate = 2017, POSIXct = TRUE)
-autocracyDf <- select(autocracyDf, country, iso2c, date, value)
-autocracyDf <- rename(autocracyDf, autocracyInst = value)
-head(autocracyDf)
-
-# downloadong the data on political right and civil liberty from Freedom house from the website of
-#Amanda B. Edgell, University of Florida
-library(readxl)
-url <- "https://acrowinghen.files.wordpress.com/2014/03/fh1972_20162.xlsx"
-destfile <- "fh1972_20162.xlsx"
-curl::curl_download(url, destfile)
-FHdf <- read_xlsx(destfile)
-FHdf <- tbl_df(FHdf)
-FHdf <- select(FHdf, country, year, pr, cl, mean, status, inverse_pr, inverse_cl, inverse_mean)
-FHdf <- filter(FHdf, year>= 1996)
-FHdf <- rename(FHdf, date = year)
-FHdf$date <- as.character(FHdf$date)
-head(FHdf)
-
-#merging the data on political right and civil liberty with the data on region and subregion with iso2c
-FHDfByRegion <- merge(FHdf, regionSubregionDf, by = "country")
-FHDfByRegion <- tbl_df(FHDfByRegion)
-FHDfByRegion <- select(FHDfByRegion, country, iso2c, date, politicalRights = inverse_pr, 
-                       civilLiberties = inverse_cl, FHcombinedScore = inverse_mean, FHstatus = status, 
-                       region, subregion)
-head(FHDfByRegion)
-str(FHDfByRegion)
-
-#joining the data on political stability and regime types indicators (regimeTypeDf)
-regimeTypeDf <- full_join(stabilityDf, polityScoreDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., democracyDf, by = c("country", "iso2c", "date")) %>%
-  full_join(., autocracyDf, by = c("country", "iso2c", "date")) %>%
-  right_join(., FHDfByRegion, by = c("country", "iso2c", "date")) 
-regimeTypeDf <- tbl_df(regimeTypeDf)
-head(regimeTypeDf)
-str(regimeTypeDf)
-
-```
-
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 7 - Political Instability and Regime Type Indicators"}
 
 # Scatterplot Matrix of Political Instability and Regime Type Indicators
-pairs(~ stability + polityScore + democracyInst + autocracyInst + politicalRights +
-        civilLiberties + FHcombinedScore, data=regimeTypeDf,
-   main="")
+pairs(~ stability + polityScore + democ + autoc + inverse_pr + inverse_cl + inverse_mean, data=WGIdevRegimeType, main="")
 
 ```
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 # Correlation Matrix between Political Stability and Regime Type Indicators
-regimeTypeDf2 <- select(regimeTypeDf, stability, polityScore, democracyInst, autocracyInst, politicalRights,         civilLiberties, FHcombinedScore)
-CorrelationRegimeTypeDf2 <- rcorr(as.matrix(regimeTypeDf2))
+regimeTypeStability <- select(WGIdevRegimeType, stability, polityScore, democ, autoc, inverse_pr, inverse_cl, inverse_mean)
+Correlation.regimeTypeStability <- rcorr(as.matrix(regimeTypeStability))
 
 
 ```
@@ -332,7 +256,7 @@ CorrelationRegimeTypeDf2 <- rcorr(as.matrix(regimeTypeDf2))
 
 #Table 6 - Correlation Matrix between Political Stability and Regime Type Indicators
 
-CorrelationRegimeTypeDf2
+Correlation.regimeTypeStability
 
 
 ```
@@ -347,48 +271,10 @@ However, before runing the step function, we need to clean the data. The followi
 - second, from the remaining variables and observations, we remove the incomplete cases and only use the complete ones.   
 
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-#creating the main dataframe by joing the dataframes on governance, development and regime type, and selecting the variables that are highly correlated with political stability
-library(dplyr)
-WGIDevPolityDf <- left_join(WGIbyRegion, devIneqStabDf, by = c("country", "iso2c", "date")) %>%
-  left_join(., regimeTypeDf, by = c("country", "iso2c", "date"))
-WGIDevPolityDf <- tbl_df(WGIDevPolityDf)
-head(WGIDevPolityDf)
-str(WGIDevPolityDf)
-names(WGIDevPolityDf)
-
-# selecting the variables of interest in a new dataframe WGIDevPolityDf2:
-WGIDevPolityDf2 <- select(WGIDevPolityDf, country, countryCode, iso2c, iso3c, region = region.x, subregion = subregion.x, date, stability, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, HDI, GINI, polityScore, polityCategory, democracyInst, autocracyInst, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
-WGIDevPolityDf2$FHstatus <- as.factor(WGIDevPolityDf2$FHstatus)
-WGIDevPolityDf2 <- tbl_df(WGIDevPolityDf2)
-str(WGIDevPolityDf2)
-
-#checking for missing values
-colSums(is.na(WGIDevPolityDf2))
-
-#removing the cases where stability score is missing
-noStability <- filter(WGIDevPolityDf2, is.na(stability))
-WGIDevPolityDf2 <- anti_join(WGIDevPolityDf2, noStability)
-
-# removing columns with more that 20% of missing values
-WGIDevPolityDf2 <- select(WGIDevPolityDf2, country, countryCode, iso2c, iso3c, region, subregion, date, stability, stabilityCategory, regulatoryQuality, GNIperCapita, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
-
-# using only complete cases (new dataframe = WGIDevPolityDf3)
-WGIDevPolityDf3 <- WGIDevPolityDf2[complete.cases(WGIDevPolityDf2),]
-dim(WGIDevPolityDf3)
-colSums(is.na(WGIDevPolityDf3))
-```
-
-```{r echo=FALSE, include=FALSE}
-# model including all variables with complete cases
-WGIDevPolityDf3b <- select(WGIDevPolityDf3, region, subregion, stability, regulatoryQuality, GNIperCapita, politicalRights, civilLiberties, FHcombinedScore, FHstatus)
-
-```
-
 ```{r echo=TRUE, include=TRUE}
 # Table 7 - Summary of the Generalized Linear Regression Model Using Step Function
-modelFit1 <- step(glm( data=WGIDevPolityDf3b, stability ~ .), trace=0,steps=10000) 
-summary(modelFit1)
+# modelFit1 <- step(glm( data=WGIdevRegimeType, stability ~ .), trace=0,steps=10000) 
+# summary(modelFit1)
 ```
 
 The above step function allows us the identify the following variables as the most significant predictors to be included in the prediction models: 
@@ -409,18 +295,14 @@ Using the variables identified through the above step function, we run machine l
 
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
-
-library(dplyr)
-library(caret)
-library(kernlab)
 #selecting the variables for the model
-WGIDevPolityDf4 <- select(WGIDevPolityDf3, stability, subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus)
+WGIdevRegimeType2 <- select(WGIdevRegimeType, stability, regulatoryQuality, GNIperCapita, HDI, polityScore, democ, autoc, xrreg, xrcomp, inverse_pr, inverse_cl, inverse_mean)
 
 # create train and test sets
 set.seed(635)
-inTrain1 <- createDataPartition(y=WGIDevPolityDf4$stability, p=0.75, list=FALSE)
-train1 <- WGIDevPolityDf4[inTrain1,]
-test1 <- WGIDevPolityDf4[-inTrain1,]
+inTrain1 <- createDataPartition(y=WGIdevRegimeType2$stability, p=0.75, list=FALSE)
+train1 <- WGIdevRegimeType2[inTrain1,]
+test1 <- WGIdevRegimeType2[-inTrain1,]
 
 # build generalized linear regression model on training set
 modelFit1 <- glm(stability ~ .,data=train1)
@@ -465,14 +347,14 @@ library(kernlab)
 library(rattle)
 
 #selecting the variables for the model (new dataframe = WGIDevPolityDf4)
-WGIDevPolityDf5 <- select(WGIDevPolityDf3, stabilityCategory, subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus)
+WGIdevRegimeType3 <- select(WGIdevRegimeType, stabilityCategory, regulatoryQuality, GNIperCapita, polityScore)
 
 
 # create test/train data sets
 set.seed(123)
-inTrain2 <- createDataPartition(y=WGIDevPolityDf5$stabilityCategory,p=0.75, list=FALSE)
-train2 <- WGIDevPolityDf5[inTrain2,]
-test2 <- WGIDevPolityDf5[-inTrain2,]
+inTrain2 <- createDataPartition(y=WGIdevRegimeType3$stabilityCategory,p=0.75, list=FALSE)
+train2 <- WGIdevRegimeType3[inTrain2,]
+test2 <- WGIdevRegimeType3[-inTrain2,]
 head(train2)
 
 ```
@@ -503,4 +385,7 @@ fancyRpartPlot(modFit4$finalModel)
 
 
 ```
+
+## References
+
 
