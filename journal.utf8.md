@@ -7,9 +7,7 @@ output:
   word_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ## September 2018
 
@@ -122,4 +120,5 @@ This month I will travel to Madagascar, where I will complete the following task
 - visit also the Doctoral School to see if I can teach a course or supervise a doctoral student,
 
 - look also for possible collaboration on a book about the politics in Madagascar with Miary. This will include survey and elite interview on: the meaning of politics for the malagasy people, the objectives of participating in the political process, and the different stategies that can be used to achieve those objectives
+
 

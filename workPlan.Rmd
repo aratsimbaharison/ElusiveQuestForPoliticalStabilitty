@@ -20,11 +20,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Step 2.1 - Chapter 1: What is it and Why Does it Matters? (by mid-October)
 
-### Step 2.2 - Chapter 2: Approach and Methodology (by end-October)
+### Step 2.2 - Chapter 2: Political Stability Around the World Since the End of the Cold War: Exploratory Analysis and Machine Learning Prediction (by end of December)
 
 
-## Step 3: Complete Part II - The Condictions of Political Instability and Crisis (by end of November)
+## Step 3: Complete Part II - The Condictions of Political Instability and Crisis (by end of Summer 2019)
 
 
-## Step 4: Complete Part III - The Triggers of Political Instability and Crisis (by end of December)
+
+## Step 4: Complete Part III - The Triggers of Political Instability and Crisis (by end of Summer 2019)
 

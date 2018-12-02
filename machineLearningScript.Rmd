@@ -1,0 +1,72 @@
+---
+title: "Script for conducting supervised learning"
+author: "Adrien Ratsimbaharison"
+date: "12/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Splitting the data using the caret package
+
+In this example, we are using the `mtcars` dataset and build a model to predict `mpg` (mile per gallon) for the car in the data
+
+```{r}
+library(caret)
+
+#Split the data into training and test sets
+set.seed(1234)
+in_train <- createDataPartition(mtcars$am, p = .80, list = FALSE)
+training <- mtcars[in_train, ]
+testing <- mtcars[- in_train, ]
+head(testing)
+```
+
+## Building and evaluating a model
+
+This is the model using simple linear regression (lm) and random forest (rf) method
+```{r}
+# Train a random forest model
+fit_rf <- train(mpg ~ ., method = "rf", data = training,
+                trControl = trainControl(method = "none"))
+
+# Train a random forest model
+fit_lm <- train(mpg ~ ., method = "lm", data = training,
+                trControl = trainControl(method = "none"))
+
+# Print the model object
+fit_rf
+fit_lm
+```
+
+This is how the above model is evaluated using the yardstick package
+
+```{r}
+library(yardstick)
+library(dplyr)
+
+# Create the new columns
+results <- training %>%
+    mutate(`Linear regression` = predict(fit_lm, training),
+           `Random forest` = predict(fit_rf, training))
+
+# Evaluate the performance
+metrics(results, truth = mpg, estimate = `Linear regression`)
+metrics(results, truth = mpg, estimate = `Random forest`)
+```
+
+## Testing the model
+
+```{r}
+# Create the new columns
+results <- testing %>%
+    mutate(`Linear regression` = predict(fit_lm, testing),
+           `Random forest` = predict(fit_rf, testing))
+
+# Evaluate the performance
+metrics(results, truth = mpg, estimate = `Linear regression`)
+metrics(results, truth = mpg, estimate = `Random forest`)
+```
+

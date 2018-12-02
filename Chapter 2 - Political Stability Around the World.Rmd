@@ -1,8 +1,11 @@
 ---
-title: "Chapter 2 - Political Stability Around the World Since the End of the Cold War: Descriptive Statistics and Exploratory Data Analysis"
+title: 'Chapter 2 - Political Stability Around the World Since the End of the Cold
+  War: Descriptive Statistics and Exploratory Data Analysis'
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 bibliography: bibliography.bib
 ---
 
@@ -46,33 +49,31 @@ Thus, based on the dataset on the political stability estimate of all countries 
 Furthermore, Figure 2 shows that the data on political stability is not normally distributed, but skweed to the left, which indicates the existence of outliers with negative values. Figure 2 also shows that the mode is between 0.5 and 1.   
 
 
-```{r echo=TRUE, warning=FALSE, include=TRUE}
-# a clean dataset including WGI, development indicators, and RegimeType indicators, is available in the local repository under "WGIdevRegimeType.csv"
+```{r echo=TRUE, warning=FALSE, include=TRUE, fig.cap= "Table 1 - Political Stability Around the World: Summary statistics"}
 
-
-# Table 1 - Summary statistics of the political stability estimate
-
+#Table 1 - Political Stability Around the World: Summary statistics
 summary(WGIdevRegimeType$stability, na.rm = TRUE)
 
 ```
 
 
-```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 1 - Political Stability: Summary Statistics"}
+```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 1 - Political Stability Around the World: Summary Statistics"}
 
 #Figure 1 - Political Stability: Summary Statistics
 
 boxplot(WGIdevRegimeType$stability, main = "")
+abline(h = 0, lwd = 2)
 
 ```
 
 
-```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap= "Figure 2 - Political Stability: Frequency"}
+```{r echo=FALSE, fig.cap= "Figure 2 - Political Stability Around the World: Frequency Distribution", message=FALSE, warning=FALSE, include=TRUE}
 
-#Figure 2 - Political Stability: Frequency
+#Figure 2 - Political Stability Around the World: Frequency Distribution
 
 hist(WGIdevRegimeType$stability, main= "", xlab = "Political Stability Estimate")
 abline(v = median(WGIdevRegimeType$stability, na.rm = TRUE), lwd = 2)
-text(x = -1, y = 650, "Median= 0.089")
+text(x = -1.3, y = 520, "Median= -0.09958")
 
 ```
 
