@@ -8,65 +8,124 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## General principle according to Max Khun, the author of the caret package in r
 
-## Splitting the data using the caret package
+Two types of supervised learning:   
 
-In this example, we are using the `mtcars` dataset and build a model to predict `mpg` (mile per gallon) for the car in the data
+  + Classification
+  + Regression
+
+Common metrics to evaluate models: Root Mean Squared Error (RMSE) for regression (e.g. lm())   
+
+  + Quantifiable
+  + Objective
+
+Common procedure is to calculate in-sample RMSE   
+
+  + Too optimistic
+  + Leads to overfi!ing
+
+Better procedure is to calculate out-of-sample error (a la caret)  
+
+  + Simulates real-world usage
+  + Helps avoid overfitting
 
 ```{r}
+# this is how to calculate out-of-sample RMSE
+
+# Fit a model to the mtcars data
+data(mtcars)
+model <- lm(mpg ~ hp, mtcars[1:20, ])
+
+# Predict out-of-sample
+predicted <- predict(model, mtcars[21:32, ], type = "response")
+
+# Evaluate error
+actual <- mtcars[21:32, "mpg"]
+sqrt(mean((predicted - actual)^2))
+# result = 5.507236
+
+```
+
+## Practicing machine learning
+
+
+### Reordering the dataset before splitting to train and test sets
+
+To ensure that the training set and test set are both random samples and that any biases in the ordering of the dataset (e.g. if it had originally been ordered by price or size) are not retained in the samples, it is better to order the dataset randomly, then divide it into the two sets.
+
+```{r}
+# this is how to reoder a dataset randomly, using the diamonds dataset
+
+# Set seed
+data(diamonds)
+set.seed(42)
+
+# Shuffle row indices: rows
+rows <- sample(nrow(diamonds))
+
+# Randomly order data
+diamonds <- diamonds[rows, ]
+```
+
+### Splitting the dataset into 80-20% split
+
+```{r}
+# Determine row to split on: split
+split <- round(nrow(diamonds)*.80)
+
+# Create train
+train <- diamonds[1: split, ]
+
+# Create test
+test <- diamonds[(split +1): nrow(diamonds),]
+
+
+```
+
+### Predicting test set
+
+```{r}
+# Fit lm model on train: model
+model <- lm(price ~., train)
+
+# Predict on test: p
+p <- predict(model, test)
+
+```
+
+### Calculating the RMSE by hand
+
+```{r}
+# Compute errors: error
+error <- p - test[["price"]]
+
+# Calculate RMSE
+sqrt(mean(error^2))
+
+# result: 1136.596
+```
+
+### Training and testing a model using cross-validarion with the caret package
+
+In this example, we are using the `mtcars` dataset and build a model to predict `mpg` (mile per gallon) for the car models in the dataset
+
+```{r}
+# Set seed for reproducibility
 library(caret)
+data(mtcars)
+set.seed(42)
+# Fit linear regression model
+model <- train(mpg ~ hp, mtcars,
+  method = "lm",
+  trControl = trainControl(
+  method = "cv", number = 10,
+  verboseIter = TRUE
+    )
+    )
+#to see the result
+summary(model)
 
-#Split the data into training and test sets
-set.seed(1234)
-in_train <- createDataPartition(mtcars$am, p = .80, list = FALSE)
-training <- mtcars[in_train, ]
-testing <- mtcars[- in_train, ]
-head(testing)
+# Aggregating results
+# Fitting final model on full training set
 ```
-
-## Building and evaluating a model
-
-This is the model using simple linear regression (lm) and random forest (rf) method
-```{r}
-# Train a random forest model
-fit_rf <- train(mpg ~ ., method = "rf", data = training,
-                trControl = trainControl(method = "none"))
-
-# Train a random forest model
-fit_lm <- train(mpg ~ ., method = "lm", data = training,
-                trControl = trainControl(method = "none"))
-
-# Print the model object
-fit_rf
-fit_lm
-```
-
-This is how the above model is evaluated using the yardstick package
-
-```{r}
-library(yardstick)
-library(dplyr)
-
-# Create the new columns
-results <- training %>%
-    mutate(`Linear regression` = predict(fit_lm, training),
-           `Random forest` = predict(fit_rf, training))
-
-# Evaluate the performance
-metrics(results, truth = mpg, estimate = `Linear regression`)
-metrics(results, truth = mpg, estimate = `Random forest`)
-```
-
-## Testing the model
-
-```{r}
-# Create the new columns
-results <- testing %>%
-    mutate(`Linear regression` = predict(fit_lm, testing),
-           `Random forest` = predict(fit_rf, testing))
-
-# Evaluate the performance
-metrics(results, truth = mpg, estimate = `Linear regression`)
-metrics(results, truth = mpg, estimate = `Random forest`)
-```
-
