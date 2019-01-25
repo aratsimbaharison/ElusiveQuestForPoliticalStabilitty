@@ -260,16 +260,14 @@ GNIperCapitaDf <- select(GNIperCapitaDf, country, iso2c, date, GNIperCapita = va
 GNIperCapitaDf$date <- as.numeric(as.character(GNIperCapitaDf$date))
 head(GNIperCapitaDf)
 
-# #data on human development index (UNDP.HDI.XD)
-# HDIDf <- wb(country = "countries_only", indicator = "UNDP.HDI.XD", 
-#             startdate = 1996, enddate = 2018, POSIXct = TRUE)
-# HDIDf <- tbl_df(HDIDf)
-# HDIDf <- select(HDIDf, country, iso2c, date, HDI = value)
-# HDIDf$date <- as.numeric(as.character(HDIDf$date))
-# head(HDIDf)
-# summary(HDIDf)
+# creating a variable with four categories of development with dplyr
+GNIperCapitaDf <- GNIperCapitaDf %>% mutate(devCategory=cut(GNIperCapita, breaks=c(0, 1025, 4035, 12475, Inf), labels=c("Low Income","Lower Middle Income","Upper Middle Income", "High Income")))
+head(GNIperCapitaDf)
+summary(GNIperCapitaDf)
+table(GNIperCapitaDf$devCategory)
 
-# alternative dataset for HDI, downloaded directly from the UNDP Website (http://hdr.undp.org/en/data#), but it needs to be transformed and merged to World Bank data:
+
+# dataset for HDI, downloaded directly from the UNDP Website (http://hdr.undp.org/en/data#), but it needs to be transformed and merged to World Bank data:
 UNDP_HDI <- read_csv("UNDP.HDI.csv")
 head(UNDP_HDI)
 

@@ -173,29 +173,6 @@ text(x = -1, y = 650, "Median= 0.089")
 
 As shown in Table 2 and Figure 3, the annual average of politial stability has remained below zero during the time period of 1996-2016 throughout the world. There was no time it had a positive value.
 
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-
-# Political Stability Trend: Annual Average Around the World
-PoliticalStabilityTrendWorld <- WGIbyRegion %>%
-  group_by(date) %>%
-  summarise(AnnualAverage = mean(stability, na.rm=TRUE))
-PoliticalStabilityTrendWorld <- tbl_df(PoliticalStabilityTrendWorld)
-
-
-```
-
-
-```{r echo=FALSE, warning=FALSE, include=TRUE, results= 'asis'}
-
-#Table 2 - Political Stability Trend: Annual Average Around the World
-
-kable(PoliticalStabilityTrendWorld, caption = "Table 2 - Political Stability Trend: Annual Average Around the World")
-
-```
-
-
-
-
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 3 - Political Stability Trend: Annual Average Around the World"}
 
 

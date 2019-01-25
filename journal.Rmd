@@ -1,25 +1,27 @@
 ---
-title: "Journal"
+title: "Research Project Journal"
 author: "Adrien Ratsimbaharison"
 date: "9/16/2018"
 output:
-  html_document: default
   word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+My research project under the sabbatical leave started practically in mid-September 2018, because the month of August was spent on getting the clearance to work on USC campus, getting office space within the Walker Institute, and getting access to the USC library and internet system.
+
 
 ## September 2018
 
-- 9/16/2018: I restarted this research project with a new r project entitled "ELUSIVE QUEST" under the "AFRICAN POLITICS RESEARCH" in my dropbox. I choose the title "ELUSIVE QUEST" to preserve the files I already created in the old project "ELUSIVE QUEST FOR POLITICAL STABILITY'.
+- 9/16/2018: I started this research project with a new r project entitled "ELUSIVE QUEST" under the "AFRICAN POLITICS RESEARCH" in my dropbox.
+
 This new r project was created with a new gitHub repository entitled "ElusiveQuestForPoliticalStabilitty" and a version control on git.
 
-  . I will start the data collection and cleaning this week, at the same time, I will take a new course on this subject on DataCamp.
+  . I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.
 
 - 9/18/2018: completed the course on data importing and cleaning on DataCamp.  
-Now I need to move to some serious stuff.  
 
 - 9/19/2018: I realized that I still need to learn how to download, read and save qualitative data (news, reports and analysis on conflicts) in r. So I decided to take another course on "Working with Web Data in R" on DataCamp. I plan to comoplete this course in 3 to 4 days. At the same time, I need to start collecting and cleaning the quantitative data from the Word Bank.
 
@@ -48,7 +50,7 @@ Now I need to move to some serious stuff.
 
 - I will still need to clean the data before analysis.
 
-CAMEROON RESEARCH PROJECT (with Ben Bongang)
+CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political Science at Savannah State Univeristy)
 
 - 9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.
 
@@ -115,11 +117,17 @@ CAMEROON RESEARCH PROJECT (with Ben Bongang)
 ## December 2018
 
 This month I will travel to Madagascar, where I will complete the following tasks:
-- observation of the second round of the presidential election: look at the campaign stategies, people's interest and participation
+- observation of the second round of the presidential election: look at the campaign stategies, people's interest and participation,
 
-- visit the University of Antananarivo for possible cooperation with the University of South Carolina,
+- look also for possible collaboration on a book about the politics in Madagascar. This will include survey and elite interview on: the meaning of politics for the malagasy people, the objectives of participating in the political process, and the different stategies that can be used to achieve those objectives
 
-- visit also the Doctoral School to see if I can teach a course or supervise a doctoral student,
+- 12/4/2018: before I leave for Madagascar, I downloaded the "Comprehensive Machine Learning Workflow" by Gabriel Pierobon (which I will read on the plane and during my trip to Madagascar), and I also reviewed the online courses on "Machine learning toobox" by Max Kuhn.
 
-- look also for possible collaboration on a book about the politics in Madagascar with Miary. This will include survey and elite interview on: the meaning of politics for the malagasy people, the objectives of participating in the political process, and the different stategies that can be used to achieve those objectives
+
+- 12/10 to 12/12/2018: I applied Pierobon's machine learning workflow in the analysis of the quantitative data in Chapter 2
+
+
+- 12/13/2018: the application of Pierobon's workflow lead me to reconsider my dataset and decide to include a new variable on development category using the World Bank's latest economic classification
+
+- I stopped at the identification of the unnecessary variables.
 

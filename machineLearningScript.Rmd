@@ -58,6 +58,8 @@ To ensure that the training set and test set are both random samples and that an
 # this is how to reoder a dataset randomly, using the diamonds dataset
 
 # Set seed
+library(dplyr)
+library(caret)
 data(diamonds)
 set.seed(42)
 
@@ -106,7 +108,7 @@ sqrt(mean(error^2))
 # result: 1136.596
 ```
 
-### Training and testing a model using cross-validarion with the caret package
+### Training and testing a model using cross-validation with the caret package
 
 In this example, we are using the `mtcars` dataset and build a model to predict `mpg` (mile per gallon) for the car models in the dataset
 
@@ -129,3 +131,29 @@ summary(model)
 # Aggregating results
 # Fitting final model on full training set
 ```
+
+Using cross-validation on the diamonds dataset
+
+```{r}
+# Fit lm model using 10-fold CV: model
+model <- train(
+  price ~ ., diamonds,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+
+# Print the summary and the model to console
+summary(model)
+model
+```
+
+Prediction of the full dataset
+
+```{r}
+# Predict on full Boston dataset
+predict(model, diamonds)
+```
+
