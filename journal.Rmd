@@ -129,5 +129,29 @@ This month I will travel to Madagascar, where I will complete the following task
 
 - 12/13/2018: the application of Pierobon's workflow lead me to reconsider my dataset and decide to include a new variable on development category using the World Bank's latest economic classification
 
-- I stopped at the identification of the unnecessary variables.
+- 12/19/2018: While in Madagascar, I continued the application of Pierobon's workflow and stopped at the identification of the unnecessary variables. 
+In fact, I was not able to create the new variable on development category, because of the internet connection did not allow me to access my data from the cloud.
+
+## January 2019:
+
+- 01/25/2019: I decided to continue working on this project during my free times on the evenings and weekends.
+
+- First thing to do is to review the data by reviewing the scripts and reloading from the data sources
+
+- As I cleaned the data, I realize that too many variables that have too much missing values (up to 80%) had to be dropped. Consequently, I decide to imputation for variables that should not fluctuate too much over time (Ex.: GNI per capita, GINI, povertyHeadcount, ect.) and when it is reasonable to think that such imputation would not change the big picture.
+
+- 01/27/2019: WGIbyCountryAndRegion (line 231 in the scriptForDownloadingQuantitativeData) is clean with no missing values, but the following variables had to be dropped: 
+ corruptionControl
+ governmentEffectiveness
+ ruleOfLaw
+ voiceAndAccountability
+By dropping these variables, we are left with only the following variables related to the WGI:
+ stability
+ stabilityDummy
+ stabilityCategory
+ regulatoryQuality
+
+01/27/2019 at 6:30 am: I stopped at line 372 in the scriptForDownloadingQuantitativeData
+
+
 
