@@ -209,8 +209,6 @@ regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Pie
 regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Western Sahara",]
 regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Virgin Islands (British)",]
 
-View(regionSubregionDf)             
-
 #joining the data on WGI with the UN classification by region and subregion
 WGIbyCountryAndRegion <- left_join(WGI, regionSubregionDf, by = c("country", "iso2c"))
 WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
@@ -237,8 +235,7 @@ summary(WGIbyCountryAndRegion)
 
 ```
 
-## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`
-
+## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`, and then joining the datasets with the dataset on WGI (WGIbyCountryAndRegion)
 
 ```{r warning=FALSE}
 library(wbstats)
@@ -251,6 +248,7 @@ library(kernlab)
 library(stringr)
 library(knitr)
 library(tidyr)
+library(VIM)
 
 
 #data on GDP growth (annual %) (NY.GDP.MKTP.KD.ZG)
@@ -362,39 +360,43 @@ names(WGIdevIneqPovDF)
 summary(WGIdevIneqPovDF)
 
 # Using the dataset with imputation devIneqPovDF2:
-WGIdevIneqPovDF2 <- left_join(WGIbyCountryAndRegion, devIneqPovDF2, by = c("country", "iso2c", "date"))
+WGIdevIneqPovDF2 <- left_join(devIneqPovDF2, WGIbyCountryAndRegion, by = c("country", "iso2c", "date"))
 WGIdevIneqPovDF2 <- tbl_df(WGIdevIneqPovDF2)
 WGIdevIneqPovDF2$date <- as.numeric(as.character(WGIdevIneqPovDF2$date))
 head(WGIdevIneqPovDF2)
 names(WGIdevIneqPovDF2)
 summary(WGIdevIneqPovDF2)
 
-# cleaning the dataframe WGIdevIneqPovDF by dropping variables and observation in combination with kNN
-library(VIM)
-summary(WGIdevIneqPovDF)
+# Given the fact that there are 1009 missing values in most of the variables (particularly GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount) for in the dataset with imputation, I decided to rerun the imputation
+WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF2)
+head(WGIdevIneqPovDF2)
+names(WGIdevIneqPovDF2)
+WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, M49Code, iso2c, date, region, subregion, stability, stabilityDummy, stabilityCategory, regulatoryQuality, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount)
 summary(WGIdevIneqPovDF2)
 
-# the first step in the data cleaning is to drop the columns with too much NAs: GINI 2432 out of 3471 obs, povertyHeadCount 2404 out of 3471 obs
+# # making the dataset on WGI, development, social inequality and poverty with imputation (WGIdevIneqPovDF2), available in the local repository under the file name `WGIdevIneqPov2.csv`
+# 
+# WGIdevIneqPov2 <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPov2.csv")
+
+
+
+# cleaning the dataset without imputation (WGIdevIneqPovDF). The process consists here of two steps:
+# 1) dropping variables with more than 80% of missing values, that is GINI and povertyHeadCount, and
+# 2) dropping the observations with missing values for the variables that have about 10% missing values
+
+# dropping the columns with more than 80% of missing values: GINI 2674 out of 3650 obs, povertyHeadCount 2656 out of 3650 obs
 WGIdevIneqPovDF <- select(WGIdevIneqPovDF, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, devCategory, HDI)
-
-# the second step is to drop the observations with missing GDPgrowthRate (136), and then missing HDI (267)
-WGIdevIneqPovDF <- subset(WGIdevIneqPovDF, WGIdevIneqPovDF$GDPannualGrowthRate != "NA")
-WGIdevIneqPovDF <- subset(WGIdevIneqPovDF, WGIdevIneqPovDF$HDI != "NA")
 summary(WGIdevIneqPovDF)
 
+# the second step is to drop all remaining observations with missing values and using complete cases only
+WGIdevIneqPovDF <- na.omit(WGIdevIneqPovDF)
+summary(WGIdevIneqPovDF)
 
-# the last step is to imput GNI per capita using kNN (It is reasonable to consider that GNI per capita does not dramatically increase or decrease with a span of 5 years)
-
-# clean data on WGI and development, inequality and poverty = WGIregimeTypeByRegionDF2, which is available in the local repository under "WGIdevIneqPov.csv"
-
-WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF, variable = "GNIperCapita", k = 5)
-WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, iso2c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion, GDPannualGrowthRate, GNIperCapita, devCategory, HDI)
-summary(WGIdevIneqPovDF2)
-
-# # making the data on WGI, development, social inequality and poverty (WGIdevIneqPovDF) available in the local repository
+# # making the dataset on WGI, development, social inequality and poverty without imputation (WGIdevIneqPovDF), available in the local repository under the file name `WGIdevIneqPov.csv`
 # 
-# WGIdevIneqPov <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPov.csv")
-# 
+# WGIdevIneqPov <- write.csv(WGIdevIneqPovDF, "WGIdevIneqPov.csv")
+
+
 
 ```
 
@@ -411,6 +413,7 @@ library(caret)
 library(kernlab)
 library(stringr)
 library(knitr)
+library(VIM)
 
 # # data on political system, revised combined polity score (UPP.REV.POL.XQ) - see Polity IV
 # polityScoreDf <- wb(country = "countries_only", indicator = "UPP.REV.POL.XQ", 

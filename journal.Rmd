@@ -134,24 +134,36 @@ In fact, I was not able to create the new variable on development category, beca
 
 ## January 2019:
 
-- 01/25/2019: I decided to continue working on this project during my free times on the evenings and weekends.
+- 01/25/2019: I decided to review the data by reviewing the scripts and reloading the data from their original sources, and then clean then.
 
-- First thing to do is to review the data by reviewing the scripts and reloading from the data sources
+- As I cleaned the data, I realized that there were too many variables that had too much missing values (up to 80%). I decided to drop these variables. I also decided to impute the values of variables that should not fluctuate too much over time (especially, GNI per capita, GINI, povertyHeadcount) and when it is reasonable to think that such imputation would not change the big picture. This applies particularly to the variables with missing values about 10%.
 
-- As I cleaned the data, I realize that too many variables that have too much missing values (up to 80%) had to be dropped. Consequently, I decide to imputation for variables that should not fluctuate too much over time (Ex.: GNI per capita, GINI, povertyHeadcount, ect.) and when it is reasonable to think that such imputation would not change the big picture.
+As a result of the decision to impute the values of GNI per capita, GINI and povertyHeadcount, I ended up with two datasets on devIneqPov:
+1) devIneqPovDF without imputation
+2) devIneqPovDF2 with imputattion 
 
-- 01/27/2019: WGIbyCountryAndRegion (line 231 in the scriptForDownloadingQuantitativeData) is clean with no missing values, but the following variables had to be dropped: 
- corruptionControl
- governmentEffectiveness
- ruleOfLaw
- voiceAndAccountability
+The existence of these two datasets also led me to create two datasets for WGIdevIneqPovDF:
+1) WGIdevIneqPovDF without imputation
+2) WGIdevIneqPovDF2 with imputattion 
+
+- 01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward: 
+. corruptionControl
+. governmentEffectiveness
+. ruleOfLaw
+. voiceAndAccountability
+
 By dropping these variables, we are left with only the following variables related to the WGI:
- stability
- stabilityDummy
- stabilityCategory
- regulatoryQuality
+. stability
+. stabilityDummy
+. stabilityCategory
+. regulatoryQuality
 
-01/27/2019 at 6:30 am: I stopped at line 372 in the scriptForDownloadingQuantitativeData
+- 1/28/2019:
+I think I have finally two clean datasets on WGI, development and poverty:
+1) WGIdevIneqPovDF without imputation (2472 observations), available in the folder under `WGIdevIneqPov.csv`
+2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the folder under `WGIdevIneqPov2.csv`
 
+I also rerun and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
 
+- stopped at line 639 "Joining all dataframes on WGI, econimic and social indicators and regime types"
 
