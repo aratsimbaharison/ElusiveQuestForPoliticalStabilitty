@@ -3,8 +3,8 @@ title: "Research Project Journal"
 author: "Adrien Ratsimbaharison"
 date: "9/16/2018"
 output:
-  word_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -146,24 +146,33 @@ The existence of these two datasets also led me to create two datasets for WGIde
 1) WGIdevIneqPovDF without imputation
 2) WGIdevIneqPovDF2 with imputattion 
 
-- 01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward: 
+- 01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:  
+
 . corruptionControl
 . governmentEffectiveness
 . ruleOfLaw
 . voiceAndAccountability
 
-By dropping these variables, we are left with only the following variables related to the WGI:
+By dropping these variables, we are left with only the following variables related to the WGI:  
+
 . stability
 . stabilityDummy
 . stabilityCategory
 . regulatoryQuality
 
 - 1/28/2019:
-I think I have finally two clean datasets on WGI, development and poverty:
+I have finally two clean datasets on WGI, development and poverty:
 1) WGIdevIneqPovDF without imputation (2472 observations), available in the folder under `WGIdevIneqPov.csv`
 2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the folder under `WGIdevIneqPov2.csv`
 
 I also rerun and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
 
-- stopped at line 639 "Joining all dataframes on WGI, econimic and social indicators and regime types"
+- 01/29/2019:
+I joined the following dataframes together:
+1) WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount)
+2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount
+3) WGIregimeTypeByRegionDF
+
+The results of the joining of the above dataframes are: `WGIdevRegimeTypeDF1` and `WGIdevRegimeTypeDF2` that are available in the local repository under `WGIdevRegimeType1.csv` and `WGIdevRegimeType2.csv`
+
 
