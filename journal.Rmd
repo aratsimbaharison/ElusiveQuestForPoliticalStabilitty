@@ -19,7 +19,7 @@ My research project under the sabbatical leave started practically in mid-Septem
 
 This new r project was created with a new gitHub repository entitled "ElusiveQuestForPoliticalStabilitty" and a version control on git.
 
-  . I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.
+  - I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.
 
 - 9/18/2018: completed the course on data importing and cleaning on DataCamp.  
 
@@ -31,19 +31,19 @@ This new r project was created with a new gitHub repository entitled "ElusiveQue
 
 - 9/23/2018: I started downloading and cleaning data from the World Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined file WGIdevIneqPov are available in the local repository.
 
-  . But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
+  - But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
 
 - 9/24/2018: I was in the end able to download and read the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
 
-  . I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.
+  - I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.
 
-  . Standardization of country names and codes.
+  - Standardization of country names and codes.
   
-  . Step 1: I created the file `WBcountryIso2c_Iso3c_M49Code.csv` which combines the World Bank's country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.
+  - Step 1: I created the file `WBcountryIso2c_Iso3c_M49Code.csv` which combines the World Bank's country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.
   
-  . Step 2: I reviewed Luke's country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke's country names and codes consistent with the World Bank's country names and codes.
+  - Step 2: I reviewed Luke's country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke's country names and codes consistent with the World Bank's country names and codes.
   
-  . Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House's country names and codes consistent with the World Bank's country names and codes.
+  - Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House's country names and codes consistent with the World Bank's country names and codes.
   
   
 - 9/26/2018: I am done with the script to download the quantitative data.
@@ -54,13 +54,13 @@ CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political Science at S
 
 - 9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.
 
-  . I downloaded the WGI for Cameroon
+  - I downloaded the WGI for Cameroon
   
-  . I downloaded the economic and social indicators from the World Bank
+  - I downloaded the economic and social indicators from the World Bank
   
-  . I downloaded the regime type indicators
+  - I downloaded the regime type indicators
   
-  . I rerun and verify the script on downloading the quantitative indicators on Cameroon
+  - I rerun and verify the script on downloading the quantitative indicators on Cameroon
 
 
 - 9/29/2018: I am back to the main project: I reviewed the script for downloading quantitative data and initiated a script for quantitative data analysis.
@@ -101,8 +101,8 @@ CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political Science at S
 
 - 11/15/2018: I go back to writing Chapter 1, focusing particularly on literature review:
 
-  *  on how "political stability" has been defined and operationalized by previous authors
-  *  on why "political stability" is important for African political leaders and people, as well as for the international community, starting with the African Union, the United Nations, and the international donors
+  - on how "political stability" has been defined and operationalized by previous authors
+  - on why "political stability" is important for African political leaders and people, as well as for the international community, starting with the African Union, the United Nations, and the international donors
 
 - 11/18/2018: I am now at the sections "Why Does Political Stability Matter?" and "The Argument of the book"
 
@@ -148,31 +148,36 @@ The existence of these two datasets also led me to create two datasets for WGIde
 
 - 01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:  
 
-. corruptionControl
-. governmentEffectiveness
-. ruleOfLaw
-. voiceAndAccountability
+  - corruptionControl
+  - governmentEffectiveness
+  - ruleOfLaw
+  - voiceAndAccountability
 
 By dropping these variables, we are left with only the following variables related to the WGI:  
 
-. stability
-. stabilityDummy
-. stabilityCategory
-. regulatoryQuality
+  - stability
+  - stabilityDummy
+  - stabilityCategory
+  - regulatoryQuality
 
 - 1/28/2019:
 I have finally two clean datasets on WGI, development and poverty:
-1) WGIdevIneqPovDF without imputation (2472 observations), available in the folder under `WGIdevIneqPov.csv`
-2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the folder under `WGIdevIneqPov2.csv`
+1) WGIdevIneqPovDF without imputation (2472 observations), available in the local repository under `WGIdevIneqPov.csv`
+2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the local repository under `WGIdevIneqPov2.csv`
 
-I also rerun and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
+I also review and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
 
 - 01/29/2019:
-I joined the following dataframes together:
+I joined the dataframes on WGI, development, inequality, poverty, and regime types together. Specifically, the dataframes joined are:
 1) WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount)
-2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount
+2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount, and
 3) WGIregimeTypeByRegionDF
 
 The results of the joining of the above dataframes are: `WGIdevRegimeTypeDF1` and `WGIdevRegimeTypeDF2` that are available in the local repository under `WGIdevRegimeType1.csv` and `WGIdevRegimeType2.csv`
+
+- 01/30/2019:
+I decided to complete the execution of Pierobon's "machine learning workflow" to my data.
+
+Stopped at line 349 : "2.7 Dropping the unnecessary variables"
 
 
