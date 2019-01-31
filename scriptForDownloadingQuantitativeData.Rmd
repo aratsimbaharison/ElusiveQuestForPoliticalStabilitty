@@ -668,7 +668,7 @@ summary(WGIdevRegimeTypeDF1)
 
 WGIdevRegimeTypeDF2 <- left_join(WGIdevIneqPovDF2, WGIregimeTypeByRegionDF, by = c("country", "date"))
 
-WGIdevRegimeTypeDF2 <- select(WGIdevRegimeTypeDF2, country, M49Code = M49Code.x, iso2c, region = region.x, subregion =  subregion.x, date, stability = stability.x, stabilityDummy = stabilityDummy.x, stabilityCategory = stabilityCategory.x, regulatoryQuality.x = regulatoryQuality.x, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH)
+WGIdevRegimeTypeDF2 <- select(WGIdevRegimeTypeDF2, country, M49Code = M49Code.x, iso2c, region = region.x, subregion =  subregion.x, date, stability = stability.x, stabilityDummy = stabilityDummy.x, stabilityCategory = stabilityCategory.x, regulatoryQuality = regulatoryQuality.x, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH)
 
 # Cleaning the dataframe WGIdevRegimeTypeDF2 by removing 725 rows with NAs for polityScore
 WGIdevRegimeTypeDF2 <- WGIdevRegimeTypeDF2 %>%
@@ -680,7 +680,7 @@ summary(WGIdevRegimeTypeDF2)
 # 
 # WGIdevRegimeType1 <- write.csv(WGIdevRegimeTypeDF1, "WGIdevRegimeType1.csv")
 # WGIdevRegimeType2 <- write.csv(WGIdevRegimeTypeDF2, "WGIdevRegimeType2.csv")
-
+# 
 
 ```
 

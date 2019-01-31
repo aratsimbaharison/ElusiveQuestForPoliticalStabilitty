@@ -74,6 +74,8 @@ library(psych)
 library(caret)
 library(caretEnsemble)
 library(doParallel)
+library(Hmisc)
+library(VIF)
 
 # we are using the dataframe WGIdevRegimeType2.csv with imputation for inequality and poverty headcount
 
@@ -156,7 +158,7 @@ glimpse(WGIdevRegimeType2)
 summary(WGIdevRegimeType2$stability)
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 1 - Summary Statistics of Political Stability Around the World"}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 1 - Summary Statistics of the Political Stability of the Whole World"}
 ggplot(data = WGIdevRegimeType2) +
   geom_boxplot(mapping = aes(y = stability), boundary = 0, fill = "grey", col = "black") +
   geom_hline(yintercept = 0, col = "red", size = 1)
@@ -164,7 +166,7 @@ ggplot(data = WGIdevRegimeType2) +
 ```
 
 
-```{r echo=FALSE, fig.cap="Fig. 2 - Histogram of Political Stability Around the World", message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE, fig.cap="Fig. 2 - Histogram of the Political Stability of the Whole World", message=FALSE, warning=FALSE, paged.print=FALSE}
 ggplot(data = WGIdevRegimeType2) +
   geom_histogram(mapping = aes(x = stability), bins = 15, boundary = 0, fill = "grey", col = "black") +
   geom_vline(xintercept = mean(WGIdevRegimeType2$stability), col = "blue", size = 1) +  
@@ -177,7 +179,7 @@ ggplot(data = WGIdevRegimeType2) +
 
 Figures 1 and 2 show that the distribution of the target variable is not perfectly normal, but we can procede regardless.
 
-2.3 Stability trends since the end of the Cold War around the world
+2.3 Trend of the Political Stability of the Whole World since the End of the Cold War
 
 
 
@@ -195,7 +197,7 @@ PoliticalStabilityTrendWorld
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap= "Fig. 3 - The Trend of Political Stability Score Around the World (1996-2016)"}
 ggplot(data = PoliticalStabilityTrendWorld) +
   geom_line(aes(x = date, y = AnnualAverage), col = "red", size = 1) + geom_hline(yintercept = 0, col = "black", size = 1) +
-  xlim(1996, 2016) + ylim(-.25, .25)
+  xlim(1996, 2016) + ylim(-.5, .5)
 ```
 
 
@@ -204,14 +206,27 @@ ggplot(data = PoliticalStabilityTrendWorld) +
 
 ```{r}
 
-#Political Stability summary for each region
+# Political Stability summary for each region
 
 politicalStabilityByRegion <- summarise(group_by(WGIdevRegimeType2, region),
           mean=mean(stability, na.rm = TRUE), sd=sd(stability, na.rm = TRUE))
 
 politicalStabilityByRegion
 
+# We compute the analysis of variance (ANOVA) to see if the differences of means are statistically significant
+res.aov <- aov(stability ~ region, data = WGIdevRegimeType2)
+
+# Summary of the analysis of variance (ANOVA)
+summary(res.aov)
+
+# As the ANOVA test is significant, we compute Tukey HSD (Tukey Honest Significant Differences) for performing multiple pairwise-comparison between the means of groups
+
+TukeyHSD(res.aov)
+
 ```
+
+
+
 
 ```{r}
 ggplot(data = WGIdevRegimeType2) +
@@ -231,15 +246,20 @@ Since we have too many variables, we can view the correlation by areas or groups
 
 1) correlation with the other world governance indicators
 2) correlation with the economic development indicators
-3) correlation with Polity IV variables
-4) correlation with Freedom House variables
+3) correlation with the main Polity IV variables (polityScore, democ, autoc, durable)
+4) correlation with other Polity IV variables (from xreg to polcomp)
+5) correlation with Freedom House variables
 
 
 ```{r}
-# Correlation between Political Stability and the other World Governance Indicators (WGI)
+# Correlation chart between Political Stability and the other World Governance Indicators (WGI)
 WGI <- select(WGIdevRegimeType2, stability, regulatoryQuality)
 correlationWGI <- chart.Correlation(WGI)
 correlationWGI
+
+# Correlation matrix with significance levels
+correlationWGI2 <- rcorr(as.matrix(WGI))
+correlationWGI2
 
 ```
 
@@ -252,6 +272,10 @@ devIndicators <- select(WGIdevRegimeType2, stability, GDPannualGrowthRate, GNIpe
 correlationDev <- chart.Correlation(devIndicators)
 correlationDev
 
+# Correlation matrix with significance levels
+correlationDev2 <- rcorr(as.matrix(devIndicators))
+correlationDev2
+
 ```
 
 
@@ -260,19 +284,29 @@ correlationDev
 ```{r}
 # Correlation between Political Stability and the main Polity IV indicators
 
-polityIvIndicators <- select(WGIdevRegimeType2, stability, polityScore, democ, autoc, durable)
-correlationPolityIv <- chart.Correlation(polityIvIndicators)
-correlationPolityIv
+polityIvIndicators1 <- select(WGIdevRegimeType2, stability, polityScore, democ, autoc, durable)
+correlationPolityIv1 <- chart.Correlation(polityIvIndicators1)
+correlationPolityIv1
+
+# Correlation matrix with significance levels
+correlationPolityIv1 <- rcorr(as.matrix(polityIvIndicators1))
+correlationPolityIv1
+
 
 ```
+
 
 
 ```{r}
 # Correlation between Political Stability and the other Polity IV indicators
 
-polityIvIndicators <- select(WGIdevRegimeType2, stability, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp)
-correlationPolityIv <- chart.Correlation(polityIvIndicators)
-correlationPolityIv
+polityIvIndicators2 <- select(WGIdevRegimeType2, stability, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp)
+correlationPolityIv2 <- chart.Correlation(polityIvIndicators2)
+correlationPolityIv2
+
+# Correlation matrix with significance levels
+correlationPolityIv2 <- rcorr(as.matrix(polityIvIndicators2))
+correlationPolityIv2
 
 ```
 
@@ -286,6 +320,10 @@ freedomHouseIndicators <- select(WGIdevRegimeType2, stability, inverse_pr, inver
 correlationFreedomHouse <- chart.Correlation(freedomHouseIndicators)
 correlationFreedomHouse
 
+# Correlation matrix with significance levels
+correlationFreedomHouse <- rcorr(as.matrix(freedomHouseIndicators))
+correlationFreedomHouse
+
 ```
 
 
@@ -296,6 +334,18 @@ In addition to the correlation chart, we can also cross-tabulate political stabi
 - politicalChange
 - status
 - politicalChangeFH
+
+
+```{r}
+#Crosstabulation between stability category and development category
+
+#using World Bank data on GNI per capita and development category
+
+stabilityAndDevCategory <- table(WGIdevRegimeType2$devCategory, WGIdevRegimeType2$stabilityCategory)
+prop.table(stabilityAndDevCategory, 1)
+#test of independence
+chisq.test(stabilityAndDevCategory)
+```
 
 
 ```{r}
@@ -334,55 +384,87 @@ chisq.test(changeAndStatus)
 
 
 
-```{r}
-#Crosstabulation between stability category and development category
-
-#using World Bank data on GNI per capita and development category
-
-stabilityAndDevCategory <- table(WGIdevRegimeType2$devCategory, WGIdevRegimeType2$stabilityCategory)
-prop.table(stabilityAndDevCategory)
-#test of independence
-chisq.test(stabilityAndDevCategory)
-```
-
 
 2.7 Dropping the unnecessary variables
 
+Following the rule of thumb established by some researchers on the use of correlation coefficient (See for instance, Hinkle, Wiersma & Jurs. 2002. Applied Statistics for the Behavioral Sciences), we decided to drop from this study the variables that have weak correlation with political stability. Specifically, setting the threshold at .30 (or -.30), we dropped the variables with a correlation coefficient of .00 to .30 (or .00 to -.30).
+
+As result of this selection, we kept in this study the following variables:
+
+- Variable related to World Governance Indicators (WGI):
+  
+  - regulatoryQuality  (correlation coefficient = .70) 
+
+- Variables related to economic development, inequality, and poverty:
+
+  - GNIperCapita (correlation coefficient = .62)     
+  - devCategory (categorical variable)       
+  - HDI (correlation coefficient = .62)            
+  - povertyHeadCount (correlation coefficient = -.43)
+
+- Variables from Polity IV
+
+  - polityScore (correlation coefficient = .33)   
+  - polityCategory (categorical variable)   
+  - democ (correlation coefficient = .32)
+  - durable (correlation coefficient = .49)
+
+  
+- Variables fron Freedom House
+
+  - inverse_pr (for pr) (correlation coefficient = .55)
+  - inverse_cl (for cl) (correlation coefficient = .62)
+  - status (categorical variable)
+
+```{r}
+# The definitive dataframe for this machine learning workflow is the following
+
+dataML <- select(WGIdevRegimeType2, country, M49Code, iso2c, region, subregion, date, stability, regulatoryQuality, GNIperCapita, HDI, povertyHeadCount, polityScore, democ, durable, inverse_pr, inverse_cl)
+dim(dataML)
+head(dataML)
+
+# sapply function for detecting NAs
+sapply(dataML, {function(x) any(is.na(x))})
+
+```
 
 
-2.8) Unnecessary columns? Columns we can quickly understand we don’t need. Drop them
-Here we want to look for columns which are totally useless. Anything that would come in the dataset that is really uninformative and we can determine that we should drop. Additional index columns, uninformative string columns, etc. This is not the case for this dataset. You could perfectly do this as soon as you import the dataset, no need to do it specifically at this point.
-2.9) Check for missing values. How many? Where? Delete them? Impute them?
-Let’s first do an overall check for NAs:
-anyNA(concrete)
-[1] FALSE
-Wonderful! no missing values in the whole set! Let me also show you a way we could have detected this for every column:
-sapply(concrete, {function(x) any(is.na(x))})
- 
-(Some tools for dealing with missing values)
-2.10) Check for outliers and other inconsistent data points. Box-plots. DBSCAN for outlier detection?
-Outlier detection is more of a craft than anything else, in my opinion. I really like the approach of using DBSCAN clustering for outlier detection but I’m not going to proceed with this so I don’t overextend this analysis. DBSCAN is a clustering algorithm that can detect noise points in the data and not assign them to any cluster. I find it very compelling for outlier detection (more about DBSCAN here)
-Instead, I’ll just go ahead with a boxplot and try to work with the points I consider relevant just by sight:
-boxplot(concrete[-9], col = “orange”, main = “Features Boxplot”)
- 
-We see that there are several potential outliers, however I consider that the age feature could be the most problematic. Let’s look at it isolated:
-boxplot(concrete$age, col = “red”)
- 
-Are these just 4 outliers? If so, we could just get rid of them. Or shouldn’t we? Let’s find out what this values are and how many of them are there.
-age_outliers <- which(concrete$age > 100)
-concrete[age_outliers, “age”]
- 
-Oh my! so there were 62 of them instead of just 4! Obviously this is simply because the same numbers are repeated several times. This makes me think that this age points are actually relevant and we don’t want to get rid of them. 62 data points from our 1,030 dataset seems too high a number to just eliminate (we would be losing plenty of information).
-2.11) Check for multicollinearity in numeric data. Variance Inflation Factors (VIF)
+
+2.8 Checking for outliers and other inconsistent data points 
+
+```{r}
+# Using boxplots to check for outliers among the numeric variables
+
+dataMLqVar <- select(dataML, stability, regulatoryQuality, GNIperCapita, HDI, povertyHeadCount, polityScore, democ, durable, inverse_pr, inverse_cl)
+summary(dataMLqVar)
+
+boxplot(dataMLqVar, col = "orange", main = "Features Boxplot")
+
+
+```
+
+
+
+2.9 Check for multicollinearity in numeric data. 
+
+"Variance Inflation Factors (VIF)
+
 We’ve already seen in the correlation plot presented before that there seems to be significant correlation between some features. We want to make sure that multicollinearity is not an issue that prevents us to move forward. In order to do this, we will compute a score called Variance Inflation Factor (VIF) which measures how much the variance of a regression coefficient is inflated due to multicollinearity in the model. If VIF score is more than 10, multicollinearity is strongly suggested and we should try to get rid of the features that are causing it.
-First, we generate a simple linear regression model of our target variable explained by each other feature. Afterwards, we call function vif()on the model object and we take a look at the named list output:
-simple_lm <- lm(strength ~ ., data = concrete)
+First, we generate a simple linear regression model of our target variable explained by each other feature. Afterwards, we call function vif()on the model object and we take a look at the named list output:"
+
+```{r}
+
+simple_lm <- lm(stability ~ ., data = dataMLqVar)
 vif(simple_lm)
+
+```
+
+
  
 Even though there are many variables scoring 5 and higher, none of them surpasses the threshold of 10 so we will consider multicollinearity not to be a big issue. However, some would argue that it could indeed be a problem to have as many features with scores of 7. We will not worry about that at this time.
 With this, we consider the Exploratory Data Analysis (EDA) phase over and we move on to Feature Engineering. Feel free to disagree with this being over! I’m sure there still plenty of exploration left to do.
 
-#### 3) FEATURE ENGINEERING
+#### 3. STABILITY FEATURES
 
 Feature engineering could also be considered a very important craft for a data scientist. It involves the production of new features obtained from the features present in the dataset. This could be as simple as extracting some dates information from string columns, or producing interaction terms. Moreover, it will certainly require some degree of subject matter expertise and domain knowledge, since coming up with new informative features is something intrinsic to the nature of the data and the overall field of application.
 Here, we will go super quick, since our data seems to be already very informative and complete (engineers might disagree!).

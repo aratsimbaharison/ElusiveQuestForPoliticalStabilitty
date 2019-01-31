@@ -178,6 +178,11 @@ The results of the joining of the above dataframes are: `WGIdevRegimeTypeDF1` an
 - 01/30/2019:
 I decided to complete the execution of Pierobon's "machine learning workflow" to my data.
 
-Stopped at line 349 : "2.7 Dropping the unnecessary variables"
+- 1/30 at 12:16 pm
+I completed the analysis of variance of the stability means by regions, and found that their differences are statistically significant.
+
+I also completed the "correlation with level of significance"
+
+Stopped at line 386 "2.7 Dropping the unnecessary variables""
 
 
