@@ -183,6 +183,24 @@ I completed the analysis of variance of the stability means by regions, and foun
 
 I also completed the "correlation with level of significance"
 
-Stopped at line 386 "2.7 Dropping the unnecessary variables""
+- 1/31/2019:
+
+I skipped the section on "Feature Engineering" and went directly to "Data Preparation" (line 457), and stopped for now.
+
+- Weekend of "Presidential's Day", 2/16 to 2/18
+
+I finished reading "Lantz, B. (2015). Machine Learning with R (2 edition). Birmingham, UK: Packt Publishing," particularly Chapters 5 and 6 on classification and regression methods.
+
+Then, I send an email to Aart Kray (Responsible of the WGI Project at the World Bank) to asking advice about the missing values in the WGI dataset I downloaded. I suggested to just download the complete dataset from the link provided in the homepage of the WGI Project.
+
+I just downloaded the data and reviewed everything with this new dataset.
+
+Redo the merging of WGI2 with countryAndRegion classification.
+
+I finished the downloading, cleaning and merging of the WGI dataset, and made it available in the local repository under the file name `WGI2byCountryAndRegion`. It has all of the variables with 3600 complete observations.
+
+
+
+
 
 

@@ -444,57 +444,17 @@ boxplot(dataMLqVar, col = "orange", main = "Features Boxplot")
 ```
 
 
-
-2.9 Check for multicollinearity in numeric data. 
-
-"Variance Inflation Factors (VIF)
-
-We’ve already seen in the correlation plot presented before that there seems to be significant correlation between some features. We want to make sure that multicollinearity is not an issue that prevents us to move forward. In order to do this, we will compute a score called Variance Inflation Factor (VIF) which measures how much the variance of a regression coefficient is inflated due to multicollinearity in the model. If VIF score is more than 10, multicollinearity is strongly suggested and we should try to get rid of the features that are causing it.
-First, we generate a simple linear regression model of our target variable explained by each other feature. Afterwards, we call function vif()on the model object and we take a look at the named list output:"
-
 ```{r}
-
-simple_lm <- lm(stability ~ ., data = dataMLqVar)
-vif(simple_lm)
+# We need to change the value of the outlier -88 and -77 in democ to 0
+dataMLqVar$democ[dataMLqVar$democ == -88] <- 0
+dataMLqVar$democ[dataMLqVar$democ == -77] <- 0
 
 ```
 
 
- 
-Even though there are many variables scoring 5 and higher, none of them surpasses the threshold of 10 so we will consider multicollinearity not to be a big issue. However, some would argue that it could indeed be a problem to have as many features with scores of 7. We will not worry about that at this time.
-With this, we consider the Exploratory Data Analysis (EDA) phase over and we move on to Feature Engineering. Feel free to disagree with this being over! I’m sure there still plenty of exploration left to do.
 
-#### 3. STABILITY FEATURES
 
-Feature engineering could also be considered a very important craft for a data scientist. It involves the production of new features obtained from the features present in the dataset. This could be as simple as extracting some dates information from string columns, or producing interaction terms. Moreover, it will certainly require some degree of subject matter expertise and domain knowledge, since coming up with new informative features is something intrinsic to the nature of the data and the overall field of application.
-Here, we will go super quick, since our data seems to be already very informative and complete (engineers might disagree!).
-I wanted to mention that engineering new features will most likely require that we repeat some of the previous analysis we have already done, since we don’t want to introduce new features that add noise to the dataset. So bear in mind that we must always look at our checklist back again and define if we need to analyze things one more time.
-3.1) Create new useful features. Interaction Terms. Basic math and statistics. Create categories with if-else structures
-Because I’m not a subject matter expert in engineering, I won’t create new features from interaction terms. I’ll just limit myself to verify if any of the variables require any type of transformation.
-The first thing that I want to do is to check two variables which seem to have unusual distributions. It is the case of age and superplastic. Let’s plot their original form and also logs below (in red).
-par(mfrow = c(2,2))
-hist(concrete$age)
-hist(concrete$superplastic)
-hist(log(concrete$age), col = “red”)
-hist(log(concrete$superplastic), col = “red”)
- 
-While I feel comfortable with converting age to it’s logarithmic form, in the case of superplastic, with as many observations being 0, I’ll have some issues when taking the log of 0, so I’ll take the log and then manually set those to 0.
-Below, the code to convert both features:
-concrete$age <- log(concrete$age)
-concrete$superplastic <- log(concrete$superplastic)
-concrete$superplastic <- ifelse(concrete$superplastic == -Inf, 0,  
-                                concrete$superplastic)
-head(concrete)
- 
-Note: I spent quite some time at this point trying to create a new superplastic feature by binning the original superplastic feature into 3 numeric categories. However, I didn’t have much success in terms of importance to explain the target variable. I won’t show those attempts, but just know that I indeed tried to work on that for some time unsuccessfully. Failing is also part of learning!
-3.2) Create dummies for categorical features. Preferably using One-Hot-Encoding
-We are not working with categorical features at this time, so this section will be skipped. However, if you were presented with some factor columns, you will have to make sure your algorithm can work with those, or otherwise proceed with one-hot-encoding them.
-3.3) Can we extract some important text from string columns using regular expressions?
-We are not working with sting data at this time, so this section will be skipped. This should be a very useful tool when you have some relevant information in character type from which you can create new useful categories.
-Thankfully we didn’t have to go through all of that! However, those last 3 sections are a MUST if we are working with that type of information. I’ll make sure to analyze a dataset in which I can show some of that.
-Let’s move on to the Data Preparation phase:
-
-#### 4) DATA PREPARATION
+#### 3. DATA PREPARATION
 
 4.1) Manual feature selection. Remove noisy, uninformative, highly-correlated, or duplicated features.
 Here’s where we take spend time for the second time in this workflow looking at our features and detecting if any of them are uninformative enough or should be dropped because of introducing problems as could be multicollinearity.
@@ -510,13 +470,19 @@ We won’t be doing that in this precise section, but leave it for later, since 
 If removing features manually isn’t straightforward enough but we still consider our dataset to contain too many features or too correlated features, we can apply dimensonality reduction techniques. Principal Components Analysis is one of those techniques, and a really useful one to both simplify our dataset, and also remove the issue of multicollinearity for good.
 Non-negative Matrix Factorization (NMF) and t-SNE are other two useful dimensionality reduction techniques.
 With just 8 features in our dataset and 1 already dropped manually, I don’t consider we require to reduce dimensionality any further.
+
 4.4) Is our dataset randomized?
+
 We are not sure it is randomized, so we will shuffle it just in case:
+
 set.seed(123)
 concrete_rand <- concrete[sample(1:nrow(concrete)), ]
 dim(concrete_rand)
+
+
 4.5) Define an evaluation protocol: how many samples do we have? Hold out method. Cross validation needed?
 We have 1,030 samples, so this is definitely a small dataset. We will divide the dataset into train and test sets and make sure we use cross-validation when we train our model. In that way we ensure we are using our few observations as well as we can.
+
 4.6) Split dataset into train & test sets (set seed for replicability)
 We first create a set of predictors and a set of our target variable
 X = concrete_rand[, -8]
@@ -537,6 +503,7 @@ X_train <- X[part.index, ]
 X_test <- X[-part.index, ]
 y_train <- y[part.index]
 y_test <- y[-part.index]
+
 So now we have 4 sets. Two predictors sets splitted into train and test, and two target sets splitted into train and test as well. All of them using the same index for partitioning.
 Once again, let’s check everything worked just fine:
 str(X_train)
@@ -546,7 +513,7 @@ str(y_test)
  
 OK! We are good to go! Now to the modeling phase!
 
-#### 5) MODELING
+#### 4. MODELING
 
 As I mentioned in the introduction, in this phase I will change my approach, and instead of going through a check-list of things to do, I will summarize altogether how we will proceed.
 •	We will use package caretEnsemble in order to train a list of models all at the same time
@@ -559,6 +526,7 @@ As I mentioned in the introduction, in this phase I will change my approach, and
 •	We will use a very cool functionality from caretEnsemble package and will ensemble the model list and then stack them in order to try to produce an ultimate combination of models to hopefully improve performance even more
 So let’s move on.
 We first set up parallel processing and cross-validation in trainControl()
+
 registerDoParallel(4)
 getDoParWorkers()
 set.seed(123)
@@ -566,7 +534,9 @@ my_control <- trainControl(method = “cv”, # for “cross-validation”
                            number = 5, # number of k-folds
                            savePredictions = “final”,
                            allowParallel = TRUE)
+                           
 We then train our list of models using the caretList() function by calling our X_train and y_train sets. We specify trControl with our trainControl object created above, and set methodList to a list of algorithms (check the caret package information to understand what models are available and how to use them).
+
 set.seed(222)
 model_list <- caretList(X_train,
                         y_train,
@@ -576,6 +546,7 @@ model_list <- caretList(X_train,
                         tuneList = NULL,
                         continue_on_fail = FALSE, 
                         preProcess = c(“center”,”scale”))
+                        
 •	I use X_train and y_train, but you can perfectly use y ~ x1 + x2 + … + xn formula instead
 •	my_control specified the 5-fold cross-validation and activated the parallel processing
 •	tuneList is FALSE because we are not specifying manual hyper-parameter tuning
@@ -632,7 +603,9 @@ print(ensemble_2)
 Notice RMSE for the best model using glmnet was 4.15, the same as our first ensemble.
 Finally, it’s time to evaluate the performance of our models over unseen data, which is in our test set.
 We first predict the test set with each model and then compute RMSE:
-#### PREDICTIONS
+
+
+#### 5. PREDICTIONS
 pred_lm <- predict.train(model_list$lm, newdata = X_test)
 pred_svm <- predict.train(model_list$svmRadial, newdata = X_test)
 pred_rf <- predict.train(model_list$rf, newdata = X_test)
@@ -640,6 +613,8 @@ pred_xgbT <- predict.train(model_list$xgbTree, newdata = X_test)
 pred_xgbL <- predict.train(model_list$xgbLinear, newdata = X_test)
 predict_ens1 <- predict(ensemble_1, newdata = X_test)
 predict_ens2 <- predict(ensemble_2, newdata = X_test)
+
+
 #### RMSE
 pred_RMSE <- data.frame(ensemble_1 = RMSE(predict_ens1, y_test),
                         ensemble_2 = RMSE(predict_ens2, y_test),
@@ -666,7 +641,11 @@ plot(varImp(xgbTree_model))
 Here we can see the high importance of variables age and cement to the prediction of concrete’s strength. This was to be expected since we had already observed a high correlation between them in our initial correlation plot.
 Working with the log of age has also allowed us to improve predictability (as verified separately).
 Notice some “unimportant” features present in the chart. Should we have dropped them? Can we simplify our model without impacting performance? We could certainly keep working on that if we needed a simpler model for any reason.
-6) Conclusion
+
+
+#### 6. CONCLUSION
+
+
 This has been quite the journey! We moved along most of the necessary steps in order to execute a complete and careful machine learning workflow. Even though we didn’t have to do a whole lot of changes and transformation to the original data as imported from the csv, we made sure we understood why and what we should have done otherwise.
 Moreover, I was able to showcase the interesting work one can do with caret and caretEnsemble in terms of doing multiple modelling, quick and dirty, all at once and being able to quickly compare model performance. The more advanced data scientists and machine learning enthusiasts could possibly take this as a first draft before proceeding with the more advanced algorithms and fine hyper-parameter tuning that will get those extra bits of performance. For the sake of this work, it proved to be really strong even with the basic configuration.
 In the book mentioned in the introduction, the author calculates correlation between predictions (using a neural network with 5 hidden layers) and the true values, obtaining a score of 0.924. It also mentions that compared to the original publication (the one his work was based on), this was a significant improvement (original publication achieved 0.885 using a similar neural network)

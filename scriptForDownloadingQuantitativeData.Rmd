@@ -128,6 +128,19 @@ summary(WGI)
 # - stabilityCategory
 # - regulatoryQuality (with 44 missing values, which should be imputed)
 
+# the alternative way to get the WGI dataset (WGI2) is to download it directly from WGI Project homepage at: http://info.worldbank.org/governance/wgi/wgidataset_stata.zip. The stata format is readily formated in country-year dataframe and directly usable. 
+
+library(haven)
+WGI2 <- read_dta("wgidataset.dta")
+WGI2 <- tbl_df(WGI2)
+str(WGI2)
+names(WGI2)
+
+# selecting the estimate values for the variables of interest
+WGI2 <- select(WGI2, country = countryname, iso3c = code, date = year, stability = pve, regulatoryQuality = rqe, governmentEffectiveness = gee, voiceAndAccountability = vae, ruleOfLaw = rle, corruptionControl= cce)
+             
+head(WGI2)
+summary(WGI2)
 
 # downloading the data on country code with region and subregion from a github repository maintained by Luke Duncalfe   
 # at: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
@@ -209,6 +222,7 @@ regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Saint Pie
 regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Western Sahara",]
 regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Virgin Islands (British)",]
 
+
 #joining the data on WGI with the UN classification by region and subregion
 WGIbyCountryAndRegion <- left_join(WGI, regionSubregionDf, by = c("country", "iso2c"))
 WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
@@ -234,6 +248,53 @@ summary(WGIbyCountryAndRegion)
 # 
 
 ```
+
+## Joining the complete dataset WGI2 downloaded from the WGI Project home page with the UN classification into regions and subregions (script after 2/18/2019)
+
+```{r}
+#joining the data on WGI with the UN classification by region and subregion
+WGI2byCountryAndRegion <- left_join(WGI2, regionSubregionDf, by = "country")
+WGI2byCountryAndRegion <- tbl_df(WGI2byCountryAndRegion)
+WGI2byCountryAndRegion$date <- as.numeric(as.character(WGI2byCountryAndRegion$date))
+head(WGI2byCountryAndRegion)
+# creating dummy variables for stability and category variables for stability
+# creating a dummy variable for stability category with dplyr: "1" for stable country, "0" for unstable country
+stabilityDf <- mutate(stabilityDf,
+                      stabilityDummy = if_else(stabilityDf$stability > 0, "1", "0"))
+head(stabilityDf)
+summary(stabilityDf)
+table(stabilityDf$stabilityDummy)
+
+# creating a variable with four categories of stability with dplyr
+stabilityDf <- stabilityDf %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
+head(stabilityDf)
+summary(stabilityDf)
+table(stabilityDf$stabilityCategory)
+
+
+head(WGI2byCountryAndRegion)
+names(WGI2byCountryAndRegion)
+WGI2byCountryAndRegion <- select(WGI2byCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+names(WGIbyCountryAndRegion)
+summary(WGIbyCountryAndRegion)
+
+# cleaning the dataset: 
+# the summary function shows that more than 80% of the data are missing in the following variables. So we decided to exclude these variables from this research project: corruptionControl, governmentEffectiveness, ruleOfLaw, voiceAndAccountability.
+# here is the clean data on WGI by country and region which is available in the local repository under "WGIbyCountryAndRegion.csv"
+
+WGIbyCountryAndRegion <- select(WGIbyCountryAndRegion, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, regulatoryQuality, region, subregion)
+WGIbyCountryAndRegion <- na.omit(WGIbyCountryAndRegion)
+names(WGIbyCountryAndRegion)
+summary(WGIbyCountryAndRegion)
+
+# # making the clean data on WGI available in the local repository
+# WGIbyCountryAndRegion <- write.csv(WGIbyCountryAndRegion, "WGIbyCountryAndRegion.csv")
+# WGIbyCountryAndRegion <- tbl_df(WGIbyCountryAndRegion)
+# 
+
+```
+
+
 
 ## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`, and then joining the datasets with the dataset on WGI (WGIbyCountryAndRegion)
 
