@@ -135,37 +135,31 @@ $(document).ready(function () {
 <li>9/16/2018: I started this research project with a new r project entitled “ELUSIVE QUEST” under the “AFRICAN POLITICS RESEARCH” in my dropbox.</li>
 </ul>
 <p>This new r project was created with a new gitHub repository entitled “ElusiveQuestForPoliticalStabilitty” and a version control on git.</p>
-<p>. I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.</p>
 <ul>
+<li><p>I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.</p></li>
 <li><p>9/18/2018: completed the course on data importing and cleaning on DataCamp.</p></li>
 <li><p>9/19/2018: I realized that I still need to learn how to download, read and save qualitative data (news, reports and analysis on conflicts) in r. So I decided to take another course on “Working with Web Data in R” on DataCamp. I plan to comoplete this course in 3 to 4 days. At the same time, I need to start collecting and cleaning the quantitative data from the Word Bank.</p></li>
 <li><p>9/20&amp;21/2018: I looked at different techniques to collect qualitative data available online. I was able to write a script on how to do that. See <code>scriptForDownloadingQualitativeData</code> and <code>scriptForCollectingQualiativeData</code>.</p></li>
 <li><p>9/22/2018: I continued learning and refreshing memory about importing, cleaning, and manipulating data in base r and dplyr.</p></li>
 <li><p>9/23/2018: I started downloading and cleaning data from the World Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined file WGIdevIneqPov are available in the local repository.</p></li>
-</ul>
-<p>. But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.</p>
-<ul>
-<li>9/24/2018: I was in the end able to download and read the “Stata Friendly Freedom House Data, 1973-2018” on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: <a href="https://acrowinghen.com/data/" class="uri">https://acrowinghen.com/data/</a>)</li>
-</ul>
-<p>. I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.</p>
-<p>. Standardization of country names and codes.</p>
-<p>. Step 1: I created the file <code>WBcountryIso2c_Iso3c_M49Code.csv</code> which combines the World Bank’s country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.</p>
-<p>. Step 2: I reviewed Luke’s country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke’s country names and codes consistent with the World Bank’s country names and codes.</p>
-<p>. Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House’s country names and codes consistent with the World Bank’s country names and codes.</p>
-<ul>
+<li><p>But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.</p></li>
+<li><p>9/24/2018: I was in the end able to download and read the “Stata Friendly Freedom House Data, 1973-2018” on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: <a href="https://acrowinghen.com/data/" class="uri">https://acrowinghen.com/data/</a>)</p></li>
+<li><p>I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.</p></li>
+<li><p>Standardization of country names and codes.</p></li>
+<li><p>Step 1: I created the file <code>WBcountryIso2c_Iso3c_M49Code.csv</code> which combines the World Bank’s country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.</p></li>
+<li><p>Step 2: I reviewed Luke’s country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke’s country names and codes consistent with the World Bank’s country names and codes.</p></li>
+<li><p>Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House’s country names and codes consistent with the World Bank’s country names and codes.</p></li>
 <li><p>9/26/2018: I am done with the script to download the quantitative data.</p></li>
 <li><p>I will still need to clean the data before analysis.</p></li>
 </ul>
 <p>CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political Science at Savannah State Univeristy)</p>
 <ul>
-<li>9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.</li>
-</ul>
-<p>. I downloaded the WGI for Cameroon</p>
-<p>. I downloaded the economic and social indicators from the World Bank</p>
-<p>. I downloaded the regime type indicators</p>
-<p>. I rerun and verify the script on downloading the quantitative indicators on Cameroon</p>
-<ul>
-<li>9/29/2018: I am back to the main project: I reviewed the script for downloading quantitative data and initiated a script for quantitative data analysis.</li>
+<li><p>9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.</p></li>
+<li><p>I downloaded the WGI for Cameroon</p></li>
+<li><p>I downloaded the economic and social indicators from the World Bank</p></li>
+<li><p>I downloaded the regime type indicators</p></li>
+<li><p>I rerun and verify the script on downloading the quantitative indicators on Cameroon</p></li>
+<li><p>9/29/2018: I am back to the main project: I reviewed the script for downloading quantitative data and initiated a script for quantitative data analysis.</p></li>
 </ul>
 <p>. the data analysis starts with the stability average and stability trend around the world for the period of 1996 to 2016.</p>
 <p>. Next: the stability averages and trends by region</p>
@@ -230,26 +224,56 @@ $(document).ready(function () {
 <p>As a result of the decision to impute the values of GNI per capita, GINI and povertyHeadcount, I ended up with two datasets on devIneqPov: 1) devIneqPovDF without imputation 2) devIneqPovDF2 with imputattion</p>
 <p>The existence of these two datasets also led me to create two datasets for WGIdevIneqPovDF: 1) WGIdevIneqPovDF without imputation 2) WGIdevIneqPovDF2 with imputattion</p>
 <ul>
-<li>01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward: . corruptionControl . governmentEffectiveness . ruleOfLaw . voiceAndAccountability</li>
+<li>01/27/2019:</li>
 </ul>
-<p>By dropping these variables, we are left with only the following variables related to the WGI: . stability . stabilityDummy . stabilityCategory . regulatoryQuality</p>
+<p>Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:</p>
 <ul>
-<li>1/28/2019: I have finally two clean datasets on WGI, development and poverty:</li>
+<li>corruptionControl</li>
+<li>governmentEffectiveness</li>
+<li>ruleOfLaw</li>
+<li>voiceAndAccountability</li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>WGIdevIneqPovDF without imputation (2472 observations), available in the folder under <code>WGIdevIneqPov.csv</code></li>
-<li>WGIdevIneqPovDF2 with imputation (3090 observations), available in the folder under <code>WGIdevIneqPov2.csv</code></li>
-</ol>
-<p>I also rerun and clean the data on WGI and regime type and made it available in the local repository, under the file name <code>WGIregimeTypeByRegion.csv</code></p>
+<p>By dropping these variables, we are left with only the following variables related to the WGI:</p>
 <ul>
-<li>01/29/2019: I joined the following dataframes together:</li>
+<li>stability</li>
+<li>stabilityDummy</li>
+<li>stabilityCategory</li>
+<li><p>regulatoryQuality</p></li>
+<li><p>1/28/2019:</p></li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount)</li>
-<li>WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount</li>
-<li>WGIregimeTypeByRegionDF</li>
-</ol>
+<p>I have finally two clean datasets on WGI, development and poverty: 1) WGIdevIneqPovDF without imputation (2472 observations), available in the local repository under <code>WGIdevIneqPov.csv</code> 2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the local repository under <code>WGIdevIneqPov2.csv</code></p>
+<p>I also review and clean the data on WGI and regime type and made it available in the local repository, under the file name <code>WGIregimeTypeByRegion.csv</code></p>
+<ul>
+<li>01/29/2019:</li>
+</ul>
+<p>I joined the dataframes on WGI, development, inequality, poverty, and regime types together. Specifically, the dataframes joined are: 1) WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount) 2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount, and 3) WGIregimeTypeByRegionDF</p>
 <p>The results of the joining of the above dataframes are: <code>WGIdevRegimeTypeDF1</code> and <code>WGIdevRegimeTypeDF2</code> that are available in the local repository under <code>WGIdevRegimeType1.csv</code> and <code>WGIdevRegimeType2.csv</code></p>
+<ul>
+<li><p>01/30/2019: I decided to complete the execution of Pierobon’s “machine learning workflow” to my data.</p></li>
+<li><p>1/30 at 12:16 pm I completed the analysis of variance of the stability means by regions, and found that their differences are statistically significant.</p></li>
+</ul>
+<p>I also completed the “correlation with level of significance”</p>
+<ul>
+<li>1/31/2019:</li>
+</ul>
+<p>I skipped the section on “Feature Engineering” and went directly to “Data Preparation” (line 457), and stopped for now.</p>
+<ul>
+<li>Weekend of “Presidential’s Day”, 2/16 to 2/18</li>
+</ul>
+<p>I finished reading “Lantz, B. (2015). Machine Learning with R (2 edition). Birmingham, UK: Packt Publishing,” particularly Chapters 5 and 6 on classification and regression methods.</p>
+<p>Then, I send an email to Aart Kray (Responsible of the WGI Project at the World Bank) to asking advice about the missing values in the WGI dataset I downloaded. I suggested to just download the complete dataset from the link provided in the homepage of the WGI Project.</p>
+<p>I just downloaded the data and reviewed everything with this new dataset.</p>
+<p>Redo the merging of WGI2 with countryAndRegion classification.</p>
+<p>I finished downloading, cleaning and merging the WGI dataset with the different regions and subregions, and made it available in the local repository under the file name <code>WGI2byCountryAndRegion</code>. It has all of the variables with 3600 complete observations.</p>
+<ul>
+<li>2/21/2018:</li>
+</ul>
+<p>I decided to delete the dataset on WGI downloaded with ’wbstats` package which produced the massive missiing values over 80% for some variable. I will completely rely on the new dataset WGI2 downloaded directly from the WGI Project homepage.</p>
+<p>I started to review the script for downloading the other datasets to be merged with the new dataset on WGI2: 1) dataset on economic and social conditions (since the data on GINI and poverty headcount are not given every year and they are not likely to fluctuate, we can safely impute them with the kNN function) 2) dataset on political conditions or regime types 3) dataset on geographic and cultural conditions</p>
+<ul>
+<li>2/23/2019</li>
+</ul>
+<p>I stopped the review of the script for downloading the quantitative data at line 207 (downloading the data on development)</p>
 </div>
 
 

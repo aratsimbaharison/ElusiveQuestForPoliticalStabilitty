@@ -146,7 +146,9 @@ The existence of these two datasets also led me to create two datasets for WGIde
 1) WGIdevIneqPovDF without imputation
 2) WGIdevIneqPovDF2 with imputattion 
 
-- 01/27/2019: Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:  
+- 01/27/2019:  
+
+Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:  
 
   - corruptionControl
   - governmentEffectiveness
@@ -161,6 +163,7 @@ By dropping these variables, we are left with only the following variables relat
   - regulatoryQuality
 
 - 1/28/2019:
+
 I have finally two clean datasets on WGI, development and poverty:
 1) WGIdevIneqPovDF without imputation (2472 observations), available in the local repository under `WGIdevIneqPov.csv`
 2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the local repository under `WGIdevIneqPov2.csv`
@@ -168,6 +171,7 @@ I have finally two clean datasets on WGI, development and poverty:
 I also review and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
 
 - 01/29/2019:
+
 I joined the dataframes on WGI, development, inequality, poverty, and regime types together. Specifically, the dataframes joined are:
 1) WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount)
 2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount, and
@@ -197,10 +201,21 @@ I just downloaded the data and reviewed everything with this new dataset.
 
 Redo the merging of WGI2 with countryAndRegion classification.
 
-I finished the downloading, cleaning and merging of the WGI dataset, and made it available in the local repository under the file name `WGI2byCountryAndRegion`. It has all of the variables with 3600 complete observations.
+I finished downloading, cleaning and merging the WGI dataset with the different regions and subregions, and made it available in the local repository under the file name `WGI2byCountryAndRegion`. It has all of the variables with 3600 complete observations.
+
+- 2/21/2018: 
+
+I decided to delete the dataset on WGI downloaded with 'wbstats` package which produced the massive missiing values over 80% for some variable. I will completely rely on the new dataset WGI2 downloaded directly from the WGI Project homepage.
+
+I started to review the script for downloading the other datasets to be merged with the new dataset on WGI2:
+1) dataset on economic and social conditions (since the data on GINI and poverty headcount are not given every year and they are not likely to fluctuate, we can safely impute them with the kNN function)
+2) dataset on political conditions or regime types
+3) dataset on geographic and cultural conditions
 
 
+- 2/23/2019
 
+I finished downloading, merging and cleaning all datasets, and made available in the local repository the final dataset (WGIdevRegimeType). It can be also access in the working directory under the file name `WGIdevRegimeTypeDF`.
 
 
 

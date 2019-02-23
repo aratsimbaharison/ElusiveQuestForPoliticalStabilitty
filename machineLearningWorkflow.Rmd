@@ -79,10 +79,12 @@ library(VIF)
 
 # we are using the dataframe WGIdevRegimeType2.csv with imputation for inequality and poverty headcount
 
-WGIdevRegimeType2 <- read_csv("WGIdevRegimeType2.csv")
-WGIdevRegimeType2$date <- as.numeric(as.character(WGIdevRegimeType2$date))
-dim(WGIdevRegimeType2)
-
+WGIdevRegimeType <- read_csv("WGIdevRegimeType.csv")
+WGIdevRegimeType <- tbl_df(WGIdevRegimeType)
+WGIdevRegimeType <- WGIdevRegimeType[, -1] #removing the first column
+WGIdevRegimeType$date <- as.numeric(as.character(WGIdevRegimeType$date))
+dim(WGIdevRegimeType)
+summary(WGIdevRegimeType)
 ```
 
 #### 2. Exploratory Data Analysis (EDA)
@@ -90,7 +92,7 @@ dim(WGIdevRegimeType2)
 2.1 Viewing the data structure using glimpse in dplyr
 
 ```{r}
-glimpse(WGIdevRegimeType2)
+glimpse(WGIdevRegimeType)
 
 ```
 
