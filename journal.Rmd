@@ -215,7 +215,14 @@ I started to review the script for downloading the other datasets to be merged w
 
 - 2/23/2019
 
-I finished downloading, merging and cleaning all datasets, and made available in the local repository the final dataset (WGIdevRegimeType). It can be also access in the working directory under the file name `WGIdevRegimeTypeDF`.
+I finished downloading, merging and cleaning all datasets, and made available in the local repository the final dataset `WGIdevRegimeType`. It can be also access in the working directory under the file name `WGIdevRegimeTypeDF`.
 
+I go back to finish the machine learning workflow by Pierobon.
+
+- 3/11/2019 to 3/16/2019: Spring break
+
+I review the DataCamp courses on Machine Learning, especially the Machine Learning Toolbox.
+I found out that the worlflow suggested by Pierobon is not very helpful in my case.
+Therefore, I decided to create my own script for Machine Learning procedures.
 
 

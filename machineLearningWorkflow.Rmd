@@ -93,7 +93,7 @@ summary(WGIdevRegimeType)
 
 ```{r}
 glimpse(WGIdevRegimeType)
-
+names(WGIdevRegimeType)
 ```
 
 **List of variables**
@@ -112,7 +112,11 @@ glimpse(WGIdevRegimeType)
   - stability          
   - stabilityDummy      
   - stabilityCategory   
-  - regulatoryQuality   
+  - corruptionControl 
+  - governmentEffectiveness 
+  - regulatoryQuality
+  - ruleOfLaw  
+  - voiceAndAccountability  
 
 - Development, Inequality, and Poverty Variables
 
@@ -152,16 +156,19 @@ glimpse(WGIdevRegimeType)
   - inverse_mean      
   - politicalChangeFH 
 
+variables to be included in the models:
+
+myVariables <- c(region, subregion, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory,democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, statu, inverse_pr, inverse_cl, inverse_mean)     
 
 
 2.2 Viewing the summary and the distibution of the target variable using summary, boxplot and histogram with base r or ggplot
 
 ```{r Table 1 - Summary Statistics, message=FALSE, warning=FALSE, paged.print=FALSE}
-summary(WGIdevRegimeType2$stability)
+summary(WGIdevRegimeType$stability)
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 1 - Summary Statistics of the Political Stability of the Whole World"}
-ggplot(data = WGIdevRegimeType2) +
+ggplot(data = WGIdevRegimeType) +
   geom_boxplot(mapping = aes(y = stability), boundary = 0, fill = "grey", col = "black") +
   geom_hline(yintercept = 0, col = "red", size = 1)
 
@@ -169,12 +176,12 @@ ggplot(data = WGIdevRegimeType2) +
 
 
 ```{r echo=FALSE, fig.cap="Fig. 2 - Histogram of the Political Stability of the Whole World", message=FALSE, warning=FALSE, paged.print=FALSE}
-ggplot(data = WGIdevRegimeType2) +
+ggplot(data = WGIdevRegimeType) +
   geom_histogram(mapping = aes(x = stability), bins = 15, boundary = 0, fill = "grey", col = "black") +
-  geom_vline(xintercept = mean(WGIdevRegimeType2$stability), col = "blue", size = 1) +  
-  geom_vline(xintercept = median(WGIdevRegimeType2$stability), col = "red", size = 1) +
-  annotate("text", label = "Median = -0.07659", x = 1.3, y = 310, col = "red", size = 5) +
-  annotate("text", label = "Mean = -0.12986", x = - 1.3, y = 320, col = "blue", size = 5) 
+  geom_vline(xintercept = mean(WGIdevRegimeType$stability), col = "blue", size = 1) +  
+  geom_vline(xintercept = median(WGIdevRegimeType$stability), col = "red", size = 1) +
+  annotate("text", label = "Median = -0.07755", x = 1.3, y = 310, col = "red", size = 5) +
+  annotate("text", label = "Mean = -0.12948", x = - 1.3, y = 320, col = "blue", size = 5) 
   
 
 ```
@@ -188,7 +195,7 @@ Figures 1 and 2 show that the distribution of the target variable is not perfect
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # Political Stability Trend: Annual Average Around the World
-PoliticalStabilityTrendWorld <- WGIdevRegimeType2 %>%
+PoliticalStabilityTrendWorld <- WGIdevRegimeType %>%
   group_by(date) %>%
   summarise(AnnualAverage = mean(stability, na.rm=TRUE))
 PoliticalStabilityTrendWorld <- tbl_df(PoliticalStabilityTrendWorld)
@@ -210,13 +217,13 @@ ggplot(data = PoliticalStabilityTrendWorld) +
 
 # Political Stability summary for each region
 
-politicalStabilityByRegion <- summarise(group_by(WGIdevRegimeType2, region),
+politicalStabilityByRegion <- summarise(group_by(WGIdevRegimeType, region),
           mean=mean(stability, na.rm = TRUE), sd=sd(stability, na.rm = TRUE))
 
 politicalStabilityByRegion
 
 # We compute the analysis of variance (ANOVA) to see if the differences of means are statistically significant
-res.aov <- aov(stability ~ region, data = WGIdevRegimeType2)
+res.aov <- aov(stability ~ region, data = WGIdevRegimeType)
 
 # Summary of the analysis of variance (ANOVA)
 summary(res.aov)
@@ -231,7 +238,7 @@ TukeyHSD(res.aov)
 
 
 ```{r}
-ggplot(data = WGIdevRegimeType2) +
+ggplot(data = WGIdevRegimeType) +
   geom_boxplot(mapping = aes(y = stability), boundary = 0, fill = "grey", col = "black") +
   geom_hline(yintercept = 0, col = "red", size = 1) + 
   facet_grid(~ region)
@@ -255,7 +262,7 @@ Since we have too many variables, we can view the correlation by areas or groups
 
 ```{r}
 # Correlation chart between Political Stability and the other World Governance Indicators (WGI)
-WGI <- select(WGIdevRegimeType2, stability, regulatoryQuality)
+WGI <- select(WGIdevRegimeType, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability)
 correlationWGI <- chart.Correlation(WGI)
 correlationWGI
 
@@ -270,7 +277,7 @@ correlationWGI2
 ```{r}
 # Correlation between Political Stability and economic and social indicators
 
-devIndicators <- select(WGIdevRegimeType2, stability, GDPannualGrowthRate, GNIperCapita, HDI, GINI, povertyHeadCount)
+devIndicators <- select(WGIdevRegimeType, stability, GDPannualGrowthRate, GNIperCapita, HDI, GINI, povertyHeadCount)
 correlationDev <- chart.Correlation(devIndicators)
 correlationDev
 
@@ -286,7 +293,7 @@ correlationDev2
 ```{r}
 # Correlation between Political Stability and the main Polity IV indicators
 
-polityIvIndicators1 <- select(WGIdevRegimeType2, stability, polityScore, democ, autoc, durable)
+polityIvIndicators1 <- select(WGIdevRegimeType, stability, polityScore, democ, autoc, durable)
 correlationPolityIv1 <- chart.Correlation(polityIvIndicators1)
 correlationPolityIv1
 
@@ -302,7 +309,7 @@ correlationPolityIv1
 ```{r}
 # Correlation between Political Stability and the other Polity IV indicators
 
-polityIvIndicators2 <- select(WGIdevRegimeType2, stability, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp)
+polityIvIndicators2 <- select(WGIdevRegimeType, stability, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp)
 correlationPolityIv2 <- chart.Correlation(polityIvIndicators2)
 correlationPolityIv2
 
@@ -318,7 +325,7 @@ correlationPolityIv2
 ```{r}
 # Correlation between Political Stability and Freedom House indicators
 
-freedomHouseIndicators <- select(WGIdevRegimeType2, stability, inverse_pr, inverse_cl, inverse_mean)
+freedomHouseIndicators <- select(WGIdevRegimeType, stability, inverse_pr, inverse_cl, inverse_mean)
 correlationFreedomHouse <- chart.Correlation(freedomHouseIndicators)
 correlationFreedomHouse
 
@@ -343,7 +350,7 @@ In addition to the correlation chart, we can also cross-tabulate political stabi
 
 #using World Bank data on GNI per capita and development category
 
-stabilityAndDevCategory <- table(WGIdevRegimeType2$devCategory, WGIdevRegimeType2$stabilityCategory)
+stabilityAndDevCategory <- table(WGIdevRegimeType$devCategory, WGIdevRegimeType$stabilityCategory)
 prop.table(stabilityAndDevCategory, 1)
 #test of independence
 chisq.test(stabilityAndDevCategory)
@@ -353,13 +360,13 @@ chisq.test(stabilityAndDevCategory)
 ```{r}
 #Crosstabulation between stability category and polity category / status
 #using polity IV data
-stabilityAndPolityCat <- table(WGIdevRegimeType2$polityCategory, WGIdevRegimeType2$stabilityCategory)
+stabilityAndPolityCat <- table(WGIdevRegimeType$polityCategory, WGIdevRegimeType$stabilityCategory)
 prop.table(stabilityAndPolityCat, 1)
 #test of independence
 chisq.test(stabilityAndPolityCat)
 
 #using Freedom House data
-stabilityAndPolityCatFH <- table(WGIdevRegimeType2$status, WGIdevRegimeType2$stabilityCategory)
+stabilityAndPolityCatFH <- table(WGIdevRegimeType$status, WGIdevRegimeType$stabilityCategory)
 prop.table(stabilityAndPolityCatFH, 1)
 #test of independence
 chisq.test(stabilityAndPolityCatFH)
@@ -370,295 +377,33 @@ chisq.test(stabilityAndPolityCatFH)
 ```{r}
 #Crosstabulation between political change and polity category / status
 #using polity IV data
-changeAndPolityCat <- table(WGIdevRegimeType2$polityCategory, WGIdevRegimeType2$politicalChange)
+changeAndPolityCat <- table(WGIdevRegimeType$polityCategory, WGIdevRegimeType$politicalChange)
 prop.table(changeAndPolityCat, 1)
 #test of independence
 chisq.test(changeAndPolityCat)
 
 #using Freedom House data
-changeAndStatus <- table(WGIdevRegimeType2$status, WGIdevRegimeType2$politicalChangeFH)
+changeAndStatus <- table(WGIdevRegimeType$status, WGIdevRegimeType$politicalChangeFH)
 prop.table(changeAndStatus, 1)
 #test of independence
 chisq.test(changeAndStatus)
 
 ```
 
-
-
-
-
-2.7 Dropping the unnecessary variables
-
-Following the rule of thumb established by some researchers on the use of correlation coefficient (See for instance, Hinkle, Wiersma & Jurs. 2002. Applied Statistics for the Behavioral Sciences), we decided to drop from this study the variables that have weak correlation with political stability. Specifically, setting the threshold at .30 (or -.30), we dropped the variables with a correlation coefficient of .00 to .30 (or .00 to -.30).
-
-As result of this selection, we kept in this study the following variables:
-
-- Variable related to World Governance Indicators (WGI):
-  
-  - regulatoryQuality  (correlation coefficient = .70) 
-
-- Variables related to economic development, inequality, and poverty:
-
-  - GNIperCapita (correlation coefficient = .62)     
-  - devCategory (categorical variable)       
-  - HDI (correlation coefficient = .62)            
-  - povertyHeadCount (correlation coefficient = -.43)
-
-- Variables from Polity IV
-
-  - polityScore (correlation coefficient = .33)   
-  - polityCategory (categorical variable)   
-  - democ (correlation coefficient = .32)
-  - durable (correlation coefficient = .49)
-
-  
-- Variables fron Freedom House
-
-  - inverse_pr (for pr) (correlation coefficient = .55)
-  - inverse_cl (for cl) (correlation coefficient = .62)
-  - status (categorical variable)
-
-```{r}
-# The definitive dataframe for this machine learning workflow is the following
-
-dataML <- select(WGIdevRegimeType2, country, M49Code, iso2c, region, subregion, date, stability, regulatoryQuality, GNIperCapita, HDI, povertyHeadCount, polityScore, democ, durable, inverse_pr, inverse_cl)
-dim(dataML)
-head(dataML)
-
-# sapply function for detecting NAs
-sapply(dataML, {function(x) any(is.na(x))})
-
-```
-
-
-
-2.8 Checking for outliers and other inconsistent data points 
-
-```{r}
-# Using boxplots to check for outliers among the numeric variables
-
-dataMLqVar <- select(dataML, stability, regulatoryQuality, GNIperCapita, HDI, povertyHeadCount, polityScore, democ, durable, inverse_pr, inverse_cl)
-summary(dataMLqVar)
-
-boxplot(dataMLqVar, col = "orange", main = "Features Boxplot")
-
-
-```
-
-
-```{r}
-# We need to change the value of the outlier -88 and -77 in democ to 0
-dataMLqVar$democ[dataMLqVar$democ == -88] <- 0
-dataMLqVar$democ[dataMLqVar$democ == -77] <- 0
-
-```
-
-
-
-
 #### 3. DATA PREPARATION
 
-4.1) Manual feature selection. Remove noisy, uninformative, highly-correlated, or duplicated features.
-Here’s where we take spend time for the second time in this workflow looking at our features and detecting if any of them are uninformative enough or should be dropped because of introducing problems as could be multicollinearity.
-As I already had decided, I’ll first drop the ash feature (you might want to leave it and remove it after trying some baseline models, deciding to drop it if it does not help with performance, I already did that, so I’ll drop it now, as was my initial assessment)
-concrete$ash <- NULL
-head(concrete)
- 
-Besides that, I won’t remove anything else.
-4.2) Transform data if needed. Scale or normalize if required.
-Most of the algorithms we will use require our numeric features to be scaled or normalized (here’s why)
-We won’t be doing that in this precise section, but leave it for later, since caret allows us to do some pre-processing within it’s training functionality. This is specifically useful because the algorithm will automatically transform back to it’s original scale when presenting us with predictions and results. If I manually normalized the dataset here, then I would have to manually transform back the predictions.
-4.3) Automatic Feature extraction. Dimensionality Reduction (PCA, NMF, t-SNE)
-If removing features manually isn’t straightforward enough but we still consider our dataset to contain too many features or too correlated features, we can apply dimensonality reduction techniques. Principal Components Analysis is one of those techniques, and a really useful one to both simplify our dataset, and also remove the issue of multicollinearity for good.
-Non-negative Matrix Factorization (NMF) and t-SNE are other two useful dimensionality reduction techniques.
-With just 8 features in our dataset and 1 already dropped manually, I don’t consider we require to reduce dimensionality any further.
 
-4.4) Is our dataset randomized?
-
-We are not sure it is randomized, so we will shuffle it just in case:
-
-set.seed(123)
-concrete_rand <- concrete[sample(1:nrow(concrete)), ]
-dim(concrete_rand)
-
-
-4.5) Define an evaluation protocol: how many samples do we have? Hold out method. Cross validation needed?
-We have 1,030 samples, so this is definitely a small dataset. We will divide the dataset into train and test sets and make sure we use cross-validation when we train our model. In that way we ensure we are using our few observations as well as we can.
-
-4.6) Split dataset into train & test sets (set seed for replicability)
-We first create a set of predictors and a set of our target variable
-X = concrete_rand[, -8]
-y = concrete_rand[, 8]
-We check everything is OK:
-str(X)
- 
-str(y)
- 
-We then proceed to split our new X(predictors) and y (target) sets into training and test sets.
-Note: you don’t have to separate the sets, and can perfectly go ahead using the formula method. I just prefer to do it this way, because this way I’m sure I align my proceeding to how I’d work with Python’s scikit-learn.
-We will use caret’s createDataPartition() function, which generates the partition indexes for us, and we will use them to perform the splits:
-set.seed(123)
-part.index <- createDataPartition(concrete_rand$strength, 
-                                  p = 0.75,                         
-                                  list = FALSE)
-X_train <- X[part.index, ]
-X_test <- X[-part.index, ]
-y_train <- y[part.index]
-y_test <- y[-part.index]
-
-So now we have 4 sets. Two predictors sets splitted into train and test, and two target sets splitted into train and test as well. All of them using the same index for partitioning.
-Once again, let’s check everything worked just fine:
-str(X_train)
-str(X_test)
-str(y_train)
-str(y_test)
- 
-OK! We are good to go! Now to the modeling phase!
 
 #### 4. MODELING
 
-As I mentioned in the introduction, in this phase I will change my approach, and instead of going through a check-list of things to do, I will summarize altogether how we will proceed.
-•	We will use package caretEnsemble in order to train a list of models all at the same time
-•	This will allow us to use the same 5 fold cross-validation for each model, thanks to caret’s functionality
-•	We will allow parallel processing to boost speed
-•	We won’t focus on the nature of the algorithms. We will just use them and comment on the results
-•	We will use a linear model, a support vector machines with radial kernel, a random forest, a gradient boosting tree based model and a gradient boosting linear based model
-•	We won’t do manual hyper-parameter tuning, instead we will allow caret to go through some default tuning in each model
-•	We will compare performance over training and test sets, focusing on RMSE as our metric (root mean squared error)
-•	We will use a very cool functionality from caretEnsemble package and will ensemble the model list and then stack them in order to try to produce an ultimate combination of models to hopefully improve performance even more
-So let’s move on.
-We first set up parallel processing and cross-validation in trainControl()
-
-registerDoParallel(4)
-getDoParWorkers()
-set.seed(123)
-my_control <- trainControl(method = “cv”, # for “cross-validation”
-                           number = 5, # number of k-folds
-                           savePredictions = “final”,
-                           allowParallel = TRUE)
-                           
-We then train our list of models using the caretList() function by calling our X_train and y_train sets. We specify trControl with our trainControl object created above, and set methodList to a list of algorithms (check the caret package information to understand what models are available and how to use them).
-
-set.seed(222)
-model_list <- caretList(X_train,
-                        y_train,
-                        trControl = my_control,
-                        methodList = c(“lm”, “svmRadial”, “rf”, 
-                                       “xgbTree”, “xgbLinear”),
-                        tuneList = NULL,
-                        continue_on_fail = FALSE, 
-                        preProcess = c(“center”,”scale”))
-                        
-•	I use X_train and y_train, but you can perfectly use y ~ x1 + x2 + … + xn formula instead
-•	my_control specified the 5-fold cross-validation and activated the parallel processing
-•	tuneList is FALSE because we are not specifying manual hyper-parameter tuning
-•	continue_on_fail is set to FALSE so it stops if something goes wrong
-•	in preProcessing is where we scale the dataset. We choose “center” and “scale”
-Now that our caretList was trained, we can take a look at the results. We can access each separate model. Here’s the SVM result:
-model_list$svmRadial
- 
-Notice caret tries some automatic tuning of the available parameters for the model, and chooses the best model using RMSE as performance metric.
-This is the same for each of the other models in our list of models. We won’t go through each one of them. That’s for you to check!
-Let’s go straight to our goal, which is finding the model that has the lowest RMSE. We first asses this for the training data.
-options(digits = 3)
-model_results <- data.frame(
- LM = min(model_list$lm$results$RMSE),
- SVM = min(model_list$svmRadial$results$RMSE),
- RF = min(model_list$rf$results$RMSE),
- XGBT = min(model_list$xgbTree$results$RMSE),
- XGBL = min(model_list$xgbLinear$results$RMSE)
- )
-print(model_results)
- 
-In terms of RMSE, the the xgbTree model offers the best result, scoring 4.36 (remember the mean strength was 35.8).
-caretEnsemble offers a functionality to resample the performance of this model list and plot it:
-resamples <- resamples(model_list)
-dotplot(resamples, metric = “RMSE”)
- 
-We can also see that the xgbTree is also presenting a smaller variance compared to the other models.
-Next, we will attempt to create a new model by ensembling our model_list in order to find the best possible model, hopefully a model that takes the best of the 5 we have trained and optimizes performance.
-Ideally, we would ensemble models that are low correlated with each other. In this case we will see that some high correlation is present, but we will choose to move on regardless, just for the sake of showcasing this feature:
-modelCor(resamples)
- 
-Firstly, we train an ensemble of our models using caretEnsemble(), which is going to perform a linear combination with all of them.
-set.seed(222)
-ensemble_1 <- caretEnsemble(model_list, 
-                            metric = “RMSE”, 
-                            trControl = my_control)
-summary(ensemble_1)
- 
- 
-As we can see, we managed to reduce RMSE for the training set to 4.156
-Here’s a plot of our ensemble
-plot(ensemble_1)
- 
-The red dashed line is the ensemble’s RMSE performance.
-Next, we can be more specific and try to do an ensemble using other algorithms with caretStack().
-Note: I tried some models but wasn’t able to improve performance. I’ll show just one of them which yielded the same performance over the training data. We will use both ensembles regardless, in order to check which one does better with unseen data.
-set.seed(222)
-ensemble_2 <- caretStack(model_list, 
-                         method = “glmnet”, 
-                         metric = “RMSE”, 
-                         trControl = my_control)
-print(ensemble_2)
- 
-Notice RMSE for the best model using glmnet was 4.15, the same as our first ensemble.
-Finally, it’s time to evaluate the performance of our models over unseen data, which is in our test set.
-We first predict the test set with each model and then compute RMSE:
 
 
 #### 5. PREDICTIONS
-pred_lm <- predict.train(model_list$lm, newdata = X_test)
-pred_svm <- predict.train(model_list$svmRadial, newdata = X_test)
-pred_rf <- predict.train(model_list$rf, newdata = X_test)
-pred_xgbT <- predict.train(model_list$xgbTree, newdata = X_test)
-pred_xgbL <- predict.train(model_list$xgbLinear, newdata = X_test)
-predict_ens1 <- predict(ensemble_1, newdata = X_test)
-predict_ens2 <- predict(ensemble_2, newdata = X_test)
 
 
-#### RMSE
-pred_RMSE <- data.frame(ensemble_1 = RMSE(predict_ens1, y_test),
-                        ensemble_2 = RMSE(predict_ens2, y_test),
-                        LM = RMSE(pred_lm, y_test),
-                        SVM = RMSE(pred_svm, y_test),
-                        RF = RMSE(pred_rf, y_test),
-                        XGBT = RMSE(pred_xgbT, y_test),
-                        XGBL = RMSE(pred_xgbL, y_test))
-print(pred_RMSE)
- 
-Surprisingly, the xgbLinear model out performs every other model on the test set, including our ensemble_1 and matching the performance of the ensemble_2
-We also observe that in general , there is a difference in performance compared to the training set. This is to be expected. We could still try to manually tune hyper-parameters in order to reduce some overfitting, but at this point I believe we have achieved very strong performance over unseen data and I will leave further optimization for a future publication.
-The last thing I wanted to show is variable importance. In order to do this, I will calculate our xgbLinear model separately, indicating I want to retain the variable importance and then plot it:
-set.seed(123)
-xgbTree_model <- train(X_train,
-                       y_train,
-                       trControl = my_control,
-                       method = “xgbLinear”,
-                       metric = “RMSE”,
-                       preProcess = c(“center”,”scale”),
-                       importance = TRUE)
-plot(varImp(xgbTree_model))
- 
-Here we can see the high importance of variables age and cement to the prediction of concrete’s strength. This was to be expected since we had already observed a high correlation between them in our initial correlation plot.
-Working with the log of age has also allowed us to improve predictability (as verified separately).
-Notice some “unimportant” features present in the chart. Should we have dropped them? Can we simplify our model without impacting performance? We could certainly keep working on that if we needed a simpler model for any reason.
+#### 6. PERFORMANCE MEASURES
 
 
 #### 6. CONCLUSION
 
-
-This has been quite the journey! We moved along most of the necessary steps in order to execute a complete and careful machine learning workflow. Even though we didn’t have to do a whole lot of changes and transformation to the original data as imported from the csv, we made sure we understood why and what we should have done otherwise.
-Moreover, I was able to showcase the interesting work one can do with caret and caretEnsemble in terms of doing multiple modelling, quick and dirty, all at once and being able to quickly compare model performance. The more advanced data scientists and machine learning enthusiasts could possibly take this as a first draft before proceeding with the more advanced algorithms and fine hyper-parameter tuning that will get those extra bits of performance. For the sake of this work, it proved to be really strong even with the basic configuration.
-In the book mentioned in the introduction, the author calculates correlation between predictions (using a neural network with 5 hidden layers) and the true values, obtaining a score of 0.924. It also mentions that compared to the original publication (the one his work was based on), this was a significant improvement (original publication achieved 0.885 using a similar neural network)
-So how did we do computing the same correlation score as the book’s author?
-pred_cor <- data.frame(ensemble_1 = cor(predict_ens1, y_test),
-                       ensemble_2 = cor(predict_ens2, y_test),
-                       LM = cor(pred_lm, y_test),
-                       SVM = cor(pred_svm, y_test),
-                       RF = cor(pred_rf, y_test),
-                       XGBT = cor(pred_xgbT, y_test),
-                       XGBL = cor(pred_xgbL, y_test))
-print(pred_cor)
- 
 

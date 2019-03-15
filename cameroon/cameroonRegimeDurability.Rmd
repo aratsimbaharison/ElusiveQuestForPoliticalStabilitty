@@ -1,0 +1,94 @@
+---
+title: "The Durability of the Paul Biya Regime in Cameroon: A Micro-Level Analysis
+  Using Afrobarometer Data"
+author: "Adrien Ratsimbaharison and Benn Bongang"
+date: "March 12, 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r the packages, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# loading the required packages
+library(haven)
+library(survey)
+library(dplyr)
+library(ggplot2)
+
+```
+
+```{r the data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# loading the data
+
+# round 6 data
+library(haven)
+cameroonRound6 <- read_sav("cam_r6_data_2016_eng.sav")
+head(cameroonRound6)
+
+
+# round 7 data
+library(haven)
+cameroonRound7 <- read_sav("cam_r7_data_eng.sav")
+head(cameroonRound7)
+
+```
+
+
+## Abstract
+
+The durability (or stability) of the Paul Biya regime could be a blessing or a curse for the Cameroonian people. Indeed, almost every study on the relationship between regime durability (or political stability) and economic development would lead to the conclusion that the former is an important condition of the latter. Nevertheless, the fact that a country has been ruled for so many years by the same individual, without being a monarchy, is certainly a sign of autocracy. In addition, having the same leader for decades may also result in sclerosis and lack of innovations for further development of the country.
+
+Most of those who attempted to explain the durability of the Biya regime adopted a top-down approach or  macro-level analysis. They tried to understand what the Biya regime did in order to stay in power for so long. In this sense, very few (if any) studies used a micro-level analysis or buttom-up approach, and attempted to understand the Cameroonian people's opinions and attitudes to explain why they were willing to stay under the same ruler for at least two generations. 
+
+We adopt such micro-level analysis or butomm-up approach in this study. Using the data from round 6 and 7 of the Afrobarometer national surveys on Cameroon, we apply simple statistical analyses to find out to what extent the Cameroonian people trust their president and his regime, and to identify the factors that may influence them to support support him. As a result, we find that the great majority of the Cameroonian people not only trust their President Paul Biya, but they are also statisfied with the government performance, and believe that their country is democratic. In sum, using a micro-level analysis, we can draw the conclusion that the Biya regime has remained durable, because of the Cameroonian people's opinions and attitudes toward this regime.
+
+**Keywords:** Africa, Cameroon, political stability, regime durability, micro-level analysis, Afrobarometer survey
+
+## Introduction
+
+President Paul Biya was elected for the seventh time as the president of Cameroon in October 2018.
+
+
+The durability (or stability) of the Paul Biya regime could be a blessing or a curse for the Cameroonian people. Indeed, almost every study on the relationship between regime durability (or political stability) and economic development would lead to the conclusion that the former is an important condition of the latter. 
+
+Nevertheless, the fact that a country has been ruled for so many years by the same individual, without being a monarchy, is certainly a sign of autocracy. In addition, having the same leader for decades may also result in sclerosis and lack of innovations for further development of the country.
+
+[Purpose and reserach questions]
+
+This study is based on a micro-level analysis or buttom-up approach to the durability of the Paul Biya regime. In this sense, instead of analyzing what the president and his regime are doing to stay in power for so long, we try to understand what the Cameroonian people think about their president and his rule. Thus, using the data from rounds 6 and 7 of the Afrobarometer national surveys on Cameroon, we try to find out to what extent the Cameroonian people trust their president and his regime and to identify the factors that may influence them in their support or lack thereof. 
+
+## Literature Review
+
+[Copied and pasted from the abstract: Most of those who attempted to explain the durability of the Biya regime adopted a top-down approach or  macro-level analysis. They tried to understand what the Biya regime did in order to stay in power for so long. In this sense, very few (if any) studies used a micro-level analysis or buttom-up approach, and attempted to understand the Cameroonian people's opinions and attitudes to explain why they were willing to stay under the same ruler for at least two generations.]
+
+
+
+
+
+## Data and Methodology
+
+Afrobarometer presents itself as "a pan-African, non-partisan research network that conducts public attitude surveys on democracy, governance, economic conditions, and related issues in more than 35 countries in Africa." (Afrobarometer, 2019) Cameroon was included in the rounds 5, 6, and 7 of the national surveys conducted by Afrobarometer. Even if they do not directly address the questions about the durability of the Paul Biya regime, the data from these surveys allow us to understand the Cameroonian people's opinions and attitudes toward the president and his regime, and explain why they are willing to stay under the same regime for so many years.
+
+
+Proxy for support to the president and his regime = questions about the trust in the institutions
+
+Factors that may be associated with the trust in the institutions =
+
+- regime performance
+- satisfaction with the democracy
+- satistfaction with freedom
+- etc.
+
+## Findings
+
+
+## Discussion and Conclusion
+
+
+## References
+
+
