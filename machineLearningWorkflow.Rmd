@@ -4,7 +4,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = FALSE
+)
 ```
 
 This workflow is based on the article by Gabriel Pierobon (2018. "A comprehensive Machine Learning workflow with multiple modelling using caret and caretEnsemble in R")
@@ -62,7 +66,7 @@ Our data is in “csv” format. It presents a header row with the column names.
 
 After importing the data, we can see its dimension and structure
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(readr)
 library(dplyr)
 library(ggplot2)
@@ -91,9 +95,9 @@ summary(WGIdevRegimeType)
 
 2.1 Viewing the data structure using glimpse in dplyr
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 glimpse(WGIdevRegimeType)
-names(WGIdevRegimeType)
+
 ```
 
 **List of variables**
@@ -163,7 +167,7 @@ myVariables <- c(region, subregion, date, stability, stabilityDummy, stabilityCa
 
 2.2 Viewing the summary and the distibution of the target variable using summary, boxplot and histogram with base r or ggplot
 
-```{r Table 1 - Summary Statistics, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Table 1 - Summary Statistics, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 summary(WGIdevRegimeType$stability)
 ```
 

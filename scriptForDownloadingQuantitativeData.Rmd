@@ -33,22 +33,24 @@ library(haven)
 
 Note concerning the country names and codes:
 As we collected the data from the World Bank, we realized that the country names and codes were not consistent throughout the database and between the World Bank and other organizations, such as the United Nations.
-Thus, in order to be consistent throughout the data collection and analysis, we decided to adopt the World Bank country names and codes as explained in the following webpage: [API: Country Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-api-country-queries)
-The file `WBCountryIso2c_Iso3c_M49Code.csv` was manipulated by hand based on the information provided by the World Bank.
+Therefore, in order to be consistent throughout the data collection and analysis, we decided to adopt the World Bank country names and codes as explained in the following webpage: [API: Country Queries](https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-api-country-queries)
+The file `WBCountryIso2c_Iso3c_M49Code.csv` was created by hand based on the information provided by the World Bank.
 
 ```{r warning=FALSE}
 
-# Downloading the WGI dataset (WGI2) directly from WGI Project homepage at: http://info.worldbank.org/governance/wgi/wgidataset_stata.zip. The stata file is already formated into country-year dataframe and directly usable. 
+# Downloading the WGI dataset (WGI2) from WGI Project homepage at: http://info.worldbank.org/governance/wgi/wgidataset_stata.zip. The stata file is already formated into country-year dataframe and directly usable. 
+# In order to avoid different problems of connecting and downloading the data directly from the WGI Project homepage, using r commands, the dataset was first downloaded to a local repository under the file name "wgidataset.dta" and then read into r
 
 WGI2 <- read_dta("wgidataset.dta")
 WGI2 <- tbl_df(WGI2)
+WGI2 <- rename(WGI2, country = countryname)
 str(WGI2)
 names(WGI2)
 
 # In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
 WGI2$country <- str_replace(WGI2$country, "Cape Verde", "Cabo Verde")
 
-# selecting the variables of interest for this study by selecting their estimated values from the WGI dataset:
+# Selecting the variables of interest for this study by selecting their estimated values from the WGI dataset:
 # Here is the list of the variables with their definition:
 # stability (pve): Political Stability and Absence of Violence/Terrorism Estimate – capturing perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically‐motivated violence and terrorism.
 # 
@@ -63,19 +65,26 @@ WGI2$country <- str_replace(WGI2$country, "Cape Verde", "Cabo Verde")
 # corruptionControl (cce): Control of Corruption Estimate – capturing perceptions of the extent to which public power is exercised for private gain, including both petty and grand forms of corruption, as well as "capture" of the state by elites and private interests.
 
 
-WGI2 <- select(WGI2, country = countryname, iso3c = code, date = year, stability = pve, voiceAndAccountability = vae, governmentEffectiveness = gee, regulatoryQuality = rqe, ruleOfLaw = rle, corruptionControl= cce)
+WGI2 <- select(WGI2, country, iso3c = code, date = year, stability = pve, voiceAndAccountability = vae, governmentEffectiveness = gee, regulatoryQuality = rqe, ruleOfLaw = rle, corruptionControl= cce)
              
 head(WGI2)
 summary(WGI2)
 
-# creating a dummy variable for stability with dplyr: "1" for stable country, "0" for unstable country
+# The summary shows that there are up to 177 NA in some of the variables, so we decided to impute these missing values using knn imputation:
+
+WGI2 <- kNN(WGI2)
+WGI2 <- select(WGI2, country, iso3c, date, stability, voiceAndAccountability, governmentEffectiveness, regulatoryQuality, ruleOfLaw, corruptionControl)
+head(WGI2)
+summary(WGI2)
+
+# Creating a dummy variable for stability with dplyr: "1" for stable country, "0" for unstable country
 WGI2 <- mutate(WGI2,
         stabilityDummy = if_else(WGI2$stability > 0, "1", "0"))
 head(WGI2)
 summary(WGI2)
 table(WGI2$stabilityDummy)
 
-# creating a variable with four categories of stability with dplyr
+# Creating a variable with four categories of stability with dplyr based on arbitrary thresholds of + 1 (for highly stable) and - 1 (for hinghly unstable)
 WGI2 <- WGI2 %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
 head(WGI2)
 summary(WGI2)
@@ -84,7 +93,7 @@ table(WGI2$stabilityCategory)
 
 ```
 
-## Downloading the Data on the UN Country Names and Code with their Classification into Region and Subregion from a GitHub Repository Maintained by Luke Duncalfe   
+## Downloading the Data on the UN Country Names and Codes with their Classification into Region and Subregion from a GitHub Repository Maintained by Luke Duncalfe   
 
 
 ```{r}
@@ -170,6 +179,7 @@ regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Western S
 regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Virgin Islands (British)",]
 
 head(regionSubregionDf)
+
 ```
 
 
@@ -186,16 +196,8 @@ WGI2byCountryAndRegion <- select(WGI2byCountryAndRegion, country, M49Code, iso2c
 names(WGI2byCountryAndRegion)
 summary(WGI2byCountryAndRegion)
 
-# cleaning the dataset: 
-# the summary function shows that the NAs are less than 5% of the total number of observation (4066). Therefore, we can just drop them to clean the data on WGI.
 
-# here is the clean data on WGI by country and region which is available in the local repository under "WGI2byCountryAndRegion"
-
-WGI2byCountryAndRegion <- na.omit(WGI2byCountryAndRegion)
-names(WGI2byCountryAndRegion)
-summary(WGI2byCountryAndRegion)
-
-# # making the clean data on WGI available in the local repository
+# # making the clean data on WGI by region and subregion available in the local repository
 # WGI2byCountryAndRegion <- write.csv(WGI2byCountryAndRegion, "WGI2byCountryAndRegion.csv")
 # WGI2byCountryAndRegion <- tbl_df(WGI2byCountryAndRegion)
 
@@ -204,7 +206,7 @@ summary(WGI2byCountryAndRegion)
 
 
 
-## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website Using `webstats`, and then joining the datasets with the dataset on WGI (WGIbyCountryAndRegion)
+## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website using `webstats`package, and then joining the datasets with the dataset on WGI by region and subregion (WGI2byCountryAndRegion)
 
 ```{r warning=FALSE}
 # loading the required libraries
@@ -247,7 +249,9 @@ summary(GNIperCapitaDf)
 table(GNIperCapitaDf$devCategory)
 
 
-# downloading the data on HDI directly from the UNDP Website (http://hdr.undp.org/en/data#), which needs to be transformed, using `gather` function in dplyr:
+# downloading the data on Human Development Indicators (HDI) from the UNDP Website (http://hdr.undp.org/en/data#), which needs to be transformed into country-year format, using `gather` function in `dplyr` package:
+# in order to avoid different problems of connecting and downloading the data using r commands, the dataset was first downloaded to a local repository under the file name "UNDP.HDI.csv" and then read into r
+
 UNDP_HDI <- read_csv("UNDP.HDI.csv")
 head(UNDP_HDI)
 

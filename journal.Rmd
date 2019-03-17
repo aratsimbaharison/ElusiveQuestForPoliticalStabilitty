@@ -225,4 +225,15 @@ I review the DataCamp courses on Machine Learning, especially the Machine Learni
 I found out that the worlflow suggested by Pierobon is not very helpful in my case.
 Therefore, I decided to create my own script for Machine Learning procedures.
 
+The review of the ML courses led me to the following conclusions:   
+
+1) I need to use the `caret package' for the data preprocessing and modeling. I may also use `radom forest` as a single model for classification and regression predictions (I have to learn more about random forest to make a definitive decision on this).
+2) There is no need to clean the data at the level of the collection. Caret will take care of this with the preProcessing command: "knnImpute"
+3) There is no need to transform some variables with outliers. Caret will take care of this with the preProcessing commands: "center", "scale"
+4) There is no need to drop the multicorrelated variables, the non significant variables. Caret will take care of this with the commands: "pca", "zv" (zero variance), "nzv" (near zero variance)
+
+- 3/16/2019:
+
+In reviewing the script on the data collection, I decided to impute the missing values of several variables, including GINI, povertyHeadCount, 
+
 

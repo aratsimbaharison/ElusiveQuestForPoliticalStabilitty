@@ -1,0 +1,229 @@
+---
+title: "Script for the Machine Learning Predictions"
+author: "Adrien Ratsimbaharison"
+date: "March 16, 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = FALSE
+)
+```
+
+## The six steps in the machine learning predictions:
+
+1) Defining the problem 
+2) Reading and exploring the Data 
+3) Preparing the data: data randomization and partition
+4) Predicting with classification
+5) Predicting with regression
+6) Conclusion
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+#  Loading the required packages:
+library(caret)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(VIM)
+library(rattle)
+
+```
+
+
+### Step 1: Defining the problem
+
+When performing machine learning techniques, it is always a good idea to define exactly What you are trying to predict. In our case, we are trying to predict:
+
+1) the classification of countries either as "stable" (with stability scores greater than 0) or as "unstable" (with stability scores less than 0), and
+2) the stability scores of countries based on some predictors.
+  
+In terms of machine learning, we are dealing in this case with a multivariate supervised machine learning problem in which we have to predict a binary and multi-class outcome (thus we will use classification techniques) and a numeric outcome (thus we will use a mutliple regression technique).  
+
+
+### Step 2: Reading and exploring the Data
+
+Our data were downloaded from different sources and merged in a single data frame (See script on downloading quantitative data for the information on how the data were collected and manipulated).
+
+We just need here to read the data into r and explore the features.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# reading the data into r
+
+WGIdevRegimeType <- read.csv("WGIdevRegimeType.csv")
+
+# looking at the different types of variables and correcting their classes
+
+glimpse(WGIdevRegimeType)
+
+WGIdevRegimeType$stabilityDummy <- as.factor(WGIdevRegimeType$stabilityDummy)
+
+```
+
+Before preparing the data for the modeling, we need to take a look at the target variables: stabilityDummy and stability.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# summary statistics of the target variables
+table(WGIdevRegimeType$stabilityDummy)
+
+summary(WGIdevRegimeType$stability)
+
+# plotting the target variables
+
+barplot(table(WGIdevRegimeType$stabilityDummy))
+
+hist(WGIdevRegimeType$stability)
+
+```
+
+We need also to take a look at the summary statistics of the other variables of interest, paying attention to the existence of NAs, outliers, and zero variances.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+WGIdevRegimeTypeSummary <- select(WGIdevRegimeType, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+
+summary(WGIdevRegimeTypeSummary)
+
+```
+
+From the summary statistics of the other variables, we can see that, among the Polity IV variables, there are some extreme values of -66 (for interruption periods), -77 (for interregnum), and -88 (for transition periods), which are known as "standardized authority codes" (See Marshall, M. G., Gurr, T. R., & Jaggers, K., 2018). Since there is no commonly agreed procedure on how to handle these extreme values among scholars (See Plümper, T., & Neumayer, E., 2010), we decided to remove them from our data, because they may falsify our results.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Removing the interruption periods (-66), interregnum periods (-77), and transitional periods (-88)
+
+WGIdevRegimeType <- filter(WGIdevRegimeType, democ != -88 & democ != -77 &  democ != -66)
+
+summary(WGIdevRegimeType)
+dim(WGIdevRegimeType)
+
+```
+
+
+### Step 3: Preparing the data: data randomization and feature selection
+
+The data were arranged in a country-year format. Therefore, it is a good idea to randoming the rows before partitioning the dataset
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Randomizing the dataset
+set.seed(112)
+rows <- sample(nrow(WGIdevRegimeType))
+WGIdevRegimeTypeRand <- WGIdevRegimeType[rows, ]
+
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Selecting the variables to be included in the classification model. We need to remove the political stability score (stability) and stability category (stabilityCategory) from this dataset.
+
+WGIdevRegimeTypeRandClass <- select(WGIdevRegimeTypeRand, date, stabilityDummy, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Selecting the variables to be included in the regression model. We need to remove the stability dummy (stabilityDummy) and stability category (stabilityCategory) from this dataset.
+
+WGIdevRegimeTypeRandReg <- select(WGIdevRegimeTypeRand, date, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+
+```
+
+
+### Step 4: Predicting with classification
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Partitionning the dataset into training set and testing set for the classification model
+set.seed(123)
+inTrain1 <- createDataPartition(y = WGIdevRegimeTypeRandClass$stabilityDummy, p = .75, list = FALSE)
+training1 <- WGIdevRegimeTypeRandClass[inTrain1,]
+testing1 <- WGIdevRegimeTypeRandClass[-inTrain1,]
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Training the classification model
+
+classModel <- train(stabilityDummy ~ ., method = "rpart", data = training1,
+                    preProcess = c("zv", "nzv", "center", "scale")
+                    )
+print(classModel$finalModel)
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Plotting the classification model
+fancyRpartPlot(classModel$finalModel)
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Making prediction and assessing the model performance
+
+classPred <- predict(classModel, testing1)
+
+confusionMatrix(classPred, testing1$stabilityDummy)
+
+```
+
+
+### Step 5: Predicting with regression
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Partitionning the dataset into training set and testing set for the regression model
+set.seed(234)
+inTrain2 <- createDataPartition(y = WGIdevRegimeTypeRandReg$stability, p = .75, list = FALSE)
+training2 <- WGIdevRegimeTypeRandReg[inTrain2,]
+testing2 <- WGIdevRegimeTypeRandReg[-inTrain2,]
+dim(training2)
+dim(testing2)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Training the regression model
+
+regModel <- train(stability ~ ., method = "glm", data = training2,
+                  trControl = trainControl(method = "cv", number = 5,
+                                           verboseIter = TRUE),
+                  preProcess = c("zv", "nzv", "center", "scale", "pca")
+                  )
+regFinalModel <- regModel$finalModel
+  
+print(regModel)
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Regression model diagnostics
+
+plot(regFinalModel, 1, pch = 19)
+
+
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Making prediction and assessing the model performance
+
+regPred <- predict(regModel, testing2)
+
+postResample(pred = regPred, obs = testing2$stability)
+
+```
+
+
+### Step 6: Conclusion
+
+
