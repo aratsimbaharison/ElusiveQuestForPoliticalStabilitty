@@ -234,6 +234,24 @@ The review of the ML courses led me to the following conclusions:
 
 - 3/16/2019:
 
-In reviewing the script on the data collection, I decided to impute the missing values of several variables, including GINI, povertyHeadCount, 
+In reviewing the script on the data collection, I decided to impute the missing values of several variables, including GINI, and povertyHeadCount.
+
+However, when it comes to handling the extreme values in the Polity IV dataset, I just decided to remove all observations with the values of -66 (interruption periods), -77 (interregnum periods), and -88 (transitional periods). The reason for this is that there is no single and agreed upon procedure to handle these extreme values among scholars (See Plümper & Neumayer, 2010).
+
+- 3/17/2019:
+
+I completed another review of the script for data collection and manipulation.
+
+I completed the initial script for machine learning prediction, based on classification and regression. I just need to review and improve it for the final identification of the significant predictors.
+
+- 3/25/2019:
+
+After reading the paper on ViEWS (Hegre, H., et al.2019. ViEWS: A political violence early-warning system. *Journal of Peace Research*, 56(2), 002234331982386. https://doi.org/10.1177/0022343319823860
+), I came up with the following ideas:
+
+1) include conflict (or conflict history) and state legitimacy as predictors in the main dataframe
+2) correlate and plot stability against the measures of "state fragility index" (Center for Systemic Peace) and "state failure" to see if they are correlated and measure the same thing
+
+
 
 

@@ -1,27 +1,26 @@
 ---
 title: "Script for the Machine Learning Predictions"
-author: "Adrien Ratsimbaharison"
-date: "March 16, 2019"
+author: "Adrien M. Ratsimbaharison"
+date: "March 17, 2019"
 output:
   word_document: default
   html_document: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-	message = FALSE,
-	warning = FALSE,
-	include = FALSE
-)
+knitr::opts_chunk$set(echo = TRUE)
 ```
+
 
 ## The six steps in the machine learning predictions:
 
+These steps generally follow the steps suggested by different machine learning practitioners and instructors, including Lantz (2015), Pierobon (2018), and Leek, Peng, & Caffo (2018).
+
 1) Defining the problem 
-2) Reading and exploring the Data 
+2) Exploring the Data 
 3) Preparing the data: data randomization and partition
-4) Predicting with classification
-5) Predicting with regression
+4) Modeling and predicting with classification
+5) Modeling and predicting with regression
 6) Conclusion
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -30,7 +29,6 @@ library(caret)
 library(dplyr)
 library(ggplot2)
 library(readr)
-library(VIM)
 library(rattle)
 
 ```
@@ -46,7 +44,7 @@ When performing machine learning techniques, it is always a good idea to define 
 In terms of machine learning, we are dealing in this case with a multivariate supervised machine learning problem in which we have to predict a binary and multi-class outcome (thus we will use classification techniques) and a numeric outcome (thus we will use a mutliple regression technique).  
 
 
-### Step 2: Reading and exploring the Data
+### Step 2: Reading and exploring the Data in r
 
 Our data were downloaded from different sources and merged in a single data frame (See script on downloading quantitative data for the information on how the data were collected and manipulated).
 
@@ -60,9 +58,9 @@ WGIdevRegimeType <- read.csv("WGIdevRegimeType.csv")
 
 # looking at the different types of variables and correcting their classes
 
-glimpse(WGIdevRegimeType)
-
 WGIdevRegimeType$stabilityDummy <- as.factor(WGIdevRegimeType$stabilityDummy)
+
+glimpse(WGIdevRegimeType)
 
 ```
 
@@ -123,7 +121,7 @@ WGIdevRegimeTypeRand <- WGIdevRegimeType[rows, ]
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 # Selecting the variables to be included in the classification model. We need to remove the political stability score (stability) and stability category (stabilityCategory) from this dataset.
 
-WGIdevRegimeTypeRandClass <- select(WGIdevRegimeTypeRand, date, stabilityDummy, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+WGIdevRegimeTypeRandClass <- select(WGIdevRegimeTypeRand, stabilityDummy, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
 
 ```
 
@@ -131,12 +129,12 @@ WGIdevRegimeTypeRandClass <- select(WGIdevRegimeTypeRand, date, stabilityDummy, 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 # Selecting the variables to be included in the regression model. We need to remove the stability dummy (stabilityDummy) and stability category (stabilityCategory) from this dataset.
 
-WGIdevRegimeTypeRandReg <- select(WGIdevRegimeTypeRand, date, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+WGIdevRegimeTypeRandReg <- select(WGIdevRegimeTypeRand, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
 
 ```
 
 
-### Step 4: Predicting with classification
+### Step 4: Modeling and predicting with classification
 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -154,8 +152,11 @@ testing1 <- WGIdevRegimeTypeRandClass[-inTrain1,]
 # Training the classification model
 
 classModel <- train(stabilityDummy ~ ., method = "rpart", data = training1,
+                    trControl = trainControl(method = "cv", number = 5,
+                                           verboseIter = TRUE),
                     preProcess = c("zv", "nzv", "center", "scale")
                     )
+
 print(classModel$finalModel)
 ```
 
@@ -176,7 +177,7 @@ confusionMatrix(classPred, testing1$stabilityDummy)
 ```
 
 
-### Step 5: Predicting with regression
+### Step 5: Modeling and predicting with regression
 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}

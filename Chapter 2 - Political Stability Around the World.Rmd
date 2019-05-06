@@ -4,8 +4,8 @@ title: 'Chapter 2 - Political Stability Around the World Since the End of the Co
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output:
-  html_document: default
   word_document: default
+  html_document: default
 bibliography: bibliography.bib
 ---
 
@@ -73,7 +73,7 @@ abline(h = 0, lwd = 2)
 
 hist(WGIdevRegimeType$stability, main= "", xlab = "Political Stability Estimate")
 abline(v = median(WGIdevRegimeType$stability, na.rm = TRUE), lwd = 2)
-text(x = -1.3, y = 520, "Median= -0.09958")
+text(x = -0.4, y = 1000, "Median= 0.4939")
 
 ```
 
@@ -113,7 +113,7 @@ kable(PoliticalStabilityTrendWorld, caption = "Table 2 - Political Stability Tre
 PoliticalStabilityTrendWorld$PSAnnualAverage <- as.numeric(PoliticalStabilityTrendWorld$AnnualAverage)
 
 plot(PoliticalStabilityTrendWorld$date, PoliticalStabilityTrendWorld$AnnualAverage, type="o", lwd = 2,
-     ylim=range( -1:1),
+     ylim=range( -1.5:1.5),
      main="",
      xlab = "Years", ylab = "Political Stability (Annual Average)")
 abline(h = 0, lwd = 1.5)
@@ -148,7 +148,7 @@ kable(politicalStabilityByRegion, caption = "Table 3 - Political Stability: Aver
 ```
 
 
-```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 4 - Political Stability: Average by Region"}
+```{r echo=FALSE, fig.cap="Fig. 3 - Political Stability: Average by Region", message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # Boxplot of Political Stability by Region
 boxplot(stability~region,data=WGIdevRegimeType, main="",
@@ -156,6 +156,26 @@ boxplot(stability~region,data=WGIdevRegimeType, main="",
 abline(h = 0, lwd = 2)
 
 ```
+
+**Identifying the Most Stable and Most Unstable Countries in Africa** 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# subsetting the African countries
+WGIdevRegimeTypeAf <- filter(WGIdevRegimeType, region == "Africa")
+
+# calculating the average stability by country in Africa
+
+politicalStabilityByCountry <- summarise(group_by(WGIdevRegimeTypeAf, country),
+          mean=mean(stability, na.rm = TRUE), sd=sd(stability, na.rm = TRUE))
+
+mostStable <- arrange(politicalStabilityByCountry, desc(mean))
+mostStable
+
+mostUnstable <- arrange(politicalStabilityByCountry, mean)
+mostUnstable
+
+```
+
 
 ## 2.2 - Exploratory Data Analysis
 
@@ -171,7 +191,7 @@ This result allows us to include all world governance indicators in our predicti
 # reading the data on WGI
 
 # Scatterplot Matrix
-pairs(~ stability + regulatoryQuality,data=WGIdevRegimeType,
+pairs(~ stability + corruptionControl + governmentEffectiveness + regulatoryQuality + ruleOfLaw + voiceAndAccountability,data=WGIdevRegimeType,
    main="")
 
 ```
@@ -180,7 +200,7 @@ pairs(~ stability + regulatoryQuality,data=WGIdevRegimeType,
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 # Correlation between Political Stability and the other World Governance Indicators (WGI)
-WGI <- select(WGIdevRegimeType, stability, regulatoryQuality)
+WGI <- select(WGIdevRegimeType, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability)
 correlationWGI <- rcorr(as.matrix(WGI))
 
 
@@ -205,7 +225,7 @@ Nevertheless, since all of these correlations are statistically significant (wit
 
 ```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 6 - Correlation between Political Stability, Development, and Social Inequality"}
 # Scatterplot Matrix of Political Stability, Development, and Social Inequality
-pairs(~ stability + GNIperCapita + HDI, data=WGIdevRegimeType,
+pairs(~ stability + GNIperCapita + GDPannualGrowthRate + HDI + GINI + povertyHeadCount, data=WGIdevRegimeType,
    main=" ")
 
 ```
@@ -213,7 +233,7 @@ pairs(~ stability + GNIperCapita + HDI, data=WGIdevRegimeType,
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 # Correlation Matrix between Political Stability and the Indicators of Development and Social Inequality
-devStability <- select(WGIdevRegimeType, stability, GNIperCapita, HDI)
+devStability <- select(WGIdevRegimeType, stability, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount)
 correlation.devStability <- rcorr(as.matrix(devStability))
 
 
@@ -262,131 +282,34 @@ Correlation.regimeTypeStability
 
 ```
 
-### *Generalized Linear Regression Model to Identify the Significant Variables*
+### *Generalized Linear Regression Model to Identify the Most Significant Variables*
 
-In this section, we include all variables in a single dataframe and run a step function in order to identify the most significant variables to be included in the prediction model.   
+In this section, we include all variables in a single dataframe and run a step function in order to identify the most significant variables to be included in the prediction models.   
 
-However, before runing the step function, we need to clean the data. The following steps were followed in order to remove the missing values (NAs):   
-
-- first, we identify the variables with high percentage of missing values (more than 20%) and remove them from the dataframe,
-- second, from the remaining variables and observations, we remove the incomplete cases and only use the complete ones.   
 
 
 ```{r echo=TRUE, include=TRUE}
+# Selecting the variables to be included in the regression model. We need to remove the stability dummy (stabilityDummy) and stability category (stabilityCategory) from this dataset.
+
+WGIdevRegimeTypeReg <- select(WGIdevRegimeType, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
+
 # Table 7 - Summary of the Generalized Linear Regression Model Using Step Function
-# modelFit1 <- step(glm( data=WGIdevRegimeType, stability ~ .), trace=0,steps=10000) 
-# summary(modelFit1)
+modelFit1 <- step(glm( data=WGIdevRegimeTypeReg, stability ~ .), trace=0,steps=10000)
+summary(modelFit1)
 ```
 
 The above step function allows us the identify the following variables as the most significant predictors to be included in the prediction models: 
-subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus.
+
+corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityCategory, politicalChange, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion
+
+The following variables were dropped or appeared to be insignificant in this model:
+
+polityScore, democ, autoc, polcomp, inverse_pr
 
 
 ## III. Predicting Political Stability Using Machine Learning
 
+See `scriptForMachineLearningPrediction`
 
-
-### *Predicting with Generalized Linear Regression*
-
-Using the variables identified through the above step function, we run machine learning predictions using generalized linear regression with the caret package, and we obtain the following results:    
-
-- As shown in Table 8a, on the trainning data set, the following variables are still significant: subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus.
-
-- As shown in Table 8b, on the test data set, the same variables (subregion, regulatoryQuality, GNIperCapita, civilLiberties, FHstatus) are also significant.
-
-
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-#selecting the variables for the model
-WGIdevRegimeType2 <- select(WGIdevRegimeType, stability, regulatoryQuality, GNIperCapita, HDI, polityScore, democ, autoc, xrreg, xrcomp, inverse_pr, inverse_cl, inverse_mean)
-
-# create train and test sets
-set.seed(635)
-inTrain1 <- createDataPartition(y=WGIdevRegimeType2$stability, p=0.75, list=FALSE)
-train1 <- WGIdevRegimeType2[inTrain1,]
-test1 <- WGIdevRegimeType2[-inTrain1,]
-
-# build generalized linear regression model on training set
-modelFit1 <- glm(stability ~ .,data=train1)
-# print summary of modelFit1
-# summary(modelFit1)
-
-# build generalized linear regression model on test set
-modelFit2 <- glm(stability ~ .,data=test1)
-# print summary of modelFit2
-# summary(modelFit2)
-
-```
-
-
-```{r echo=TRUE, warning=FALSE, include=TRUE}
-#Table 8a - Machine Learning Prediction Using Generalized Linear Regression on the Trainning Dataset
-summary(modelFit1)
-```
-
-
-```{r echo=TRUE, warning=FALSE, include=TRUE}
-# Table 8b - Machine Learning Prediction Using Generalized Linear Regression on the Testing Dataset
-summary(modelFit2)
-```
-
-
-### *Predicting with Classification Tree*
-
-In this classification tree, we are using "stability category" as the target variable. Using the variables identified through the above step function, we run machine learning predictions using classification tree with the caret package, and we obtain the following results:    
-
-- As shown in Figure 8, on the trainning data set, regulatoryQuality is the only variable that can predict either a case is "moderately unstable" (65%), "moderately stable" (22%), or "highly stable" (12%). 
-
-- As shown in Figure 9, on the test data set, two variables, civilLiberties and regulatoryQuality, are needed to predict either a case is "moderately unstable" (60%), "moderately stable" (29%), or "highly stable" (11%).
-
-In sum, in both models, only regulatoryQuality is the most consistent predictor of "stability category".
-
-```{r echo=FALSE, warning=FALSE, include=FALSE}
-
-library(dplyr)
-library(caret)
-library(kernlab)
-library(rattle)
-
-#selecting the variables for the model (new dataframe = WGIDevPolityDf4)
-WGIdevRegimeType3 <- select(WGIdevRegimeType, stabilityCategory, regulatoryQuality, GNIperCapita, polityScore)
-
-
-# create test/train data sets
-set.seed(123)
-inTrain2 <- createDataPartition(y=WGIdevRegimeType3$stabilityCategory,p=0.75, list=FALSE)
-train2 <- WGIdevRegimeType3[inTrain2,]
-test2 <- WGIdevRegimeType3[-inTrain2,]
-head(train2)
-
-```
-
-
-
-```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap="Fig. 8 - Classification Tree on the Trainning Data Set"}
-# fit classification tree on the train data set
-modFit3 <- train(stabilityCategory ~ .,method="rpart",data=train2)
-# print the classification tree
-print(modFit3$finalModel)
-
-# plot the classification tree
-fancyRpartPlot(modFit3$finalModel)
-
-
-```
-
-
-```{r echo=FALSE, warning=FALSE, include=TRUE, fig.cap= "Fig. 9 - Classification Tree on the Testing Data Set"}
-# fit classification tree as on the train data set
-modFit4 <- train(stabilityCategory ~ .,method="rpart",data=test2)
-# print the classification tree
-print(modFit4$finalModel)
-
-# plot the classification tree
-fancyRpartPlot(modFit4$finalModel)
-
-
-```
-
-## References
 
 

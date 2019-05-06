@@ -3,9 +3,9 @@ title: 'Chapter 1 - Political Stability: What Is It and Why Does It Matter?'
 author: "Adrien Ratsimbaharison"
 date: "10/14/2018"
 output:
-  html_document: default
-  pdf_document: default
   word_document: default
+  pdf_document: default
+  html_document: default
 bibliography: bibliography.bib
 ---
 
@@ -73,7 +73,7 @@ The most common actors' behaviors that create and escalate conflicts are the ado
 
 Part I - Introduction
 
-Chapter 1 - Political Stability: What is it and Why it Matters?
+Chapter 1 - Political Stability: What is it and Why Does it Matter?
 
 Chapter 2 - Political Stability Around the World Since the End of the Cold War: Descriptive Statistics
 
@@ -100,11 +100,10 @@ Chapter 9 - Autocratization and Political Instability and Crisis
 
 Part IV - Case Studies
 
-Chapter 10 - Madagascar
+Chapter 10 - Two of the Most Stable Africa Countries: Botswana and Mauritius
 
-Chapter 11 - Mali
+Chapter 11 - Two of the Most Unstable African Countries: Somalia and South Sudan
 
-Chapter 12 - Botswana
 
 
 Part V - Conclusion
