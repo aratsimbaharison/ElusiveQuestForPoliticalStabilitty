@@ -260,5 +260,10 @@ After reading the practical guide for the implementation of machine learning usi
 
 I downloaded the Armed Conflict Dataset version 18.1 for the UCDP/PRIO website and gave it the name of "armedConflictDF"
 
+- 5/19/2019
 
+I created a dummy variable conflictHistory (0 = No, 1 = yes) for countries that experienced an internal armed conflict and internationalized internal armed conflict.
+I merged the conflictHistory variable to the main dataset
+
+I also downloaded the data on population size from the World Bank homepage. 
 

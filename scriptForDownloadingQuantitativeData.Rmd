@@ -206,9 +206,18 @@ summary(WGI2byCountryAndRegion)
 
 
 
-## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website using `webstats`package, and then joining the datasets with the dataset on WGI by region and subregion (WGI2byCountryAndRegion)
+## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website using `wbstats`package, and then joining the datasets with the dataset on WGI by region and subregion (WGI2byCountryAndRegion)
 
 ```{r warning=FALSE}
+
+# Downloading the data on population size (NY.GDP.MKTP.KD.ZG)
+populationDF <- wb(country = "countries_only", indicator = "SP.POP.TOTL", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+populationDF <- tbl_df(populationDF)
+populationDF <- select(populationDF, country, iso2c, date, population = value)
+populationDF$date <- as.numeric(as.character(populationDF$date))
+head(populationDF)
+summary(populationDF)
 
 
 # Downloading the data on GDP growth (annual %) (NY.GDP.MKTP.KD.ZG)
@@ -604,13 +613,9 @@ WGIdevRegimeTypeDF <- WGIdevRegimeTypeDF[! WGIdevRegimeTypeDF$country == "Nether
 
 summary(WGIdevRegimeTypeDF)
 
-# # Making WGIdevRegimeTypeDF available in the local repository under "WGIdevRegimeType.csv"
-# 
-# WGIdevRegimeType <- write.csv(WGIdevRegimeTypeDF, "WGIdevRegimeType.csv")
-
 ```
 
-## Data on armed conflicts from UCDP, after reading the article on ViEWS (political violence early-warning system) by Hegre et al. (2019):
+## Collecting the data on armed conflicts from UCDP, after reading the article on ViEWS (political violence early-warning system) by Hegre et al. (2019):
 
 ```{r}
 # # creating ucdpprio folder
@@ -627,7 +632,7 @@ summary(WGIdevRegimeTypeDF)
 # Reading the data into r
 ucdpprioData <- read.csv("ucdpprio/ucdp-prio-acd-181.csv", header = TRUE)
 
-# Following Hegre, H., et al.(2019. ViEWS: A political violence early-warning system) and Fearon and Latin (2003, Ethnicity, Insurgency, and Civil War), we identify the countries that had a history of intrastate armed conflicts in the previous period and which are also likely to experience new armed conflicts during the period under consideration. The cut-off period for the conflict history is from 1960, the year of independence for many African countries.
+# Following Hegre, H., et al.(2019. ViEWS: A political violence early-warning system) and Fearon and Latin (2003, Ethnicity, Insurgency, and Civil War), we identify the countries that had "internal armed conflict" and "internationalized internal armed conflict" in the previous period and which are also likely to experience new armed conflicts during the period under consideration. The cut-off period for the conflict history is from 1960, the year of independence for most African countries.
 
 
 library(dplyr)
@@ -640,43 +645,135 @@ unique(armedConflictHist$country)
 
 
 # Here is the list of 89 countries that had a history of intrastate armed conflict during the previous period:
+# 
+#  [1] Bolivia               Iran                  Philippines           Paraguay             
+#  [5] Myanmar (Burma)       India                 Yemen                 Guatemala            
+#  [9] Israel                Thailand              Cuba                  Indonesia            
+# [13] Argentina             Vietnam              Iraq                  Lebanon              
+# [17] Malaysia              Laos                  DR Congo (Zaire)      Ethiopia             
+# [21] Nepal                 France                Venezuela             Sudan                
+# [25] Gabon                 Burundi               Chad                  Colombia             
+# [29] Dominican Republic    Peru                  Ghana                 Nigeria              
+# [33] South Africa          Syria                 Cambodia (Kampuchea)  Madagascar (Malagasy)
+# [37] Morocco               Pakistan              Sri Lanka             Uganda               
+# [41] United Kingdom        El Salvador           Oman                  Zimbabwe (Rhodesia)  
+# [45] Uruguay               Chile                 Bangladesh            Angola               
+# [49] Mozambique            Afghanistan           Nicaragua             Somalia              
+# [53] Saudi Arabia          Liberia               Spain                 Tunisia              
+# [57] Gambia                Kenya                 Cameroon              Turkey               
+# [61] Suriname              Togo                  Burkina Faso         
+# [65] Comoros               Panama                Papua New Guinea      Rumania              
+# [69] Mali                  Niger                 Rwanda                Senegal              
+# [73] Russia (Soviet Union) Trinidad and Tobago   Djibouti              Georgia              
+# [77] Haiti                 Sierra Leone          Serbia (Yugoslavia)   Algeria              
+# [81] Azerbaijan            Bosnia-Herzegovina    Croatia               Egypt                
+# [85] Moldova               Tajikistan            Mexico                Congo                
+# [89] Mauritania  
 
-# Bolivia               Iran, Islamic Rep.                  Philippines           Paraguay             
-# Myanmar       India                 Yemen, Rep.   Guatemala            
-# Israel                Thailand              Cuba                  Indonesia            
-# Argentina             South Vietnam         Iraq                  Lebanon              
-# Malaysia              Laos                  Congo, Dem. Rep.      Ethiopia             
-# Nepal                 France                Venezuela             Sudan                
-# Gabon                 Burundi               Chad                  Colombia             
-# Dominican Republic    Peru                  Ghana                 Nigeria              
-# South Africa          Syrian Arab Republic                 Cambodia  Madagascar
-# Morocco               Pakistan              Sri Lanka             Uganda               
-# United Kingdom        El Salvador           Oman                  Zimbabwe  
-# Uruguay               Chile                 Bangladesh            Angola               
-# Mozambique            Afghanistan           Nicaragua             Somalia              
-# Saudi Arabia          Liberia               Spain                 Tunisia              
-# Gambia, The                Kenya                 Cameroon              Turkey               
-# Suriname              Togo                  South Yemen           Burkina Faso         
-# Comoros               Panama                Papua New Guinea      Romania              
-# Mali                  Niger                 Rwanda                Senegal              
-# Russian Federation Trinidad and Tobago   Djibouti              Georgia              
-# Haiti                 Sierra Leone          Serbia   Algeria              
-# Azerbaijan            Bosnia-Herzegovina    Croatia               Egypt                
-# Moldova               Tajikistan            Mexico                Congo, Rep.                
-# Mauritania 
+# In order to be consistent throughout the data collection and analyses, the country names from the UCDP-PRIO dataset were aligned with the country names used in the World Bank dataset, and the duplicate names have been removed.
 
-# In order to be consistent throughout the data collection and analyses, the country names from the UCDP-PRIO dataset were aligned with the country names used in the World Bank dataset.
+# Creating a dummy variable "conflictfHist" in the main dataset "WGIdevRegimeTypeDF"
 
-# We are adding the dummy variable "armedConflicfHist" in the main dataset "WGIdevRegimeType.csv"
+WGIdevRegimeTypeDF <- mutate(WGIdevRegimeTypeDF, conflictHistory = case_when(is.na(country) ~ "NA",
+                                           country == "Bolivia" ~ "1",
+                                           country == "Iran, Islamic Rep."~ "1",
+                                           country == "Philippines" ~ "1",
+                                           country == "Paraguay" ~ "1", 
+                                      country == "Myanmar" ~ "1",               
+                                      country == "India" ~ "1",
+                                      country == "Yemen, Rep." ~ "1",
+                                      country == "Guatemala" ~ "1",
+                                      country == "Israel" ~ "1",
+                                      country == "Thailand" ~ "1",
+                                      country == "Cuba" ~ "1",
+                                      country == "Indonesia" ~ "1",
+                                      country == "Argentina" ~ "1",
+                                      country == "Vietnam" ~ "1",
+                                      country == "Iraq" ~ "1",
+                                      country == "Lebanon" ~ "1",
+                                      country == "Malaysia" ~ "1",
+                                      country == "Laos" ~ "1",
+                                      country == "Congo, Dem. Rep." ~ "1",
+                                      country == "Ethiopia" ~ "1",
+                                      country == "Nepal" ~ "1",
+                                      country == "France" ~ "1",
+                                      country == "Venezuela" ~ "1",
+                                      country == "Sudan" ~ "1",
+                                      country == "Gabon" ~ "1",
+                                      country == "Burundi" ~ "1",
+                                      country == "Chad" ~ "1",
+                                      country == "Colombia" ~ "1",
+                                      country == "Dominican Republic" ~ "1",
+                                      country == "Peru" ~ "1",
+                                      country == "Ghana" ~ "1",
+                                      country == "Nigeria" ~ "1",
+                                      country == "South Africa" ~ "1",
+                                      country == "Syrian Arab Republic" ~ "1",
+                                      country == "Cambodia" ~ "1",
+                                      country == "Madagascar" ~ "1",
+                                      country == "Morocco" ~ "1",
+                                      country == "Pakistan" ~ "1",
+                                      country == "Sri Lanka" ~ "1",
+                                      country == "Uganda" ~ "1",
+                                      country == "United Kingdom" ~ "1",
+                                      country == "El Salvador" ~ "1",
+                                      country == "Oman" ~ "1",
+                                      country == "Zimbabwe" ~ "1",
+                                      country == "Uruguay" ~ "1",
+                                      country == "Chile" ~ "1",
+                                      country == "Bangladesh" ~ "1",
+                                      country == "Angola" ~ "1",
+                                      country == "Mozambique" ~ "1",
+                                      country == "Afghanistan" ~ "1",
+                                      country == "Nicaragua" ~ "1",
+                                      country == "Somalia" ~ "1",
+                                      country == "Saudi Arabia" ~ "1",
+                                      country == "Liberia" ~ "1",
+                                      country == "Spain" ~ "1",
+                                      country == "Tunisia" ~ "1",
+                                      country == "Gambia, The" ~ "1",
+                                      country == "Kenya" ~ "1",
+                                      country == "Cameroon" ~ "1",
+                                      country == "Turkey" ~ "1",      
+                                      country == "Suriname" ~ "1",
+                                      country == "Togo" ~ "1",
+                                      country == "Burkina Faso" ~ "1",
+                                      country == "Comoros" ~ "1",
+                                      country == "Panama" ~ "1",
+                                      country == "Papua New Guinea" ~ "1",
+                                      country == "Romania" ~ "1",
+                                      country == "Mali" ~ "1",
+                                      country == "Niger" ~ "1",
+                                      country == "Rwanda" ~ "1",
+                                      country == "Senegal" ~ "1",
+                                      country == "Russian Federation" ~ "1",       
+                                      country == "Trinidad and Tobago" ~ "1",
+                                      country == "Djibouti" ~ "1",
+                                      country == "Georgia" ~ "1",
+                                      country == "Haiti" ~ "1",
+                                      country == "Sierra Leone" ~ "1",
+                                      country == "Serbia" ~ "1",
+                                      country == "Algeria" ~ "1",
+                                      country == "Azerbaijan" ~ "1",
+                                      country == "Bosnia-Herzegovina" ~ "1",
+                                      country == "Croatia" ~ "1",
+                                      country == "Egypt, Arab Rep." ~ "1",
+                                      country == "Moldova" ~ "1",
+                                      country == "Tajikistan" ~ "1",
+                                      country == "Mexico" ~ "1",
+                                      country == "Congo, Rep." ~ "1",
+                                      country == "Mauritania" ~ "1",
+                                      TRUE ~ "0"))
 
-armedConflictHist <- mutate(armedConflictHist, history = ifelse(country == "Bolivia", 1,
-                                     ifelse(country == "Iran", 1,
-                                            ifelse(country == "Philippines", 1,
-                                                   ifelse(country == "Paraguay", 1, 0)))))
 
+```
 
-head(armedConflictHist)
+## Making available the full dataset in the local repository
 
+```{r}
+# # Making WGIdevRegimeTypeDF available in the local repository under "WGIdevRegimeType.csv"
+# 
+# WGIdevRegimeType <- write.csv(WGIdevRegimeTypeDF, "WGIdevRegimeType.csv")
 
 ```
 
