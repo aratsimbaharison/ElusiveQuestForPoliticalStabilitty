@@ -24,9 +24,18 @@ library(ggplot2)
 ```{r the data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # loading the data
 
+# Cameroon Round 5 data (updated July 2015)
+library(haven)
+# cam_r5_data_fr_july_2015 <- read_sav("http://afrobarometer.org/sites/default/files/data/round-5/cam_r5_data_fr_july_2015.sav")
+# write_sav(cam_r5_data_fr_july_2015, "cam_r5_data_fr_july_2015.sav")
+
+cameroonRound5 <- read_sav("cam_r5_data_fr_july_2015.sav", header = T, colClasses = "factor")
+head(cameroonRound5)
+glimpse(cameroonRound5)
+
 # round 6 data
 library(haven)
-cameroonRound6 <- read_sav("cam_r6_data_2016_eng.sav")
+cameroonRound6 <- read_sav("cam_r6_data_2016_eng.sav", header = T, colClasses = "factor")
 head(cameroonRound6)
 
 
@@ -34,6 +43,22 @@ head(cameroonRound6)
 library(haven)
 cameroonRound7 <- read_sav("cam_r7_data_eng.sav")
 head(cameroonRound7)
+names(cameroonRound7)
+
+# The outcome variable is Q58A (approval of the way the president has performed his job over the last 12 month)
+cameroonRound7$Q58A <- as.factor(cameroonRound7$Q58A)
+str(cameroonRound7$Q58A)
+summary(cameroonRound7$Q58A)
+myTable <- table(cameroonRound7$Q58A)
+prop.table(myTable)
+
+# Creating a binary outcome variable called "approval" for 'approval of the President's job' with Q58A
+# First, we need to remove the missing values ("8") and don't know answer ("9")
+cameroonRound7 <- filter(cameroonRound7, Q58A == 1 | Q58A == 2 | Q58A == 3 | Q58A == 4)
+cameroonRound7 <- mutate(cameroonRound7, approval = ifelse(Q58A == 1 | Q58A == 2, "disapprove", ifelse(Q58A == 3 | Q58A == 4, "approve", NA)))
+cameroonRound7$approval <- as.factor(cameroonRound7$approval)
+approvalRate <- summary(cameroonRound7$approval)
+prop.table(approvalRate)
 
 ```
 
@@ -74,7 +99,7 @@ This study is based on a micro-level analysis or buttom-up approach to the durab
 Afrobarometer presents itself as "a pan-African, non-partisan research network that conducts public attitude surveys on democracy, governance, economic conditions, and related issues in more than 35 countries in Africa." (Afrobarometer, 2019) Cameroon was included in the rounds 5, 6, and 7 of the national surveys conducted by Afrobarometer. Even if they do not directly address the questions about the durability of the Paul Biya regime, the data from these surveys allow us to understand the Cameroonian people's opinions and attitudes toward the president and his regime, and explain why they are willing to stay under the same regime for so many years.
 
 
-Proxy for support to the president and his regime = questions about the trust in the institutions
+Proxy for support to the president and his regime = the trust in the president and the approval of the way the institutions handle their job (Q58)
 
 Factors that may be associated with the trust in the institutions =
 
@@ -83,7 +108,10 @@ Factors that may be associated with the trust in the institutions =
 - satistfaction with freedom
 - etc.
 
+
 ## Findings
+
+
 
 
 ## Discussion and Conclusion

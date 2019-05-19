@@ -252,6 +252,13 @@ After reading the paper on ViEWS (Hegre, H., et al.2019. ViEWS: A political viol
 1) include conflict (or conflict history) and state legitimacy as predictors in the main dataframe
 2) correlate and plot stability against the measures of "state fragility index" (Center for Systemic Peace) and "state failure" to see if they are correlated and measure the same thing
 
+- 5/6/2019:
+
+After reading the practical guide for the implementation of machine learning using the CARET package by Kaushik (Kaushik, S. 2016, December 8. Practical guide to implement machine learning with CARET in R. Retrieved April 18, 2019, from Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/), I decided to adopte a simplified version of this practical guide for my future machine learning implementations.
+
+- 5/7/2019:
+
+I downloaded the Armed Conflict Dataset version 18.1 for the UCDP/PRIO website and gave it the name of "armedConflictDF"
 
 
 
