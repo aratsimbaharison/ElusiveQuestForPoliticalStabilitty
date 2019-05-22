@@ -1,0 +1,130 @@
+---
+title: "scriptForMachineLearningImplementation"
+author: "Adrien Ratsimbaharison"
+date: "May 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This machine learning script is based on the "Practical guide to implement machine learning with CARET in R" suggested by Saurav Kaushik in the Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/ (December 8, 2016).   
+
+The Caret package solves many problems in the implementation of machine learning process, and make it much easier to execute, even for beginners like the autors of this book.
+As Kaushik puts it, "This package [i.e., CARET package] alone is all you need to know for solve almost any supervised machine learning problem. It provides a uniform interface to several machine learning algorithms and standardizes various other tasks such as Data splitting, Pre-processing, Feature selection, Variable importance estimation, etc."
+
+The different steps suggested by Saurav Kaushik include the following:  
+
+1) Getting started with loading the package and looking at the data
+2) Pre-processing the data using Caret
+3) Splitting the data using Caret
+4) Feature selection using Caret
+5) Training models using Caret
+6) Parameter tuning using Caret
+7) Variable importance estimation using Caret
+8) Making predictions using Caret
+
+
+## 1. Getting started with loading the package and looking at the data
+
+Installing and loading the Caret package and its dependencies:
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+# Intalling the caret package if it is not already installed
+
+# install.packages("caret", dependencies = c("Depends", "Suggests"))
+
+# loading the caret package and other required packages:
+library(caret)
+library(dplyr)
+
+```
+
+Reading the data in R and looking at its structure
+
+```{r}
+# Reading the data
+train <- read.csv("WGI2popDevIneqPovRegimeConflict2.csv", stringsAsFactors = TRUE)
+
+# Looking at its structure and summary
+str(train)
+summary(train)
+
+```
+
+
+Defining the problem:
+
+In this problem we want to predict the classification of a country either as "stable" or "unstable" based on the following groups of factors or indicators:
+
+- World Governance Indicators,
+- Demographic and economic indicators,
+- Regime type indicators,
+- Conflict history.
+
+
+
+## 2. Pre-processing the data using Caret
+
+First, we need to remove the variables that are not significant for the machine learning implementation, such as the identification codes ("M49Code", "iso2c", "iso3c"), and the codes that are redundant, such as "pr", "cl", "sum", "mean" (these codes will be replaced by their inverse) and "stabilityCategory", "stabilityCategory", "devCategory", "status", 
+
+```{r}
+train <- select(train, country, date, stabilityDummy, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+
+```
+Next, we check and locate the missing values.
+
+```{r}
+sum(is.na(train))
+summary(train)
+
+```
+
+The missing values are concentrated in the following variables: "region", and "subregion". In identifying the observations without "region" and "subregion", we found out that they do not have "country" either. Therefore, we decided to remove all of them.
+
+```{r}
+missingRegion <- train[train$region == "NA",] 
+missingRegion # showing that the observation without "region" do not have "country" either.
+
+# removing the observation without "region" and "subregion"
+train <- na.omit(train)
+sum(is.na(train))
+summary(train) # showing that there are no more missing value in the train dataset.
+```
+
+
+
+## 3. Splitting the data using Caret
+
+
+
+
+## 4. Feature selection using Caret
+
+
+
+
+## 5. Training models using Caret
+
+
+
+
+## 6. Parameter tuning using Caret
+
+
+
+
+## 7. Variable importance estimation using Caret
+
+
+
+
+## 8. Making predictions using Caret
+
+
+
+## Conclusion
+

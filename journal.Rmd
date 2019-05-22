@@ -260,10 +260,36 @@ After reading the practical guide for the implementation of machine learning usi
 
 I downloaded the Armed Conflict Dataset version 18.1 for the UCDP/PRIO website and gave it the name of "armedConflictDF"
 
-- 5/19/2019
+- 5/19/2019:
 
 I created a dummy variable conflictHistory (0 = No, 1 = yes) for countries that experienced an internal armed conflict and internationalized internal armed conflict.
 I merged the conflictHistory variable to the main dataset
 
 I also downloaded the data on population size from the World Bank homepage. 
+
+I will review the whole dataset and add the population size variable to the main dataset.
+
+
+- 5/20/2019:
+
+After reviewing the data on political regime from Polity IV and Freedom House and merging them with the data on WGI by region, we realized that the rates of missing values among the variables from Polity IV were very high (27%), whereas the missing values among the variables from Freedom House were relatively low (14%). Besides, the variables from Polity IV came with some problems of coding that have to be resolve through transformation or recoding. In effect, there were different events that were coded as: -66, - 77, and -88.
+
+According to the 2017 manual: 
+"-66 Cases of foreign “interruption” are treated as “system missing.”
+-77 Cases of “interregnum,” or anarchy, are converted to a “neutral”
+Polity score of “0.”
+-88 Cases of “transition” are prorated across the span of the transition.
+For example, country X has a POLITY score of -7 in 1957, followed
+by three years of -88 and, finally, a score of +5 in 1961. The change
+(+12) would be prorated over the intervening three years at a rate of
+per year, so that the converted scores would be as follows: 1957 -7;
+1958 -4; 1959 -1; 1960 +2; and 1961 +5."
+
+Due to these problems of missing values and coding the data from Polity IV will not be included in the main dataset for the machine learning implementation.
+
+In the end we have two full dataset:
+
+1) a full dataset with Polity IV variables "WGI2popDevIneqPovRegimeConflict1" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict1.csv"
+2) a full dataset without Polity IV variables "WGI2popDevIneqPovRegimeConflict2" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict2.csv"
+
 

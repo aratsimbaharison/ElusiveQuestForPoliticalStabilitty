@@ -49,7 +49,7 @@ str(WGI2)
 names(WGI2)
 
 # In order to be consistent throughout the data collection and analysis, we need to replace "Cape Verde" with"Cabo Verde"
-WGI2$country <- str_replace(WGI2$country, "Cape Verde", "Cabo Verde")
+WGI2$country <- replace(WGI2$country, WGI2$country == "Cape Verde", "Cabo Verde")
 
 # Selecting the variables of interest for this study by selecting their estimated values from the WGI dataset:
 # Here is the list of the variables with their definition:
@@ -99,9 +99,9 @@ table(WGI2$stabilityCategory)
 
 ```{r}
 
-# We downloaded the data on the UN country names and codes with their classification into region and subregion from a github repository maintained by Luke Duncalfe   
+# We downloaded the data on the UN country names and codes with their classification into region and subregion from the github repository maintained by Luke Duncalfe   
 # at: https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-# According to the author and contributors, "These lists are the result of merging data from two sources, the Wikipedia ISO 3166-1 article for alpha and numeric country codes, and the UN Statistics site for countries' regional, and sub-regional codes. In addition to countries, it includes dependent territories."
+# According to the author and contributors to this database, "These lists are the result of merging data from two sources, the Wikipedia ISO 3166-1 article for alpha and numeric country codes, and the UN Statistics site for countries' regional, and sub-regional codes. In addition to countries, it includes dependent territories."
 
 regionSubregionDf <- read_csv("https://raw.githubusercontent.com/aratsimbaharison/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
 regionSubregionDf <- tbl_df(regionSubregionDf)
@@ -197,20 +197,20 @@ names(WGI2byCountryAndRegion)
 summary(WGI2byCountryAndRegion)
 
 
-# # making the clean data on WGI by region and subregion available in the local repository
+# # making the clean data on WGI2 by region and subregion available in the local repository
 # WGI2byCountryAndRegion <- write.csv(WGI2byCountryAndRegion, "WGI2byCountryAndRegion.csv")
 # WGI2byCountryAndRegion <- tbl_df(WGI2byCountryAndRegion)
-
+# 
 
 ```
 
 
 
-## Downloading and Cleaning the Data on Development, Inequality, and Poverty from the World Bank Website using `wbstats`package, and then joining the datasets with the dataset on WGI by region and subregion (WGI2byCountryAndRegion)
+## Downloading and Cleaning the Data on Population, Development, Inequality, and Poverty from the World Bank Website using `wbstats`package, and then joining the datasets with the dataset on WGI by region and subregion (WGI2byCountryAndRegion)
 
 ```{r warning=FALSE}
 
-# Downloading the data on population size (NY.GDP.MKTP.KD.ZG)
+# Downloading the data on population size (SP.POP.TOTL)
 populationDF <- wb(country = "countries_only", indicator = "SP.POP.TOTL", 
                      startdate = 1996, enddate = 2018, POSIXct = TRUE)
 populationDF <- tbl_df(populationDF)
@@ -254,7 +254,7 @@ head(UNDP_HDI)
 
 UNDP_HDI <- UNDP_HDI %>% 
   gather("1990",    "1991",    "1992",    "1993",    "1994",   "1995",  "1996",    "1997",    "1998",    "1999",    "2000",   "2001",    "2002",    "2003",    "2004",    "2005",    "2006",   "2007",    "2008",    "2009",    "2010",    "2011",    "2012",   "2013",    "2014",    "2015",    "2016", "2017", key = "year", value = "HDI")
-
+head(UNDP_HDI)
 summary(UNDP_HDI)
 
 UNDP_HDI <- tbl_df(UNDP_HDI)
@@ -266,10 +266,13 @@ UNDP_HDI2 <- arrange(UNDP_HDI, country, date)
 
 # In order to be consistent with the World Bank data, the following country names have been changed:
 
-UNDP_HDI2$country <- replace(UNDP_HDI2$country, UNDP_HDI2$country == "Eswatini (Kingdom of)", "Eswatini")
+UNDP_HDI2$country <- replace(UNDP_HDI2$country, UNDP_HDI2$country == "Cote d'Ivoire", "Côte d'Ivoire")
+UNDP_HDI2$country <- replace(UNDP_HDI2$country, UNDP_HDI2$country == "Sao Tome and Principe", "São Tomé and Principe")
 UNDP_HDI2$country <- replace(UNDP_HDI2$country, UNDP_HDI2$country == "Hong Kong, China (SAR)", "Hong Kong SAR, China")
 UNDP_HDI2$country <- replace(UNDP_HDI2$country, UNDP_HDI2$country == "Venezuela", "Venezuela, RB")
 
+# In order to be consistent with the World Bank data, the following country names have been deleted:
+UNDP_HDI2 <- UNDP_HDI2[! UNDP_HDI2$country == "Eswatini (Kingdom of)",]
 
 head(UNDP_HDI2)
 summary(UNDP_HDI2)
@@ -299,65 +302,60 @@ povHeadCountDF$date <- as.numeric(as.character(povHeadCountDF$date))
 head(povHeadCountDF)
 summary(povHeadCountDF)
 
-# Joining the data on development, social inequality, and poverty: devIneqPovDF
-devIneqPovDF <- full_join(GNIperCapitaDf, GDPannualGrowthDF, by = c("country", "date")) %>%
+# Joining the data on population, development, social inequality, and poverty: popDevIneqPovDF
+popDevIneqPovDF <- full_join(GNIperCapitaDf, GDPannualGrowthDF, by = c("country", "date")) %>%
   full_join(., UNDP_HDI2, by = c("country", "date")) %>%
   full_join(., GINIDf, by = c("country", "date")) %>%
-  full_join(., povHeadCountDF, by = c("country", "date"))
+  full_join(., povHeadCountDF, by = c("country", "date")) %>%
+  full_join(., populationDF, by = c("country", "date"))
   
-devIneqPovDF <- tbl_df(devIneqPovDF)
-devIneqPovDF$date <- as.numeric(as.character(devIneqPovDF$date))
-head(devIneqPovDF)
-names(devIneqPovDF)
-devIneqPovDF <- select(devIneqPovDF, country, iso2c = iso2c.x, date, GDPannualGrowthRate, GNIperCapita, devCategory, HDI, GINI, povertyHeadCount)
-summary(devIneqPovDF)
+popDevIneqPovDF <- tbl_df(popDevIneqPovDF)
+popDevIneqPovDF$date <- as.numeric(as.character(popDevIneqPovDF$date))
+head(popDevIneqPovDF)
+names(popDevIneqPovDF)
+popDevIneqPovDF <- select(popDevIneqPovDF, country, iso2c = iso2c.x, date, population, GDPannualGrowthRate, GNIperCapita, devCategory, HDI, GINI, povertyHeadCount)
+summary(popDevIneqPovDF)
 
-# The summary shows that there are 166 NAs for GDPannualGrowthRate, 1452 NAs for GNIperCapita, 384 NAs for HDI, 3381 NAs for GINI, and 3349 NAs for povertyHeadcount
+# The summary shows that there are 462 NAs for GDPannualGrowthRate, 1747 NAs for GNIperCapita, 702 NAs for HDI, 3561 NAs for GINI, and 3560 NAs for povertyHeadcount
 # Knowing that the values of GINI and poverty head count are not given every year by the World Bank,and assuming that the values of these variables (along with those of GNIperCapita and GDPannualGrowthRate) are not likely to fluctuate from year to year for each country, we decided to impute their missing values, using kNN function from the VIM package. We call the new dataset with massive imputation "devIneqPovDF2".
 
-devIneqPovDF2 <- kNN(devIneqPovDF)
-head(devIneqPovDF2)
-names(devIneqPovDF2)
-devIneqPovDF2 <- select(devIneqPovDF2, country, iso2c, date, GDPannualGrowthRate, GNIperCapita, devCategory, HDI, GINI, povertyHeadCount)
-summary(devIneqPovDF2)
+popDevIneqPovDF <- kNN(popDevIneqPovDF)
+head(popDevIneqPovDF)
+names(popDevIneqPovDF)
+popDevIneqPovDF <- select(popDevIneqPovDF, country, iso2c, date, population, GDPannualGrowthRate, GNIperCapita, devCategory, HDI, GINI, povertyHeadCount)
+summary(popDevIneqPovDF)
 
 
-# # making the data on development, social inequality and poverty available in the local repository
-# devIneqPovDF <- write.csv(devIneqPovDF, "devIneqPovDF.csv")
-# devIneqPovDF <- tbl_df(devIneqPovDF)
-# 
-# # with imputation
-# devIneqPovDF2 <- write.csv(devIneqPovDF2, "devIneqPovDF2.csv")
-# devIneqPovDF2 <- tbl_df(devIneqPovDF2)
-# 
+# # making the data on population, development, social inequality and poverty available in the local repository
+# popDevIneqPov <- write.csv(popDevIneqPovDF, "popDevIneqPov.csv")
+# popDevIneqPov <- tbl_df(popDevIneqPov)
+
 
 
 ```
 
-## Joining the Data on WGI by Country, Region, and Subregion with the Data on Development, Social Inequality, and Poverty (WGIdevIneqPovDF)
+## Joining the Data on WGI by Country, Region, and Subregion with the Data on Population, Development, Social Inequality, and Poverty (WGIpopDevIneqPov)
 
 
 ```{r}
 
-
 # Using the dataset on devIneqPovDF2 with imputation for HDI, GINI and povertyHeadcount:
-WGIdevIneqPovDF2 <- left_join(WGI2byCountryAndRegion, devIneqPovDF2, by = c("country", "date"))
-WGIdevIneqPovDF2 <- tbl_df(WGIdevIneqPovDF2)
-WGIdevIneqPovDF2$date <- as.numeric(as.character(WGIdevIneqPovDF2$date))
-head(WGIdevIneqPovDF2)
-names(WGIdevIneqPovDF2)
-WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, M49Code, iso2c = iso2c.x, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, region, subregion)
-summary(WGIdevIneqPovDF2)
+WGIpopDevIneqPov <- left_join(WGI2byCountryAndRegion, popDevIneqPovDF, by = c("country", "date"))
+WGIpopDevIneqPov <- tbl_df(WGIpopDevIneqPov)
+WGIpopDevIneqPov$date <- as.numeric(as.character(WGIpopDevIneqPov$date))
+head(WGIpopDevIneqPov)
+names(WGIpopDevIneqPov)
+WGIpopDevIneqPov <- select(WGIpopDevIneqPov, country, M49Code, iso2c = iso2c.x, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, region, subregion)
+summary(WGIpopDevIneqPov)
 
-# The summary shows that there are about 779 NAs for most of the WGI variables and 303 NAs for the development, inequality and poverty variables. Since these values are no likely to fuctuate from year to year, we decide to impute them using the kNN imputation
-WGIdevIneqPovDF2 <- kNN(WGIdevIneqPovDF2)
-WGIdevIneqPovDF2 <- select(WGIdevIneqPovDF2, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, region, subregion)
-summary(WGIdevIneqPovDF2)
+# The summary shows that there are about 209 NAs for most of the population, development, inequality and poverty variables. A look at the dataframe shows that the missing values are related to some countries that does not have data on these variables. Therefore, we decide to remove the incomplete cases.
+WGIpopDevIneqPov <- na.omit(WGIpopDevIneqPov)
+summary(WGIpopDevIneqPov)
 
 # # making the dataset on WGI, development, social inequality and poverty with imputation (WGIdevIneqPovDF2), available in the local repository under the file name `WGIdevIneqPov2.csv`
 # 
-# WGIdevIneqPov2 <- write.csv(WGIdevIneqPovDF2, "WGIdevIneqPov2.csv")
-# 
+# WGIpopDevIneqPov <- write.csv(WGIpopDevIneqPov, "WGIpopDevIneqPov.csv")
+
 
 ```
 
@@ -408,8 +406,7 @@ summary(polityScoreDf)
 # The following country names have been changed:
 
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Sudan-North", "Sudan")
-polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Ivory Coast", "Cote d'Ivoire")
-polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Cote D'Ivoire", "Cote d'Ivoire")
+polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Ivory Coast", "Côte d'Ivoire")
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Gambia", "Gambia, The")
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Cape Verde", "Cabo Verde")
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Congo Brazzaville", "Congo, Rep.")
@@ -427,7 +424,7 @@ polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country ==
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "East Timor", "Timor-Leste")
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Timor Leste", "Timor-Leste")
 polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Myanmar (Burma)", "Myanmar")
-polityScoreDf$country <- replace(polityScoreDf$country, polityScoreDf$country == "Taiwan", "Taiwan, China")
+
 
 # The following country names have been deleted:
 
@@ -444,7 +441,8 @@ polityScoreByRegionDF <- left_join(polityScoreDf, regionSubregionDf, by = "count
 polityScoreByRegionDF <- tbl_df(polityScoreByRegionDF)
 names(polityScoreByRegionDF)
 
-polityScoreByRegionDF <- select(polityScoreByRegionDF, country, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, prior, emonth, eday, eyear, eprec, interim, bmonth, bday, byear, bprec, post, change, d4, sf, regtrans, polityCategory, politicalChange, region, subregion)
+# Selecting the variables of interest
+polityScoreByRegionDF <- select(polityScoreByRegionDF, country, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, polityCategory, politicalChange, region, subregion)
 
 head(polityScoreByRegionDF)
 names(polityScoreByRegionDF)
@@ -496,7 +494,7 @@ freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Vincent & Grenadines", "St. Vincent and Grenadines")
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Antigua & Barbuda", "Antigua and Barbuda")
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Kitts and Nevis", "St. Kitts and Nevis")
-freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Sao Tome & Principe", "Sao Tome and Principe")
+freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Sao Tome & Principe", "São Tomé and Principe")
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Saint Lucia", "St. Lucia")
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "Bosnia-Herzegovina", "Bosnia and Herzegovina")
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "East Timor", "Timor-Leste")
@@ -534,7 +532,7 @@ freedomHouseByRegionDF <- tbl_df(freedomHouseByRegionDF)
 names(freedomHouseByRegionDF)
 freedomHouseByRegionDF <- select(freedomHouseByRegionDF, country, iso2c, iso3c, M49Code, date, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, region, subregion)
 head(freedomHouseByRegionDF)
-str(freedomHouseByRegionDF)
+
 
 # Creating a new variable for politicalChangeFH: either "democratization" if the inverse_mean increases from year1 to year1 + 1, "autocratization" if the inverse_mean decreases, or "no change" if the inverse_mean stays the same from year1 to year1 + 1.
 
@@ -543,77 +541,43 @@ freedomHouseByRegionDF <- freedomHouseByRegionDF %>%
   mutate(politicalChangeFH = case_when(inverse_mean > lag(inverse_mean) ~ "democratization", 
                                      inverse_mean < lag(inverse_mean) ~ "autocratization",
                                      TRUE ~ "no change"))
+# Removing the incomplete cases
+freedomHouseByRegionDF <- na.omit(freedomHouseByRegionDF)
+summary(freedomHouseByRegionDF)
 head(freedomHouseByRegionDF)
 
 # Joining  the data on regime types (Polity IV and Freedom House data) with the data on the UN classification into region and subregion
 
-regimeTypeByRegion <- left_join(polityScoreByRegionDF, freedomHouseByRegionDF, by = c("country", "date")) 
+regimeTypeByRegion <- left_join(freedomHouseByRegionDF, polityScoreByRegionDF, by = c("country", "date")) 
 
 regimeTypeByRegion <- tbl_df(regimeTypeByRegion)
 
-regimeTypeByRegion <- select(regimeTypeByRegion, country, iso2c, iso3c, M49Code, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, polityCategory, politicalChange, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, region = region.x, subregion = subregion.x)
+regimeTypeByRegion <- select(regimeTypeByRegion, country, iso2c, iso3c, M49Code, date, democ, autoc, polityScore, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, polityCategory, politicalChange, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
 head(regimeTypeByRegion)
 names(regimeTypeByRegion)
+summary(regimeTypeByRegion)
+
+# Joining  the data on regime types (Polity IV and Freedom House data) with the data on WGI by region with the name "WGI2regimeTypeByRegionDF"
+
+WGI2regimeTypeByRegion <- left_join(WGI2byCountryAndRegion, regimeTypeByRegion, by = c("country", "date"))
+WGI2regimeTypeByRegion <- tbl_df(WGI2regimeTypeByRegion)
+names(WGI2regimeTypeByRegion)
+
+WGI2regimeTypeByRegion <- select(WGI2regimeTypeByRegion, country, M49Code = M49Code.x, iso3c = iso3c.x, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
+
+head(WGI2regimeTypeByRegion)
+names(WGI2regimeTypeByRegion)
+summary(WGI2regimeTypeByRegion)
 
 
-# Joining  the data on regime types (Polity IV and Freedom House data) with the data on WGI
 
-WGIregimeTypeByRegionDF <- left_join(WGI2byCountryAndRegion, polityScoreByRegionDF, by = c("country", "date")) %>%
-  left_join(., freedomHouseByRegionDF, by = c("country", "date"))
-
-WGIregimeTypeByRegionDF <- tbl_df(WGIregimeTypeByRegionDF)
-
-WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, M49Code = M49Code.x, iso3c = iso3c.x, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
-
-head(WGIregimeTypeByRegionDF)
-names(WGIregimeTypeByRegionDF)
-summary(WGIregimeTypeByRegionDF)
-
-# The summary shows that there are 551 NAs for most of the Freedom House variables and 1072 NAs for the polity IV variables. In order to keep the dimension of the dataset, we decide to impute them using the kNN imputation.
-
-WGIregimeTypeByRegionDF <- kNN(WGIregimeTypeByRegionDF)
-names(WGIregimeTypeByRegionDF)
-WGIregimeTypeByRegionDF <- select(WGIregimeTypeByRegionDF, country, M49Code, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
-summary(WGIregimeTypeByRegionDF)
-
-# # making the data on WGI and regime type available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
+# # making the data on WGI and regime type available in the local repository, under the file name "WGI2regimeTypeByRegion.csv"
 # 
-# WGIregimeTypeByRegion <- write.csv(WGIregimeTypeByRegionDF, "WGIregimeTypeByRegion.csv")
+# WGI2regimeTypeByRegion <- write.csv(WGI2regimeTypeByRegion, "WGI2regimeTypeByRegion.csv")
 
 
 ```
 
-## Joining all datasets on WGI, development, inequality, poverty, and regime types in a single dataset
-
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
-
-# The datasets to join are:
-# 1) WGIdevIneqPovDF2
-# 2) WGIregimeTypeByRegionDF
-
-
-# Joining the dataframe WGIdevIneqPovDF2
-
-WGIdevRegimeTypeDF <- left_join(WGIdevIneqPovDF2, WGIregimeTypeByRegionDF, by = c("country", "date"))
-names(WGIdevRegimeTypeDF)
-WGIdevRegimeTypeDF <- select(WGIdevRegimeTypeDF, country, M49Code = M49Code.x, iso2c, iso3c = iso3c.x, date, stability = stability.x, stabilityDummy = stabilityDummy.x, stabilityCategory = stabilityCategory.x, corruptionControl = corruptionControl.x, governmentEffectiveness = governmentEffectiveness.x, regulatoryQuality = regulatoryQuality.x, ruleOfLaw = ruleOfLaw.x, voiceAndAccountability = voiceAndAccountability.x, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion =  subregion.x)
-
-summary(WGIdevRegimeTypeDF)
-
-# The summary shows that there are 779 NAs for most of the regime type variables. In order to keep the dimension of the dataset, we decide to impute these NAs using the kNN imputation
-
-WGIdevRegimeTypeDF <- kNN(WGIdevRegimeTypeDF)
-WGIdevRegimeTypeDF <- select(WGIdevRegimeTypeDF, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region, subregion)
-
-# Due to inconsistencies, the following countries have been removed
-WGIdevRegimeTypeDF <- WGIdevRegimeTypeDF[! WGIdevRegimeTypeDF$country == "Micronesia, Fed. Sts.",]
-WGIdevRegimeTypeDF <- WGIdevRegimeTypeDF[! WGIdevRegimeTypeDF$country == "Virgin Islands (U.S.)",]
-WGIdevRegimeTypeDF <- WGIdevRegimeTypeDF[! WGIdevRegimeTypeDF$country == "Netherlands Antilles (former)",]
-
-summary(WGIdevRegimeTypeDF)
-
-```
 
 ## Collecting the data on armed conflicts from UCDP, after reading the article on ViEWS (political violence early-warning system) by Hegre et al. (2019):
 
@@ -636,12 +600,12 @@ ucdpprioData <- read.csv("ucdpprio/ucdp-prio-acd-181.csv", header = TRUE)
 
 
 library(dplyr)
-armedConflictHist <- ucdpprioData %>%
+armedConflictDF <- ucdpprioData %>%
   select(country = location, year, type_of_conflict) %>%
   filter(year <= 1995 & year >= 1960) %>%
   filter(type_of_conflict == 3 | type_of_conflict == 4)
 
-unique(armedConflictHist$country)
+unique(armedConflictDF$country)
 
 
 # Here is the list of 89 countries that had a history of intrastate armed conflict during the previous period:
@@ -672,9 +636,9 @@ unique(armedConflictHist$country)
 
 # In order to be consistent throughout the data collection and analyses, the country names from the UCDP-PRIO dataset were aligned with the country names used in the World Bank dataset, and the duplicate names have been removed.
 
-# Creating a dummy variable "conflictfHist" in the main dataset "WGIdevRegimeTypeDF"
+# Creating a dummy variable "conflictfHist" in the main dataset "WGI2regimeTypeByRegion"
 
-WGIdevRegimeTypeDF <- mutate(WGIdevRegimeTypeDF, conflictHistory = case_when(is.na(country) ~ "NA",
+WGI2regimeTypeConflictByRegion <- mutate(WGI2regimeTypeByRegion, conflictHistory = case_when(is.na(country) ~ "NA",
                                            country == "Bolivia" ~ "1",
                                            country == "Iran, Islamic Rep."~ "1",
                                            country == "Philippines" ~ "1",
@@ -764,16 +728,112 @@ WGIdevRegimeTypeDF <- mutate(WGIdevRegimeTypeDF, conflictHistory = case_when(is.
                                       country == "Congo, Rep." ~ "1",
                                       country == "Mauritania" ~ "1",
                                       TRUE ~ "0"))
+head(WGI2regimeTypeConflictByRegion)
+summary(WGI2regimeTypeConflictByRegion)
+
+# # making the data on WGI2, regime type, and conflict history available in the local repository, under the file name "WGI2regimeTypeConflictByRegion.csv"
+# 
+# WGI2regimeTypeConflictByRegion <- write.csv(WGI2regimeTypeConflictByRegion, "WGI2regimeTypeConflictByRegion.csv")
+
 
 
 ```
 
-## Making available the full dataset in the local repository
+
+## Joining all datasets on WGI, population, development, inequality, poverty, regime types, and comnflict history in the full dataset "WGI2popDevIneqPovRegimeConflict.csv"
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# The datasets to be joined are:
+# 1) data on governance (WGI2) by region
+# 2) data on population, development, poverty, and inequality
+# 3) data on regime type and conflict history
+
+
+# Joining the dataframe WGIdevIneqPovDF2
+
+WGI2popDevIneqPovRegimeConflict <- left_join(WGI2byCountryAndRegion, popDevIneqPovDF, by = c("country", "date"))
+WGI2popDevIneqPovRegimeConflict <- left_join(WGI2popDevIneqPovRegimeConflict, WGI2regimeTypeConflictByRegion, by = c("country", "date"))
+
+names(WGI2popDevIneqPovRegimeConflict)
+WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code = M49Code.x, iso2c = iso2c.x, iso3c = iso3c.x, date, stability = stability.x, stabilityDummy = stabilityDummy.x, stabilityCategory = stabilityCategory.x, corruptionControl = corruptionControl.x, governmentEffectiveness = governmentEffectiveness.x, regulatoryQuality = regulatoryQuality.x, ruleOfLaw = ruleOfLaw.x, voiceAndAccountability = voiceAndAccountability.x, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region = region.x, subregion =  subregion.x)
+
+# Due to inconsistencies, the following countries have been removed
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Micronesia, Fed. Sts.",]
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Virgin Islands (U.S.)",]
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Netherlands Antilles (former)",]
+
+summary(WGI2popDevIneqPovRegimeConflict)
+
+# The summary shows that there are 190 NAs for the variables related to population, development, inequality and development; there are also 1082 NAs for the variables related to Polity IV; and there are 541 NAs for the variables related to Freedom House. Due to the high rates of missing values and the problems related to the coding of some instances in the data from Polity IV (Ex.: transition period is coded as -88, etc. See Polity IV codebook) will not the variables from Polity IV in some analyses that need the full dataset.
+
+# The first step in cleaning the full dataset is to impute the missing values for the variables from Freedom House (541 or 13% of the observations) and the variables from the World Bank (190 or 4% of the observation).
+
+# Imputing the Freedom House variables: c("pr", "cl", "sum", "mean", "inverse_pr", "inverse_cl", "inverse_mean")
+library(VIM)
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("pr", "cl", "sum", "mean", "inverse_pr", "inverse_cl", "inverse_mean"), k = 5)
+
+# Imputing the World Bank variables in four steps (due to "Error: subscript out of bounds): c("population", "GNIperCapita", "GDPannualGrowthRate", "HDI", "GINI", "povertyHeadCount")
+library(VIM)
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("population", "GNIperCapita"), k = 5)
+
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("GDPannualGrowthRate", "HDI"), k = 5)
+
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = "GINI", k = 5)
+
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = "povertyHeadCount", k = 5)
+
+names(WGI2popDevIneqPovRegimeConflict)
+
+WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+
+# Full dataset with Polity IV variables: WGI2popDevIneqPovRegimeConflict1
+
+WGI2popDevIneqPovRegimeConflict1 <- WGI2popDevIneqPovRegimeConflict
+
+
+
+# Cleaning the full dataset with Polity IV, by removing the missing values:
+
+
+# The second step in cleaning the full dataset is to remove the Polity IV variables:
+# Polity IV variables
+# Full dataset without Polity IV variables: WGI2popDevIneqPovRegimeConflict2
+
+WGI2popDevIneqPovRegimeConflict2 <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+
+# Since the variable devCategory contains some missing values (190 NAs), we need to recode this variable, which depends on GNIperCapita:
+WGI2popDevIneqPovRegimeConflict2 <- WGI2popDevIneqPovRegimeConflict2 %>% mutate(devCategory=cut(GNIperCapita, breaks=c(0, 1025, 4035, 12475, Inf), labels=c("Low Income","Lower Middle Income","Upper Middle Income", "High Income")))
+
+# Since the variable "status" contains some missing values (541 NAs), we need to recode this variable, which depends on mean:
+WGI2popDevIneqPovRegimeConflict2 <- WGI2popDevIneqPovRegimeConflict2 %>% mutate(status=cut(mean, breaks=c(0, 2.5, 5.0, Inf), labels=c("Free","Partly Free","Not Free")))
+
+# Since the variable "politicalChangeFH" contains some missing values (541), we need to recode this variable, which depends on inverse_mean:
+WGI2popDevIneqPovRegimeConflict2 <- WGI2popDevIneqPovRegimeConflict2 %>% 
+  group_by(country) %>% 
+  mutate(politicalChangeFH = case_when(inverse_mean > lag(inverse_mean) ~ "democratization", 
+                                     inverse_mean < lag(inverse_mean) ~ "autocratization",
+                                     TRUE ~ "no change"))
+
+
+summary(WGI2popDevIneqPovRegimeConflict2)
+
+```
+
+## Making available the full dataset with Polity IV variables "WGI2popDevIneqPovRegimeConflict1" in the local repository as : "WGI2popDevIneqPovRegimeConflict1.csv"
 
 ```{r}
-# # Making WGIdevRegimeTypeDF available in the local repository under "WGIdevRegimeType.csv"
-# 
-# WGIdevRegimeType <- write.csv(WGIdevRegimeTypeDF, "WGIdevRegimeType.csv")
+
+# WGI2popDevIneqPovRegimeConflict1 <- write.csv(WGI2popDevIneqPovRegimeConflict1, "WGI2popDevIneqPovRegimeConflict1.csv")
+
+```
+
+## Making available the full dataset without Polity IV variables "WGI2popDevIneqPovRegimeConflict2" in the local repository as : "WGI2popDevIneqPovRegimeConflict2.csv"
+
+```{r}
+ 
+# WGI2popDevIneqPovRegimeConflict2 <- write.csv(WGI2popDevIneqPovRegimeConflict2, "WGI2popDevIneqPovRegimeConflict2.csv")
 
 ```
 
