@@ -78,18 +78,19 @@ WGI2 <- select(WGI2, country, iso3c, date, stability, voiceAndAccountability, go
 head(WGI2)
 summary(WGI2)
 
-# Creating a dummy variable for stability with dplyr: "1" for stable country, "0" for unstable country
+# Creating a variable with two category of stability ("stabilityCategory2") with dplyr: "1" for stable country, "0" for unstable country
 WGI2 <- mutate(WGI2,
-        stabilityDummy = if_else(WGI2$stability > 0, "1", "0"))
+        stabilityCategory2 = if_else(WGI2$stability > 0, "stable", "unstable"))
+WGI2$stabilityCategory2 <- as.factor(WGI2$stabilityCategory2)
 head(WGI2)
 summary(WGI2)
-table(WGI2$stabilityDummy)
+table(WGI2$stabilityCategory2)
 
-# Creating a variable with four categories of stability with dplyr based on arbitrary thresholds of + 1 (for highly stable) and - 1 (for hinghly unstable)
-WGI2 <- WGI2 %>% mutate(stabilityCategory=cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("Highly Unstable","Moderately Unstable","Moderately Stable", "Highly Stable")))
+# Assiming that countries with stability scores close to zero are either "moderately stable" (scores from 0 to 0.999) or "moderately unstable"" (scores from -0.999 to 0), we also create a variable with four categories of stability with dplyr based on arbitrary thresholds of + 1 (for highly stable) and - 1 (for hinghly unstable)
+WGI2 <- WGI2 %>% mutate(stabilityCategory4 =cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("highly unstable","moderately unstable","moderately stable", "highly stable")))
 head(WGI2)
 summary(WGI2)
-table(WGI2$stabilityCategory)
+table(WGI2$stabilityCategory2)
 
 
 ```
@@ -180,6 +181,9 @@ regionSubregionDf <- regionSubregionDf[! regionSubregionDf$country == "Virgin Is
 
 head(regionSubregionDf)
 
+# List of 208 countries in the world according to the Wikipedia ISO 3166-1 article for alpha and numeric country codes, and the UN Statistics site for countries' regional, and sub-regional codes:
+unique(regionSubregionDf$country)
+
 ```
 
 
@@ -192,7 +196,7 @@ WGI2byCountryAndRegion <- tbl_df(WGI2byCountryAndRegion)
 WGI2byCountryAndRegion$date <- as.numeric(as.character(WGI2byCountryAndRegion$date))
 names(WGI2byCountryAndRegion)
 
-WGI2byCountryAndRegion <- select(WGI2byCountryAndRegion, country, M49Code, iso2c, iso3c = iso3c.x, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
+WGI2byCountryAndRegion <- select(WGI2byCountryAndRegion, country, M49Code, iso2c, iso3c = iso3c.x, date, stability, stabilityCategory2, stabilityCategory4, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, region, subregion)
 names(WGI2byCountryAndRegion)
 summary(WGI2byCountryAndRegion)
 
@@ -340,26 +344,24 @@ summary(popDevIneqPovDF)
 ```{r}
 
 # Using the dataset on devIneqPovDF2 with imputation for HDI, GINI and povertyHeadcount:
-WGIpopDevIneqPov <- left_join(WGI2byCountryAndRegion, popDevIneqPovDF, by = c("country", "date"))
-WGIpopDevIneqPov <- tbl_df(WGIpopDevIneqPov)
-WGIpopDevIneqPov$date <- as.numeric(as.character(WGIpopDevIneqPov$date))
-head(WGIpopDevIneqPov)
-names(WGIpopDevIneqPov)
-WGIpopDevIneqPov <- select(WGIpopDevIneqPov, country, M49Code, iso2c = iso2c.x, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, region, subregion)
-summary(WGIpopDevIneqPov)
+WGI2popDevIneqPov <- left_join(WGI2byCountryAndRegion, popDevIneqPovDF, by = c("country", "date"))
+WGI2popDevIneqPov <- tbl_df(WGI2popDevIneqPov)
+WGI2popDevIneqPov$date <- as.numeric(as.character(WGI2popDevIneqPov$date))
+head(WGI2popDevIneqPov)
+names(WGI2popDevIneqPov)
+WGI2popDevIneqPov <- select(WGI2popDevIneqPov, country, M49Code, iso2c = iso2c.x, iso3c, date, stability, stabilityCategory2, stabilityCategory4, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, region, subregion)
+summary(WGI2popDevIneqPov)
 
 # The summary shows that there are about 209 NAs for most of the population, development, inequality and poverty variables. A look at the dataframe shows that the missing values are related to some countries that does not have data on these variables. Therefore, we decide to remove the incomplete cases.
-WGIpopDevIneqPov <- na.omit(WGIpopDevIneqPov)
-summary(WGIpopDevIneqPov)
+WGI2popDevIneqPov <- na.omit(WGI2popDevIneqPov)
+summary(WGI2popDevIneqPov)
 
-# # making the dataset on WGI, development, social inequality and poverty with imputation (WGIdevIneqPovDF2), available in the local repository under the file name `WGIdevIneqPov2.csv`
+# # making the dataset on WGI, development, social inequality and poverty with imputation (WGI2popDevIneqPov), available in the local repository under the file name `WGI2popDevIneqPov.csv`
 # 
-# WGIpopDevIneqPov <- write.csv(WGIpopDevIneqPov, "WGIpopDevIneqPov.csv")
+# WGI2popDevIneqPov <- write.csv(WGI2popDevIneqPov, "WGI2popDevIneqPov.csv")
 
 
 ```
-
-
 
 
 ## Downloading and Cleaning the Data on Regime Types from Polity IV and Freedom House
@@ -500,7 +502,6 @@ freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country
 freedomHouseDF$country <- replace(freedomHouseDF$country, freedomHouseDF$country == "East Timor", "Timor-Leste")
 
 
-
 # The following country names have been deleted:
 
 freedomHouseDF <- freedomHouseDF[! freedomHouseDF$country == "Germany, W.",]
@@ -563,8 +564,9 @@ WGI2regimeTypeByRegion <- left_join(WGI2byCountryAndRegion, regimeTypeByRegion, 
 WGI2regimeTypeByRegion <- tbl_df(WGI2regimeTypeByRegion)
 names(WGI2regimeTypeByRegion)
 
-WGI2regimeTypeByRegion <- select(WGI2regimeTypeByRegion, country, M49Code = M49Code.x, iso3c = iso3c.x, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
+WGI2regimeTypeByRegion <- select(WGI2regimeTypeByRegion, country, M49Code = M49Code.x, iso3c = iso3c.x, date, stability, stabilityCategory2, stabilityCategory4, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, polityScore, polityCategory, polityCategory,  politicalChange, democ, autoc, durable,  xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, region = region.x, subregion = subregion.x)
 
+WGI2regimeTypeByRegion <- tbl_df(WGI2regimeTypeByRegion)
 head(WGI2regimeTypeByRegion)
 names(WGI2regimeTypeByRegion)
 summary(WGI2regimeTypeByRegion)
@@ -574,7 +576,7 @@ summary(WGI2regimeTypeByRegion)
 # # making the data on WGI and regime type available in the local repository, under the file name "WGI2regimeTypeByRegion.csv"
 # 
 # WGI2regimeTypeByRegion <- write.csv(WGI2regimeTypeByRegion, "WGI2regimeTypeByRegion.csv")
-
+# WGI2regimeTypeByRegion <- tbl_df(WGI2regimeTypeByRegion)
 
 ```
 
@@ -604,6 +606,7 @@ armedConflictDF <- ucdpprioData %>%
   select(country = location, year, type_of_conflict) %>%
   filter(year <= 1995 & year >= 1960) %>%
   filter(type_of_conflict == 3 | type_of_conflict == 4)
+armedConflictDF <- tbl_df(armedConflictDF)
 
 unique(armedConflictDF$country)
 
@@ -728,10 +731,12 @@ WGI2regimeTypeConflictByRegion <- mutate(WGI2regimeTypeByRegion, conflictHistory
                                       country == "Congo, Rep." ~ "1",
                                       country == "Mauritania" ~ "1",
                                       TRUE ~ "0"))
+
+WGI2regimeTypeConflictByRegion <- tbl_df(WGI2regimeTypeConflictByRegion)
 head(WGI2regimeTypeConflictByRegion)
 summary(WGI2regimeTypeConflictByRegion)
 
-# # making the data on WGI2, regime type, and conflict history available in the local repository, under the file name "WGI2regimeTypeConflictByRegion.csv"
+# # making the data on WGI2, regime type, and conflict history available ("WGI2regimeTypeConflictByRegion") in the local repository, under the file name "WGI2regimeTypeConflictByRegion.csv"
 # 
 # WGI2regimeTypeConflictByRegion <- write.csv(WGI2regimeTypeConflictByRegion, "WGI2regimeTypeConflictByRegion.csv")
 
@@ -746,9 +751,9 @@ summary(WGI2regimeTypeConflictByRegion)
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 # The datasets to be joined are:
-# 1) data on governance (WGI2) by region
-# 2) data on population, development, poverty, and inequality
-# 3) data on regime type and conflict history
+# 1) data on governance (WGI2) by region (WGI2byCountryAndRegion)
+# 2) data on population, development, poverty, and inequality (popDevIneqPovDF)
+# 3) data on regime type and conflict history (WGI2popDevIneqPovRegimeConflict)
 
 
 # Joining the dataframe WGIdevIneqPovDF2

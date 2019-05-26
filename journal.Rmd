@@ -292,4 +292,12 @@ In the end we have two full dataset:
 1) a full dataset with Polity IV variables "WGI2popDevIneqPovRegimeConflict1" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict1.csv"
 2) a full dataset without Polity IV variables "WGI2popDevIneqPovRegimeConflict2" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict2.csv"
 
+5/23/2019:
+
+I start to apply Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).
+
+5/26/2019
+
+I finished the script for machine learning implementation based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).
+
 
