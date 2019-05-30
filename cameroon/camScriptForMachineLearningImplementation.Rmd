@@ -1,0 +1,283 @@
+---
+title: "Script for Machine Learning Implementation in Cameroon's Cae"
+author: "Adrien Ratsimbaharison"
+date: "May 26, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This machine learning script is based on the "Practical guide to implement machine learning with CARET in R" suggested by Saurav Kaushik in the Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/ (December 8, 2016).   
+
+The Caret package solves many problems in the implementation of machine learning process, and make it much easier to execute, even for beginners like the autors of this book.
+As Kaushik puts it, "This package [i.e., CARET package] alone is all you need to know for solve almost any supervised machine learning problem. It provides a uniform interface to several machine learning algorithms and standardizes various other tasks such as Data splitting, Pre-processing, Feature selection, Variable importance estimation, etc."
+
+The different steps suggested by Saurav Kaushik include the following:  
+
+1) Getting started with loading the package and looking at the data
+2) Pre-processing the data using Caret
+3) Splitting the data using Caret
+4) Feature selection using Caret
+5) Training models using Caret
+6) Parameter tuning using Caret
+7) Variable importance estimation using Caret
+8) Making predictions using Caret
+
+
+## 1. Getting started with loading the package and looking at the data
+
+Installing and loading the Caret package and its dependencies:
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+# Intalling the caret package if it is not already installed
+
+# install.packages("caret", dependencies = c("Depends", "Suggests"))
+
+# loading the caret package and other required packages:
+library(caret)
+library(dplyr)
+library(haven)
+library(magrittr)
+
+```
+
+Reading the data in R and looking at its structure
+
+```{r}
+# Reading the data
+train2 <- read_sav("cam_r7_data_eng.sav")
+train2 <- tbl_df(train2)
+
+# Looking at its structure and summary
+str(train2)
+names(train2)
+# Selecting the variables of interest
+
+train2 <- select(train2, URBRUR, REGION, EA_SVC_A, EA_SVC_B, EA_SVC_C, EA_SVC_D, EA_FAC_A, EA_FAC_B, EA_FAC_C, EA_FAC_D, EA_FAC_E, EA_FAC_F, EA_FAC_G, EA_SEC_A, EA_SEC_B, EA_SEC_C, EA_SEC_D, EA_SEC_E, EA_ROAD_A, EA_ROAD_B, EA_ROAD_C, Q1, Q2A, Q2AOTHER, Q2B, Q2BOTHER, Q3, Q4A, Q4B, Q5, Q6, Q7, Q8A, Q8B, Q8C, Q8D, Q8E, Q8F, Q9, Q10A, Q10B, Q11A, Q11B, Q12A, Q12B, Q12C, Q12D, Q12E, Q13, Q14, Q15, Q16, Q17, Q18A, Q18B, Q18C, Q18D, Q19A, Q19B, Q19C, Q19D, Q19E, Q20A, Q20B, Q21A, Q21B, Q22, Q23, Q24A, Q24B, Q25A, Q25B, Q25C, Q25D, Q25E, Q25F, Q26A, Q26B, Q26C, Q26D, Q26E, Q27A, Q27B, Q27C, Q28, Q29, Q30, Q31, Q32, Q33, Q34, Q35, Q36, Q37, Q38A, Q38B, Q38C, Q38D, Q38E, Q38F, Q38G, Q39A, Q39B, Q39C, Q40, Q41, Q42A, Q42B, Q42C, Q42D, Q42E, Q42F, Q43A, Q43B, Q43C, Q43D, Q43E, Q43F, Q43G, Q43H, Q43I, Q43J, Q43K, Q43L_CAM, Q43M_CAM, Q44A, Q44B, Q44C, Q44D, Q44E, Q44F, Q44G, Q44H, Q44I, Q44J, Q44K_CAM, Q44L_CAM, Q44M_CAM, Q44N_CAM, Q45, Q46, Q47, Q48A, Q48B, Q48C, Q48D, Q48E, Q48F, Q49A, Q49B, Q49C, Q49D, Q49E, Q49F, Q49G, Q49H, Q49I, Q49J, Q49K, Q49L, Q49M, Q49N, Q49O, Q49P, Q49Q, Q49R, Q49S, Q49T, Q50, Q51, Q52, Q53A, Q53B, Q53C, Q54A, Q54B, Q55PT1, Q55PT1OTHER, Q55PT2, Q55PT2OTHER, Q55PT3, Q55PT3OTHER, Q56A, Q56B, Q56C, Q56D, Q56E, Q56F, Q56G, Q56H, Q56I, Q56J, Q56K, Q56L, Q56M, Q56N, Q56O, Q56P, Q56Q, Q56R, Q56S, Q57A, Q57B, Q57C, Q57D, Q57E, Q57F, Q57G, Q58A, Q58B, Q58C, Q58D, Q58E, Q59A, Q59B, Q59C, Q60A, Q60B, Q60C, Q60D, Q61A, Q61B, Q61C, Q62, Q63, Q64, Q65, Q66, Q67, Q68A, Q68B, Q69, Q70, Q70OTHER, Q71, Q72A, Q72B, Q73A, Q73B, Q74, Q75, Q76, Q77A, Q77B, Q77C, Q77D, Q78A, Q78B, Q79_CAM, Q80_CAM, Q81A_CAM, Q81B_CAM, Q81C_CAM, Q81D_CAM, Q82A_CAM, Q82B_CAM, Q82C_CAM, Q82D_CAM, Q84, Q84OTHER, Q85A, Q85B, Q86A, Q86B, Q86C, Q86D, Q87A, Q87B, Q87C, Q87D, Q88A,Q88B, Q88BOTHER, Q89A, Q89B, Q89C, Q89D, Q89E, Q89F, Q90, Q91A, Q91B, Q92A, Q92B, Q93, Q94, Q95A, Q95B, Q95C, Q96A, Q96B, Q97, Q98, Q98OTHER, Q99, Q99OTHER, Q100)
+
+summary(train2)
+
+# correcting the types of variables to factor for the categorical responses
+train2 %<>% 
+      mutate_each(funs(if(is.numeric(.)) as.factor(.) else .))
+
+train2$Q1 <- as.numeric(train2$Q1)
+
+summary(train2)
+
+```
+
+
+Defining the problem:
+
+In this problem we want to predict the classification of Cameroonians into two categories: either they "approve" or "disapprove" the President's job performance (Question Q58A in Afrobarometer Round 7 survey).
+
+```{r}
+
+# We need to create a variable on approval, with 0 = "disapprove", 1 = "approve"
+train2 <- mutate(train2, approval = ifelse(Q58A == 1 | Q58A == 2, "Disapprove",
+                                           ifelse(Q58A == 3 | Q58A == 4, "Approve", "Don't know" )))
+train2$approval <- as.factor(train2$approval)
+# we remove Q58A from the dataset, as it is redundant with the new variable approval
+train2 <- select(train2, - Q58A)
+str(train2)
+
+```
+
+
+## 2. Pre-processing the data using Caret
+
+First, we need to check for the missing values.
+
+```{r}
+sum(is.na(train2))
+
+```
+Since there is no missing value, we can move to the next step in pre-processing the data, which is to center and scale the numerical variables, and to implement a "principal component analysis" or "pca". The only numerical variable in the dataset is the age, which does not need centering and scaling.
+
+
+```{r}
+# principal component analysis
+
+preProcValues <- preProcess(train2, method = "pca") 
+
+library('RANN')
+train_processed2 <- predict(preProcValues, train2)
+
+```
+
+Finally, we can use "one hot encoding" in Caret to create dummy variables for each level of a categorical variable.
+
+```{r}
+# Before creating the dummy variables for each categorical variable, we need to convert the outcome variable to numeric
+train_processed2$approval <-ifelse(train_processed2$approval=='Disapprove',0,
+                                   ifelse(train_processed2$approval=='Approve',1, 2))
+
+
+# Creating dummy variables using "one hot encoding" by converting every categorical variable to numerical using dummy variables
+dmy <- dummyVars(" ~ .", data = train_processed2,fullRank = T)
+train_transformed2 <- data.frame(predict(dmy, newdata = train_processed2))
+
+#Checking the structure of transformed train file
+str(train_transformed2)
+
+#Converting the dependent variable back to categorical
+train_processed2$approval <-as.factor(train_processed2$approval)
+
+```
+
+
+## 3. Splitting the data using Caret
+
+Since the dataset was initially arranged in a country-year format, it is a good idea to randomize the rows before splitting the dataset into trainSet and testSet. 
+
+```{r}
+# Randomizing the dataset
+set.seed(234)
+rows <- sample(nrow(train_transformed2))
+train_transformed2 <- train_transformed2[rows,]
+
+#Spliting dataset into trainSet and testSet based on outcome with a ratio of 75% and 25%, using createDataPartition in Caret
+index <- createDataPartition(train_processed2$approval, p=0.75, list=FALSE)
+trainSet2 <- train_transformed2[index,]
+testSet2 <- train_transformed2[-index,]
+
+#Checking the structure of trainSet
+str(trainSet2)
+
+```
+
+
+
+## 4. Feature selection using Caret
+
+The feature selection, which is a crucial part of machine learning, is made easy by Caret. The "recursive feature elimination" or "rfe" function in Caret is used to find the best subset of features to be included in the models.
+
+```{r}
+# Feature selection using rfe in caret
+control <- rfeControl(functions = rfFuncs,
+                   method = "repeatedcv",
+                   repeats = 3,
+                   verbose = FALSE)
+outcomeName2<-'approval'
+predictors2<-names(trainSet2)[!names(trainSet2) %in% outcomeName2]
+approval_Pred_Profile <- rfe(trainSet2[,predictors2], trainSet2[,outcomeName2],
+                      rfeControl = control)
+approval_Pred_Profile
+
+```
+
+The result of the feature selection is as follows:
+
+Recursive feature selection
+
+Outer resampling method: Cross-Validated (10 fold, repeated 3 times) 
+
+Resampling performance over subset size:
+
+
+The top 5 variables (out of 2608):
+   Q58B.3, Q58B.9, Q43A.9, Q58B.2, Q43A.3
+
+## 5. Training models using Caret
+
+Caret provides a large number of algorithms with similar syntax. Following Kaushik's practical guide, we will apply the following: GBM, Random forest, Neural net and Logistic regression.
+
+```{r}
+model_gbm2<-train(trainSet2[,predictors2],trainSet2[,outcomeName2],method='gbm')
+model_rf2<-train(trainSet2[,predictors2],trainSet2[,outcomeName2],method='rf')
+model_nnet2<-train(trainSet2[,predictors2],trainSet2[,outcomeName2],method='nnet')
+model_glm2<-train(trainSet2[,predictors2],trainSet2[,outcomeName2],method='glm')
+```
+
+
+
+## 6. Parameter tuning using Caret (Skipped)
+
+
+
+## 7. Variable importance estimation using Caret
+
+We can also check the variable importance estimates in Caret by using the "varImp" function" for any model.
+
+### 7.1 Variable importance for GBM
+
+```{r}
+# Checking variable importance for GBM
+# Variable Importance
+varImp(object=model_gbm2)
+
+
+#Plotting Varianle importance for GBM
+plot(varImp(object=model_gbm2),main="GBM - Variable Importance")
+
+```
+
+### 7.2 Variable importance for RF
+
+```{r}
+#Checking variable importance for RF
+varImp(object=model_rf2)
+#rf variable importance
+
+
+#Plotting Varianle importance for Random Forest
+plot(varImp(object=model_rf2),main="RF - Variable Importance")
+
+```
+
+
+### 7.3 Variable importance for NNET
+
+```{r}
+#Checking variable importance for NNET
+varImp(object=model_nnet2)
+#nnet variable importance
+
+#Plotting Variable importance for Neural Network
+plot(varImp(object=model_nnet2),main="NNET - Variable Importance")
+
+```
+
+### 7.4 Variable importance for GLM
+
+```{r}
+#Checking variable importance for GLM
+varImp(object=model_glm2)
+#glm variable importance
+
+#Plotting Variable importance for GLM
+plot(varImp(object=model_glm2),main="GLM - Variable Importance")
+
+```
+
+## 8. Making predictions using Caret
+
+```{r}
+#Predictions with gbm
+predictions_gbm2 <-predict.train(object=model_gbm2,testSet2[,predictors2],type="raw")
+table(predictions_gbm2)
+
+confusionMatrix(predictions_gbm2,testSet2[,outcomeName2])
+
+```
+
+
+```{r}
+#Predictions with rf
+predictions_rf2 <-predict.train(object=model_rf2,testSet2[,predictors2],type="raw")
+table(predictions_rf2)
+
+confusionMatrix(predictions_rf2,testSet2[,outcomeName2])
+
+```
+
+## Conclusion

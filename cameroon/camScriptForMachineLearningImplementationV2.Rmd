@@ -1,0 +1,308 @@
+---
+title: "Script for Machine Learning Implementation in Cameroon's Case (Version 2)"
+author: "Adrien Ratsimbaharison"
+date: "May 26, 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This machine learning script is based on the "Practical guide to implement machine learning with CARET in R" suggested by Saurav Kaushik in the Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/ (December 8, 2016).   
+
+The Caret package solves many problems in the implementation of machine learning process, and make it much easier to execute, even for beginners like the autors of this book.
+As Kaushik puts it, "This package [i.e., CARET package] alone is all you need to know for solve almost any supervised machine learning problem. It provides a uniform interface to several machine learning algorithms and standardizes various other tasks such as Data splitting, Pre-processing, Feature selection, Variable importance estimation, etc."
+
+The different steps suggested by Saurav Kaushik include the following:  
+
+1) Getting started with loading the package and looking at the data
+2) Pre-processing the data using Caret
+3) Splitting the data using Caret
+4) Feature selection using Caret
+5) Training models using Caret
+6) Parameter tuning using Caret
+7) Variable importance estimation using Caret
+8) Making predictions using Caret
+
+
+## 1. Getting started with loading the package and looking at the data
+
+Installing and loading the Caret package and its dependencies:
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+# Intalling the caret package if it is not already installed
+
+# install.packages("caret", dependencies = c("Depends", "Suggests"))
+
+# loading the caret package and other required packages:
+library(caret)
+library(dplyr)
+library(haven)
+library(magrittr)
+library(gbm)
+
+```
+
+Reading the data in R and looking at its structure:
+
+```{r}
+# Reading the data
+train2 <- read_sav("cam_r7_data_eng.sav")
+train2 <- tbl_df(train2)
+
+# Looking at its structure
+str(train2)
+
+# Selecting the variables of interest
+
+train2 <- select(train2, URBRUR, REGION, EA_SVC_A, EA_SVC_B, EA_SVC_C, EA_SVC_D, EA_FAC_A, EA_FAC_B, EA_FAC_C, EA_FAC_D, EA_FAC_E, EA_FAC_F, EA_FAC_G, EA_SEC_A, EA_SEC_B, EA_SEC_C, EA_SEC_D, EA_SEC_E, EA_ROAD_A, EA_ROAD_B, EA_ROAD_C, Q1, Q2A, Q2AOTHER, Q2B, Q2BOTHER, Q3, Q4A, Q4B, Q5, Q6, Q7, Q8A, Q8B, Q8C, Q8D, Q8E, Q8F, Q9, Q10A, Q10B, Q11A, Q11B, Q12A, Q12B, Q12C, Q12D, Q12E, Q13, Q14, Q15, Q16, Q17, Q18A, Q18B, Q18C, Q18D, Q19A, Q19B, Q19C, Q19D, Q19E, Q20A, Q20B, Q21A, Q21B, Q22, Q23, Q24A, Q24B, Q25A, Q25B, Q25C, Q25D, Q25E, Q25F, Q26A, Q26B, Q26C, Q26D, Q26E, Q27A, Q27B, Q27C, Q28, Q29, Q30, Q31, Q32, Q33, Q34, Q35, Q36, Q37, Q38A, Q38B, Q38C, Q38D, Q38E, Q38F, Q38G, Q39A, Q39B, Q39C, Q40, Q41, Q42A, Q42B, Q42C, Q42D, Q42E, Q42F, Q43A, Q43B, Q43C, Q43D, Q43E, Q43F, Q43G, Q43H, Q43I, Q43J, Q43K, Q43L_CAM, Q43M_CAM, Q44A, Q44B, Q44C, Q44D, Q44E, Q44F, Q44G, Q44H, Q44I, Q44J, Q44K_CAM, Q44L_CAM, Q44M_CAM, Q44N_CAM, Q45, Q46, Q47, Q48A, Q48B, Q48C, Q48D, Q48E, Q48F, Q49A, Q49B, Q49C, Q49D, Q49E, Q49F, Q49G, Q49H, Q49I, Q49J, Q49K, Q49L, Q49M, Q49N, Q49O, Q49P, Q49Q, Q49R, Q49S, Q49T, Q50, Q51, Q52, Q53A, Q53B, Q53C, Q54A, Q54B, Q55PT1, Q55PT1OTHER, Q55PT2, Q55PT2OTHER, Q55PT3, Q55PT3OTHER, Q56A, Q56B, Q56C, Q56D, Q56E, Q56F, Q56G, Q56H, Q56I, Q56J, Q56K, Q56L, Q56M, Q56N, Q56O, Q56P, Q56Q, Q56R, Q56S, Q57A, Q57B, Q57C, Q57D, Q57E, Q57F, Q57G, Q58A, Q58B, Q58C, Q58D, Q58E, Q59A, Q59B, Q59C, Q60A, Q60B, Q60C, Q60D, Q61A, Q61B, Q61C, Q62, Q63, Q64, Q65, Q66, Q67, Q68A, Q68B, Q69, Q70, Q70OTHER, Q71, Q72A, Q72B, Q73A, Q73B, Q74, Q75, Q76, Q77A, Q77B, Q77C, Q77D, Q78A, Q78B, Q79_CAM, Q80_CAM, Q81A_CAM, Q81B_CAM, Q81C_CAM, Q81D_CAM, Q82A_CAM, Q82B_CAM, Q82C_CAM, Q82D_CAM, Q84, Q84OTHER, Q85A, Q85B, Q86A, Q86B, Q86C, Q86D, Q87A, Q87B, Q87C, Q87D, Q88A,Q88B, Q88BOTHER, Q89A, Q89B, Q89C, Q89D, Q89E, Q89F, Q90, Q91A, Q91B, Q92A, Q92B, Q93, Q94, Q95A, Q95B, Q95C, Q96A, Q96B, Q97, Q98, Q98OTHER, Q99, Q99OTHER, Q100)
+
+# Changing the types of all variables to factor, except the variable "age" which should be kept numeric
+train2 %<>% 
+      mutate_each(funs(if(is.numeric(.)) as.factor(.) else .))
+
+train2$Q1 <- as.numeric(train2$Q1)
+
+# we need also to remove the variables that end with "OTHER" which created the errors "NA/NaN/Inf in foreign function call (arg 1)" in the execution of feature selection using the "rfe" function in step 4;
+
+train2 <- select(train2, - c(Q2AOTHER, Q2BOTHER, Q55PT3OTHER, Q55PT2OTHER, Q55PT1OTHER, Q70OTHER, Q98OTHER, Q84OTHER, Q88BOTHER, Q99OTHER))
+
+```
+
+
+Defining the problem:
+
+In this problem we want to predict the classification of Cameroonians into two categories: either they "approve", "disapprove", or "don't know" ("or don't have opinion about") the President's job performance (Question Q58A in Afrobarometer Round 7 survey).
+
+```{r}
+
+# We need to create a new variable for "approval" by mutating Q58A and assigning the following value: 0 = "Disapprove", 1 = "Approve", 2 = "Don't know"
+train2 <- mutate(train2, approval = ifelse(Q58A == 1 | Q58A == 2, "Disapprove",
+                                           ifelse(Q58A == 3 | Q58A == 4, "Approve", "Don't know" )))
+train2$approval <- as.factor(train2$approval)
+# we remove Q58A from the dataset, as it is redundant with the new variable approval
+train2 <- select(train2, - Q58A)
+train_transformed2 <- train2
+
+```
+
+
+## 2. Pre-processing the data using Caret
+
+In this step, we only check for the missing values, and skipped the other pre-processing procedures, such as centering, scaling, principal component analysis, and creation of "one hot encoding". 
+
+```{r}
+sum(is.na(train_transformed2))
+
+```
+
+Since there is no missing value to remove, we can move to the next step, which is splitting the data.
+
+
+
+## 3. Splitting the data using Caret
+
+Since the dataset was initially arranged in a country-year format, it is a good idea to randomize the rows before splitting the dataset into trainSet and testSet. 
+
+```{r}
+# Randomizing the dataset
+set.seed(234)
+rows <- sample(nrow(train_transformed2))
+train_transformed2 <- train_transformed2[rows,]
+
+#Spliting dataset into trainSet and testSet based on outcome with a ratio of 75% and 25%, using createDataPartition in Caret
+index <- createDataPartition(train_transformed2$approval, p=0.75, list=FALSE)
+trainSet2 <- train_transformed2[index,]
+testSet2 <- train_transformed2[-index,]
+
+#Checking the structure of trainSet2
+str(trainSet2)
+
+```
+
+
+
+## 4. Feature selection using Caret
+
+The feature selection, which is a crucial part of machine learning, is made easy by Caret. The "recursive feature elimination" or "rfe" function in Caret is used to find the best subset of features to be included in the models.
+
+```{r}
+# Feature selection using rfe in caret
+ctrl <- rfeControl(functions = rfFuncs,
+                   method = "repeatedcv",
+                   repeats = 3,
+                   verbose = FALSE)
+
+y <- trainSet2$approval
+x <- select(trainSet2, - approval)
+
+approvalProfile <- rfe(x, y,
+                rfeControl = ctrl)
+
+approvalProfile
+
+```
+
+
+Recursive feature selection
+
+Outer resampling method: Cross-Validated (10 fold, repeated 3 times) 
+
+Resampling performance over subset size:
+
+The top 5 variables (out of 16):
+   Q58B, Q43A, Q58C, REGION, Q58E
+
+## 5. Training models using Caret
+
+Caret provides a large number of algorithms with similar syntax. Following Kaushik's practical guide, we will apply the following: GBM, Random forest, Neural net and Logistic regression.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 5,
+                           repeats = 3)
+model_gbm2 <- train(approval ~ ., data = trainSet2, 
+                 method = "gbm", 
+                 trControl = fitControl,
+                 verbose = FALSE)
+
+model_rf2 <- train(approval ~ ., data = trainSet2, 
+                 method = "rf", 
+                 trControl = fitControl,
+                 verbose = FALSE)
+
+
+```
+
+
+## 6. Variable importance estimation using Caret
+
+We can also check the variable importance estimates in Caret by using the "varImp" function" for any model.
+
+### 6.1 Variable importance for GBM
+
+```{r}
+# Checking variable importance for GBM
+# Variable Importance
+varImp(object=model_gbm2)
+
+
+#Plotting Varianle importance for GBM
+plot(varImp(object=model_gbm2),main="GBM - Variable Importance", top = 20)
+
+```
+
+### 6.2 Variable importance for RF
+
+```{r}
+#Checking variable importance for RF
+varImp(object=model_rf2)
+#rf variable importance
+
+
+#Plotting Varianle importance for Random Forest
+plot(varImp(object=model_rf2),main="RF - Variable Importance", top = 20)
+
+```
+
+
+## 7. Making predictions using Caret
+
+```{r}
+#Predictions with gbm
+predictions_gbm2 <-predict.train(object=model_gbm2,testSet2,type="raw")
+table(predictions_gbm2)
+
+confusionMatrix(predictions_gbm2,testSet2$approval)
+
+```
+Result of the prediction withm GBM:
+
+predictions_gbm2
+   Approve Disapprove Don't know 
+       184         96         19 
+Confusion Matrix and Statistics
+
+            Reference
+Prediction   Approve Disapprove Don't know
+  Approve        137         37         10
+  Disapprove      28         62          6
+  Don't know       3          1         15
+
+Overall Statistics
+                                          
+               Accuracy : 0.7157          
+                 95% CI : (0.6609, 0.7662)
+    No Information Rate : 0.5619          
+    P-Value [Acc > NIR] : 3.046e-08       
+                                          
+                  Kappa : 0.4738          
+                                          
+ Mcnemar's Test P-Value : 0.03532         
+
+Statistics by Class:
+
+                     Class: Approve Class: Disapprove Class: Don't know
+Sensitivity                  0.8155            0.6200           0.48387
+Specificity                  0.6412            0.8291           0.98507
+Pos Pred Value               0.7446            0.6458           0.78947
+Neg Pred Value               0.7304            0.8128           0.94286
+Prevalence                   0.5619            0.3344           0.10368
+Detection Rate               0.4582            0.2074           0.05017
+Detection Prevalence         0.6154            0.3211           0.06355
+Balanced Accuracy            0.7283            0.7246           0.73447
+
+
+
+```{r}
+#Predictions with rf
+predictions_rf2 <-predict.train(object=model_rf2,testSet2,type="raw")
+table(predictions_rf2)
+
+confusionMatrix(predictions_rf2,testSet2$approval)
+
+```
+Result of the predition with Random Forest algorithm:
+
+predictions_rf2
+   Approve Disapprove Don't know 
+       185         91         23 
+Confusion Matrix and Statistics
+
+            Reference
+Prediction   Approve Disapprove Don't know
+  Approve        142         32         11
+  Disapprove      23         63          5
+  Don't know       3          5         15
+
+Overall Statistics
+                                         
+               Accuracy : 0.7358         
+                 95% CI : (0.682, 0.7849)
+    No Information Rate : 0.5619         
+    P-Value [Acc > NIR] : 3.686e-10      
+                                         
+                  Kappa : 0.513          
+                                         
+ Mcnemar's Test P-Value : 0.1095         
+
+Statistics by Class:
+
+                     Class: Approve Class: Disapprove Class: Don't know
+Sensitivity                  0.8452            0.6300           0.48387
+Specificity                  0.6718            0.8593           0.97015
+Pos Pred Value               0.7676            0.6923           0.65217
+Neg Pred Value               0.7719            0.8221           0.94203
+Prevalence                   0.5619            0.3344           0.10368
+Detection Rate               0.4749            0.2107           0.05017
+Detection Prevalence         0.6187            0.3043           0.07692
+Balanced Accuracy            0.7585            0.7446           0.72701
+
+
+
+## Conclusion

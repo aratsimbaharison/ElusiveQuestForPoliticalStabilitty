@@ -761,8 +761,11 @@ summary(WGI2regimeTypeConflictByRegion)
 WGI2popDevIneqPovRegimeConflict <- left_join(WGI2byCountryAndRegion, popDevIneqPovDF, by = c("country", "date"))
 WGI2popDevIneqPovRegimeConflict <- left_join(WGI2popDevIneqPovRegimeConflict, WGI2regimeTypeConflictByRegion, by = c("country", "date"))
 
+WGI2regimeTypeConflictByRegion <- tbl_df(WGI2regimeTypeConflictByRegion)
+
 names(WGI2popDevIneqPovRegimeConflict)
-WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code = M49Code.x, iso2c = iso2c.x, iso3c = iso3c.x, date, stability = stability.x, stabilityDummy = stabilityDummy.x, stabilityCategory = stabilityCategory.x, corruptionControl = corruptionControl.x, governmentEffectiveness = governmentEffectiveness.x, regulatoryQuality = regulatoryQuality.x, ruleOfLaw = ruleOfLaw.x, voiceAndAccountability = voiceAndAccountability.x, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region = region.x, subregion =  subregion.x)
+
+WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code = M49Code.x, iso2c = iso2c.x, iso3c = iso3c.x, date, stability = stability.x, stabilityCategory2 = stabilityCategory2.x, stabilityCategory4 = stabilityCategory4.x, corruptionControl = corruptionControl.x, governmentEffectiveness = governmentEffectiveness.x, regulatoryQuality = regulatoryQuality.x, ruleOfLaw = ruleOfLaw.x, voiceAndAccountability = voiceAndAccountability.x, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region = region.x, subregion =  subregion.x)
 
 # Due to inconsistencies, the following countries have been removed
 WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Micronesia, Fed. Sts.",]
@@ -779,34 +782,22 @@ summary(WGI2popDevIneqPovRegimeConflict)
 library(VIM)
 WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("pr", "cl", "sum", "mean", "inverse_pr", "inverse_cl", "inverse_mean"), k = 5)
 
-# Imputing the World Bank variables in four steps (due to "Error: subscript out of bounds): c("population", "GNIperCapita", "GDPannualGrowthRate", "HDI", "GINI", "povertyHeadCount")
+# Imputing the World Bank variables c("population", "GNIperCapita", "GDPannualGrowthRate", "HDI", "GINI", "povertyHeadCount")
 library(VIM)
-WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("population", "GNIperCapita"), k = 5)
-
-WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("GDPannualGrowthRate", "HDI"), k = 5)
-
-WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = "GINI", k = 5)
-
-WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = "povertyHeadCount", k = 5)
+WGI2popDevIneqPovRegimeConflict <- kNN(WGI2popDevIneqPovRegimeConflict, variable = c("population", "GNIperCapita", "GDPannualGrowthRate", "HDI", "GINI", "povertyHeadCount"), k = 5)
 
 names(WGI2popDevIneqPovRegimeConflict)
 
-WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory2, stabilityCategory4, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, polityScore, polityCategory, politicalChange, democ, autoc, durable, xrreg, xrcomp, xropen, xconst, parreg, parcomp, exrec, exconst, polcomp, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
 
 # Full dataset with Polity IV variables: WGI2popDevIneqPovRegimeConflict1
 
 WGI2popDevIneqPovRegimeConflict1 <- WGI2popDevIneqPovRegimeConflict
 
 
-
-# Cleaning the full dataset with Polity IV, by removing the missing values:
-
-
-# The second step in cleaning the full dataset is to remove the Polity IV variables:
-# Polity IV variables
 # Full dataset without Polity IV variables: WGI2popDevIneqPovRegimeConflict2
 
-WGI2popDevIneqPovRegimeConflict2 <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityDummy, stabilityCategory, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+WGI2popDevIneqPovRegimeConflict2 <- select(WGI2popDevIneqPovRegimeConflict, country, M49Code, iso2c, iso3c, date, stability, stabilityCategory2, stabilityCategory4, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, devCategory, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, pr, cl, sum, mean, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
 
 # Since the variable devCategory contains some missing values (190 NAs), we need to recode this variable, which depends on GNIperCapita:
 WGI2popDevIneqPovRegimeConflict2 <- WGI2popDevIneqPovRegimeConflict2 %>% mutate(devCategory=cut(GNIperCapita, breaks=c(0, 1025, 4035, 12475, Inf), labels=c("Low Income","Lower Middle Income","Upper Middle Income", "High Income")))
@@ -820,7 +811,6 @@ WGI2popDevIneqPovRegimeConflict2 <- WGI2popDevIneqPovRegimeConflict2 %>%
   mutate(politicalChangeFH = case_when(inverse_mean > lag(inverse_mean) ~ "democratization", 
                                      inverse_mean < lag(inverse_mean) ~ "autocratization",
                                      TRUE ~ "no change"))
-
 
 summary(WGI2popDevIneqPovRegimeConflict2)
 
