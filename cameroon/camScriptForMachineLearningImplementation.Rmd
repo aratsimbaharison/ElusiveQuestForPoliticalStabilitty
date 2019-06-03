@@ -1,5 +1,5 @@
 ---
-title: "Script for Machine Learning Implementation in Cameroon's Cae"
+title: "Script for Machine Learning Implementation in Cameroon's Case"
 author: "Adrien Ratsimbaharison"
 date: "May 26, 2019"
 output: html_document

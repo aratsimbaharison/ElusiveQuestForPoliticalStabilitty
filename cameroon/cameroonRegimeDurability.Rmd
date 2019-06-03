@@ -1,5 +1,5 @@
 ---
-title: "The Durability of the Paul Biya Regime in Cameroon: A Micro-Level Analysis
+title: "Understanding the Durability of the Paul Biya Regime in Cameroon: A Micro-Level Analysis
   Using Afrobarometer Data"
 author: "Adrien Ratsimbaharison and Benn Bongang"
 date: "March 12, 2019"
@@ -18,6 +18,7 @@ library(haven)
 library(survey)
 library(dplyr)
 library(ggplot2)
+library(zeallot)
 
 ```
 
@@ -29,36 +30,95 @@ library(haven)
 # cam_r5_data_fr_july_2015 <- read_sav("http://afrobarometer.org/sites/default/files/data/round-5/cam_r5_data_fr_july_2015.sav")
 # write_sav(cam_r5_data_fr_july_2015, "cam_r5_data_fr_july_2015.sav")
 
-cameroonRound5 <- read_sav("cam_r5_data_fr_july_2015.sav", header = T, colClasses = "factor")
-head(cameroonRound5)
-glimpse(cameroonRound5)
+cameroonRound5 <- read_sav("cam_r5_data_fr_july_2015.sav")
+cameroonRound5 <- as_tibble(cameroonRound5)
 
 # round 6 data
 library(haven)
-cameroonRound6 <- read_sav("cam_r6_data_2016_eng.sav", header = T, colClasses = "factor")
-head(cameroonRound6)
-
+cameroonRound6 <- read_sav("cam_r6_data_2016_eng.sav")
+cameroonRound6 <- as_tibble(cameroonRound6)
 
 # round 7 data
 library(haven)
 cameroonRound7 <- read_sav("cam_r7_data_eng.sav")
-head(cameroonRound7)
-names(cameroonRound7)
+cameroonRound7 <- as_tibble(cameroonRound7)
 
-# The outcome variable is Q58A (approval of the way the president has performed his job over the last 12 month)
+# Selecting the variables of interest for the undertanding the trust in President Paul Biya and the approval of his job performance
+
+cameroonRound7 <- select(cameroonRound7, URBRUR, REGION, EA_SVC_A, EA_SVC_B, EA_SVC_C, EA_SVC_D, EA_FAC_A, EA_FAC_B, EA_FAC_C, EA_FAC_D, EA_FAC_E, EA_FAC_F, EA_FAC_G, EA_SEC_A, EA_SEC_B, EA_SEC_C, EA_SEC_D, EA_SEC_E, EA_ROAD_A, EA_ROAD_B, EA_ROAD_C, Q1, Q2A, Q2AOTHER, Q2B, Q2BOTHER, Q3, Q4A, Q4B, Q5, Q6, Q7, Q8A, Q8B, Q8C, Q8D, Q8E, Q8F, Q9, Q10A, Q10B, Q11A, Q11B, Q12A, Q12B, Q12C, Q12D, Q12E, Q13, Q14, Q15, Q16, Q17, Q18A, Q18B, Q18C, Q18D, Q19A, Q19B, Q19C, Q19D, Q19E, Q20A, Q20B, Q21A, Q21B, Q22, Q23, Q24A, Q24B, Q25A, Q25B, Q25C, Q25D, Q25E, Q25F, Q26A, Q26B, Q26C, Q26D, Q26E, Q27A, Q27B, Q27C, Q28, Q29, Q30, Q31, Q32, Q33, Q34, Q35, Q36, Q37, Q38A, Q38B, Q38C, Q38D, Q38E, Q38F, Q38G, Q39A, Q39B, Q39C, Q40, Q41, Q42A, Q42B, Q42C, Q42D, Q42E, Q42F, Q43A, Q43B, Q43C, Q43D, Q43E, Q43F, Q43G, Q43H, Q43I, Q43J, Q43K, Q43L_CAM, Q43M_CAM, Q44A, Q44B, Q44C, Q44D, Q44E, Q44F, Q44G, Q44H, Q44I, Q44J, Q44K_CAM, Q44L_CAM, Q44M_CAM, Q44N_CAM, Q45, Q46, Q47, Q48A, Q48B, Q48C, Q48D, Q48E, Q48F, Q49A, Q49B, Q49C, Q49D, Q49E, Q49F, Q49G, Q49H, Q49I, Q49J, Q49K, Q49L, Q49M, Q49N, Q49O, Q49P, Q49Q, Q49R, Q49S, Q49T, Q50, Q51, Q52, Q53A, Q53B, Q53C, Q54A, Q54B, Q55PT1, Q55PT1OTHER, Q55PT2, Q55PT2OTHER, Q55PT3, Q55PT3OTHER, Q56A, Q56B, Q56C, Q56D, Q56E, Q56F, Q56G, Q56H, Q56I, Q56J, Q56K, Q56L, Q56M, Q56N, Q56O, Q56P, Q56Q, Q56R, Q56S, Q57A, Q57B, Q57C, Q57D, Q57E, Q57F, Q57G, Q58A, Q58B, Q58C, Q58D, Q58E, Q59A, Q59B, Q59C, Q60A, Q60B, Q60C, Q60D, Q61A, Q61B, Q61C, Q62, Q63, Q64, Q65, Q66, Q67, Q68A, Q68B, Q69, Q70, Q70OTHER, Q71, Q72A, Q72B, Q73A, Q73B, Q74, Q75, Q76, Q77A, Q77B, Q77C, Q77D, Q78A, Q78B, Q79_CAM, Q80_CAM, Q81A_CAM, Q81B_CAM, Q81C_CAM, Q81D_CAM, Q82A_CAM, Q82B_CAM, Q82C_CAM, Q82D_CAM, Q84, Q84OTHER, Q85A, Q85B, Q86A, Q86B, Q86C, Q86D, Q87A, Q87B, Q87C, Q87D, Q88A,Q88B, Q88BOTHER, Q89A, Q89B, Q89C, Q89D, Q89E, Q89F, Q90, Q91A, Q91B, Q92A, Q92B, Q93, Q94, Q95A, Q95B, Q95C, Q96A, Q96B, Q97, Q98, Q98OTHER, Q99, Q99OTHER, Q100)
+
+# Changing the types of all variables to factor, except the variable "age" which should be kept numeric
+cameroonRound7 %>%
+      mutate_each(funs(if(is.numeric(.)) as.factor(.) else .))
+
+cameroonRound7$Q1 <- as.numeric(cameroonRound7$Q1)
+
+# we need also to remove the variables that end with "OTHER" because most of the values (or responses) to the variables are of character or string type and generate the errors "NA/NaN/Inf" with the execution of some procedures such as the feature selection using "rfe"
+
+cameroonRound7 <- select(cameroonRound7, - c(Q2AOTHER, Q2BOTHER, Q55PT3OTHER, Q55PT2OTHER, Q55PT1OTHER, Q70OTHER, Q98OTHER, Q84OTHER, Q88BOTHER, Q99OTHER))
+
+# The outcome variable 1 is Q43A (Response to the question: "How much do you trust the President")
+cameroonRound7$Q43A <- as.factor(cameroonRound7$Q43A)
+str(cameroonRound7$Q43A)
+summary(cameroonRound7$Q43A)
+myTable <- table(cameroonRound7$Q43A)
+prop.table(myTable)
+
+# The outcome variable 2 is Q58A (approval of the way the president has performed his job over the last 12 month)
 cameroonRound7$Q58A <- as.factor(cameroonRound7$Q58A)
 str(cameroonRound7$Q58A)
 summary(cameroonRound7$Q58A)
 myTable <- table(cameroonRound7$Q58A)
 prop.table(myTable)
 
-# Creating a binary outcome variable called "approval" for 'approval of the President's job' with Q58A
-# First, we need to remove the missing values ("8") and don't know answer ("9")
-cameroonRound7 <- filter(cameroonRound7, Q58A == 1 | Q58A == 2 | Q58A == 3 | Q58A == 4)
-cameroonRound7 <- mutate(cameroonRound7, approval = ifelse(Q58A == 1 | Q58A == 2, "disapprove", ifelse(Q58A == 3 | Q58A == 4, "approve", NA)))
+# Crosstabulating approval and trust of the President
+table(cameroonRound7$Q43A, cameroonRound7$Q58A)
+
+# For the purpose of creating figure, we need to assign to Q43A ("Trust in President Paul Biya")and Q58A (Approval of the President's Job") their respective original values
+
+cameroonRound7 <- mutate(cameroonRound7, trustInThePresident = ifelse(Q43A == 0, "1. Not at all", 
+                                                                      ifelse(Q43A == 1, "2. Just a little",
+                                                                             ifelse(Q43A == 2, "3. Somewhat", 
+                                                                                    ifelse(Q43A == 3, "4. A lot",
+                                                                                           ifelse(Q43A == 9, "5. Don't know", "5. Don't know"))))))
+
+table(cameroonRound7$trustInThePresident)
+
+cameroonRound7 <- mutate(cameroonRound7, approvalOfThePresident = ifelse(Q58A == 1, "1. Strongly disapprove", 
+                                                                      ifelse(Q58A == 2, "2. Disapprove",
+                                                                             ifelse(Q58A == 3, "3. Approve", 
+                                                                                    ifelse(Q58A == 4, "4. Strongly approve",
+                                                                                           ifelse(Q58A == 9, "5. Don't know", "5. Don't know"))))))
+
+table(cameroonRound7$approvalOfThePresident)
+
+
+# In order to simplify the interpretation of the results of the machine learning implementation, we need to create the variable "trust" with three categories of responses, by mutating Q43A and assigning the following value: 0 = "Distrust", 1 = "Trust", 2 = "Don't know"
+cameroonRound7 <- mutate(cameroonRound7, trust = ifelse(Q43A == 0 | Q43A == 1, "2. Distrust",
+                                           ifelse(Q43A == 2 | Q43A == 3, "1. Trust", "3. Don't know" )))
+cameroonRound7$trust <- as.factor(cameroonRound7$trust)
+
+# In order to simplify the interpretation of the results of the machine learning implementation, we need to create the variable "approval" with three categories of responses, by mutating Q58A and assigning the following value: 0 = "Disapprove", 1 = "Approve", 2 = "Don't know"
+cameroonRound7 <- mutate(cameroonRound7, approval = ifelse(Q58A == 1 | Q58A == 2, "Disapprove",
+                                           ifelse(Q58A == 3 | Q58A == 4, "Approve", "Don't know" )))
 cameroonRound7$approval <- as.factor(cameroonRound7$approval)
-approvalRate <- summary(cameroonRound7$approval)
-prop.table(approvalRate)
+
+table(cameroonRound7$trust, cameroonRound7$approval)
+
+# In order to simplify the interpretation of the results of the machine learning implementation, we need to create the variable "voteForThePresident" with three categories of responses, by mutating Q99 and assigning the following value: 1 = "Vote for the President", 2 = "Vote for other candidates", 3 = "Don't know"
+cameroonRound7 <- mutate(cameroonRound7, voteForThePresident = ifelse(Q99 == 1220, "1. Vote for the President",
+                                           ifelse(Q99 == 1221 | Q99 == 1222 | Q99 == 1223 | Q99 == 1224, "2. Vote for other candidates", "3. Don't know" )))
+cameroonRound7$voteForThePresident <- as.factor(cameroonRound7$voteForThePresident)
+votingIntention <- table(cameroonRound7$voteForThePresident)
+
+prop.table(votingIntention)
+
+votingIntentionTrust <- table(cameroonRound7$trust, cameroonRound7$voteForThePresident)
+prop.table(votingIntentionTrust)
+
+votingIntentionApproval <- table(cameroonRound7$approval, cameroonRound7$voteForThePresident)
+prop.table(votingIntentionApproval)
+
 
 ```
 
@@ -111,10 +171,146 @@ Factors that may be associated with the trust in the institutions =
 
 ## Findings
 
+### Descriptive Statistics
+
+Afrobarometer's round 7 survey consists of the responses of 1204 respondents to some 297 questions. These respondents were randomly selected by Afrobarometer in taking into consideration the following factors:
+
+- urban or rural location of the respondent,
+- region of the respondent,
+- age of the respondent,
+- primary language spoken by the respondent at home
+
+```{r}
+# Distribution between urban and rural location of the respondents
+table(cameroonRound7$URBRUR)
+
+# Distribution of respondents by region of origin
+table(cameroonRound7$REGION)
+
+# Distribution of respondents by age
+table(cameroonRound7$Q1)
+
+# Distribution of respondents by primary language at home
+table(cameroonRound7$Q2B)
+
+```
+
+In this study, we will focus on two major factors that may help us understand why Paul Biya's regime has been one of the most durable regime in Africa. These two factors are:
+
+- the trust of the respondents in the President,
+- the approval of the way the President performed his job
+
+Assuming that the people who trust the President tend also to approve the way he performs his job, and tend also to vote for him or let him stay in power for a long time, we will identify in this study the factors that lead these people this trust and approval.
+
+Concerning the level of trust, we find that:
+
+- the great majority of Cameroonians (over 59%) trust "a lot" or "somewhat" the President (See Figure 1 below)
+- about 35% of them do not trust "at all" or "trust a little"
+
+```{r}
+trustLevel <- table(cameroonRound7$trustInThePresident)
+
+prop.table(trustLevel)
+
+ggplot(data = cameroonRound7, aes(trustInThePresident)) +
+  geom_bar()
+
+```
+
+
+Concerning the level of trust, we also find that:
+
+```{r}
+approvalLevel <- table(cameroonRound7$approvalOfThePresident)
+prop.table(approvalLevel)
+
+ggplot(data = cameroonRound7, aes(approvalOfThePresident)) +
+  geom_bar()
+
+```
+
+- the great majority of Cameroonians (over 56%) either "approve"" or "strongly approve" the way the President performed his job, and  
+- only about 33.5% of them do not "approve" or "stongly disapprove".
+
+
+
+It is worth noting that the trust in the President and approval of his job performance are very low among the people in the Anglophone areas (North-East and South-East).
+
+```{r}
+# Subsetting the Anglophone respondents (inhabitants of the North-East and South_East regions, respectively No. 1228 and 1231 in the Afrobarometer survey)
+
+anglophone <- filter(cameroonRound7, REGION == 1228 | REGION == 1231)
+francophone <- filter(cameroonRound7, REGION != 1228 & REGION != 1231)
+
+# Trust level among Anglophone
+trustLevelAnglo <- table(anglophone$trustInThePresident)
+
+prop.table(trustLevelAnglo)
+
+ggplot(data = anglophone, aes(trustInThePresident)) +
+  geom_bar()
+
+# Approval level among Anglophone
+approvalLevelAnglo <- table(anglophone$approvalOfThePresident)
+prop.table(approvalLevelAnglo)
+
+ggplot(data = anglophone, aes(approvalOfThePresident)) +
+  geom_bar()
+
+```
+The correlation between "trust" and "approval":
+
+In order to determine whether "trust" and "approval" are correlated and can be used interchangeable, we compute and plot the correlation between the two variables.
+
+```{r}
+# First, we need to transform the variables to numeric
+cameroonRound7$Q43A <- as.numeric(cameroonRound7$Q43A)
+cameroonRound7$Q58A <- as.numeric(cameroonRound7$Q58A)
+
+cor(cameroonRound7$Q43A, cameroonRound7$Q58A)
+
+```
+
+The correlation between "trust", "approval", and "voting":
+
+In order to determine whether "trust" or "approval" are correlated with "voting intention", we crosstabulate these variable Q99, which is the answer to the question "If presidential elections were held tomorrow, which party’s candidate would you vote for?"
+
+
+```{r}
+
+prop.table(votingIntention)
+
+ggplot(data = cameroonRound7, aes(voteForThePresident)) +
+  geom_bar()
+
+votingIntentionTrust <- table(cameroonRound7$trust, cameroonRound7$voteForThePresident)
+prop.table(votingIntentionTrust)
+
+votingIntentionApproval <- table(cameroonRound7$approval, cameroonRound7$voteForThePresident)
+prop.table(votingIntentionApproval)
+
+```
+
+
+
+### The Determinants of the Popular Trust in the President and Approval of his Job Performance
+
+We run two machine learning scripts to identify the factors that led to the trust in the President and the approval of his job performance.
+
+The results of these machine learning scripts are as follows:
+
+1) The predictors of trust in the President are:
+
+
+
+
+2) The predictors of the approval of the President's job performance are:
 
 
 
 ## Discussion and Conclusion
+
+
 
 
 ## References
