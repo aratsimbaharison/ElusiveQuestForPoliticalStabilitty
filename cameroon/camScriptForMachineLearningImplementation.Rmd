@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Note: this is the first attempt at the implementation of machine learnig for the prediction of approval
 
 ## Introduction
 
