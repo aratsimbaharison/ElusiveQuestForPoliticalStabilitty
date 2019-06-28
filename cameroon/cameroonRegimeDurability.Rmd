@@ -1,10 +1,10 @@
 ---
-title: "Understanding the Durability of the Paul Biya Regime in Cameroon: A Micro-Level Approach Using Afrobarometer's Round 7 National Survey Dataset"
+title: "Understanding the Durability of the Paul Biya Regime in Cameroon: A Micro-Level Approach Using Afrobarometer's Round 7 National Survey"
 author: "Adrien Ratsimbaharison and Benn Bongang"
 date: "March 12, 2019"
 output:
-  html_document: default
   word_document: default
+  html_document: default
 bibliography: bibliography.bib
 ---
 
@@ -120,6 +120,15 @@ prop.table(votingIntentionTrust, 1)
 votingIntentionApproval <- table(cameroonRound7$approval, cameroonRound7$voteForThePresident)
 prop.table(votingIntentionApproval, 1)
 
+# In order to simplify the interpretation of the results of the machine learning implementation, we need to create the variable "protest" with three categories of responses, by mutating Q26E and assigning the following value: 0 and 1 = "No", 2, 3, and 4 = "Yes", 9 = "Don't know"
+cameroonRound7 <- mutate(cameroonRound7, protest = ifelse(Q26E == 0 |Q26E == 1, "No",
+                                           ifelse(Q26E == 2 | Q26E == 3 | Q26E == 4, "Yes",
+                                                  ifelse(Q26E == 9, "Don't know", "Don't know" ))))
+cameroonRound7$protest <- as.factor(cameroonRound7$protest)
+protestParticipation <- table(cameroonRound7$protest)
+prop.table(protestParticipation)
+
+
 # For the purpose of figure creation , we need to assign to URBRUR ("Trust in President Paul Biya")and REGION (Approval of the President's Job") their respective original values
 
 cameroonRound7 <- mutate(cameroonRound7, 
@@ -146,35 +155,71 @@ cameroonRound7 <- mutate(cameroonRound7,
 
 ## Abstract
 
-The durability (or stability) of the Paul Biya regime, which is an extension of the Ahmadou Ahidjo regime, could be a blessing or a curse for the Cameroonian people. Indeed, almost every study on the relationship between regime durability (or political stability) and economic development would lead to the conclusion that the former is an important condition of the latter. Nevertheless, the fact that a country has been ruled for so many years by the same individual, without being a monarchy, is certainly a sign of autocracy. Also, having the same leader for decades may result in sclerosis and lack of innovations for further development of the country.
-Most of those who attempted to explain the durability of the Biya regime adopted a top-down approach or macro-level analysis. They tried to understand what the Biya regime did in order to stay in power for so long. In this sense, very few (if any) studies used a micro-level analysis or bottom-up approach and attempted to understand the Cameroonian people’s opinions and attitudes to explain why they were willing to stay under the same ruler for at least two generations.
-We adopt such micro-level analysis or bottom-up approach in this study. Using the data from rounds 5, 6, and 7 of the Afrobarometer national surveys on Cameroon, we apply different statistical techniques to find out to what extent the Cameroonian people trust their president and his regime and to identify the factors that may influence them to support or reject him. As a result, we find despite the marked difference between French-speaking and English-speaking communities, the majority of the population of the country, especially the French speaking still trust the President Paul Biya, and believe that the country is on a democratic path, while the majority of the English-speaking population believe the country is undemocratic. In sum, using a micro-level analysis, we can draw the conclusion that the people’s opinions and attitudes explain the Biya regime remained in power for several decades. 
+*[Short background information on the durability of the Paul Biya regime]*    
+
+
+
+
+
+
+
+
+*[Purpose of this study and research method]*
+
+We adopt a micro-level (or bottom-up) approach to understand why the majority of the Cameroonian people were willing to stay under the same ruler for at least two generations. Using the data from the Afrobarometer's round 7 national survey in Cameroon, we apply simple statistical analyses and machine learning (or predictive analytics) to find out to what extent the Cameroonian people support their president and his regime and to identify the predictors of such support. 
+
+*[Key findings]*
+
+As a result, we find despite the so-called "Anglophone crisis" and Boko Haram's attacks in the North, the majority of Cameroonians, especially the French speakers still approve the job performance of Paul Biya. Nevertheless, the main factors behind this approval have more to do with their trust in the president himself, the approval of the job performance of thei parliament members, and their regional location, than with the conduct of the political affairs of the country or the management of the national economy.
 
 
 **Keywords:** Africa, Cameroon, political stability, regime durability, micro-level analysis, Afrobarometer national survey
 
 ## Introduction
 
-President Paul Biya was elected for the seventh time as the president of Cameroon in October 2018, despite the protests from the opposition from different parts of the countries. This seventh term in office will consolidate his title as the “longest serving president in the world,” and he is expected to stay in power until 2025 or for 43 years. 
-The durability (or stability) of the Paul Biya regime could be a blessing or a curse for the Cameroonian people. Indeed, almost every study on the relationship between regime durability (or political stability) and economic development would lead to the conclusion that the former is an important condition of the latter. Nevertheless, the fact that a country has been ruled for so many years by the same individual, without being a monarchy, is certainly a sign of autocracy. Also, having the same leader for decades may also result in sclerosis and lack of innovations for further development of the country.
 
-This study is based on a micro-level analysis or bottom-up approach to the durability of the Paul Biya regime. In this sense, instead of analyzing what the president and his regime are doing to stay in power for so long, we try to understand what the Cameroonian people think about their president and his rule. Thus, using the data from rounds 5, 6 and 7 of the Afrobarometer national surveys on Cameroon, we try to find out to what extent the Cameroonian people trust their president and his regime and to identify the factors that may influence them in their support or lack thereof.
+
+*[Background information about the durability of the Paul Biya regime]*
+
+
+On eve of the 2018 presidential election, Paul Biya has been already in power in Cameroon for forty six years (ten year as Prime Minister and thirty six as President). This longevity record alone made him "Africa and the world's longest-serving head of state who is non-royal" [@tchouteuPaulBiyaCameroon2018]. 
+
+
+*[This section is from the old literature review. Please rewrite to make it in line with the purpose and research question of the paper]*
+
+
+Cameroon was barely a decade in existence as an independent federal republic when Victor  T. Levine [-@levineCameroonFederalRepublic1971] noted its political stability and hinted at the potential for future instability inherent in the "complexity” of its political, social, and economic configurations.” No doubt then that Levine found Cameroon’s stability "most remarkable.”  Unlike Cameroon, he observed, other  African countries federations fractured, including the Central African Federation, Ethiopian-Eritrean Federation, as well as the Federal Republic of Nigeria and the secession of Biafra.
+In his study on the origins of radical nationalism in Cameroon, Richard A. Joseph [-@josephRadicalNationalismCameroun1977] traces the post-World 11birth of the nationalist party, Union des Populations du Cameroon (UPC) and documents the brutal repression of its militants by the French and their allies in Cameroon who eventually became the leadership of the country under Ahmadou Ahidjo at independence.  UPC militants were exiled for several years, lured back in the early 1970s,  their leaders were publicly executed.
+
+
+*[Purpose and research question of this study]*
+
+For some reasons, this remarkable durability of the Paul Biya regime has not drawn a lot of academic interests yet. While there are numerous studies on the durability of autocratic regimes and survival of autocrats in general, we can only identify one or two on that of the Paul Biya regime. Thus, the purpose of this study is not only to fill this gap in the literature, but also to address specifically the question of why the majority of Cameroonians are still supporting the Paul Biya regime. In doing so, we will adopt a micro-level (or bottom-up) approach by trying to understand the factors that may have led to such support.
+
 
 
 ## Literature Review
 
-A quick review of the literature shows that most of those who tried to explain the durability of the Paul Biya regime took a top-down approach or a macro-level analysis. In other words, they tried to understand what the Biya regime did in order to stay in power for so long. In this sense, very few (if any) studies used a bottom-up approach or micro-level analysis and attempted to understand the Cameroonian people’s opinions and attitudes to explain the durability of this regime.
-Cameroon was barely a decade in existence as an independent federal republic when Victor  T. Levine [-@levineCameroonFederalRepublic1971] noted its political stability and hinted at the potential for future instability inherent in the “complexity” of its political, social, and economic configurations.” No doubt then that Levine found Cameroon’s stability “most remarkable.”  Unlike Cameroon, he observed, other  African countries federations fractured, including the Central African Federation, Ethiopian-Eritrean Federation, as well as the Federal Republic of Nigeria and the secession of Biafra.
-In his study on the origins of radical nationalism in Cameroon, Richard A. Joseph [-@josephRadicalNationalismCameroun1977] traces the post-World 11birth of the nationalist party, Union des Populations du Cameroon (UPC) and documents the brutal repression of its militants by the French and their allies in Cameroon who eventually became the leadership of the country under Ahmadou Ahidjo at independence.  UPC militants were exiled for several years, lured back in the early 1970s,  their leaders were publicly executed. Nicolas Argenti [-@argentiIntestinesStateYouth2008] anthropological examination of the origins of youth violence in the Grassfields of Cameroon suggests, for instance, that repression of those who challenged colonial authorities led the youth in places such as Oku to resort to secret societies and masked warrior dances to confront and frighten their oppressors. 
-Other authors [@takougangDemocracyDemocratizationCameroon1998; @koningsNegotiatingAnglophoneIdentity2003; @fowlerAfricanCrossroadsIntersections1996] provide insightful explanations of political and structural factors that explain the durability and relative political stability of the Biya regime.  However, they do not fully explain citizens attitudes as a factor in understanding Cameroon under Biya.
+[*New literature review focusing on the Paul Biya regime and its durability:*]   
+
+
+For the most part, the contemporary literature on the Cameroonian politics focuses on the dictatorial characteristics of the Paul Biya regime, the division between the Anglophone part (North-West and South-West regions, making up about 20% of the country) and its Francophone part (the rest of the country), which led in recent years to a growing interest in the so-called "Anglophone crisis." In line with this trend, very few studies have been devoted specifically to the durability of the Paul Biya regime, and there is not yet a commonly accepted explanation as to why it has lasted for more than three decades. Nevertheless, the broader literature on the durability of autocratic regime and survival of autocrats offer some insights that can help understand the durability of the Paul Biya regime.
+
+Concerning the dictatorial characteristics of the Paul Biya regime, Janvier Tchouteu and others describe and denounce the autocratic rule of Paul Biya in Cameroon in a series of books [@tchouteuCAMEROONHauntedHeart2017; @tchouteuCameroonFranceDysfunctional2017; @tchouteuPaulBiyaCameroon2018]. In each one of these books, the authors also accuses France of having designed the Cameroonian political system, having put in power Paul Biya and his predecessor, Ahmadou Ahidjo, and having supported them since independence in 1960 until now. The role of France in designing the Cameroonian political system and "leaving Cameroon in the hands of a government that would be sympathetic to [its] interests" after independence is also pointed out by Martin Atangana [@atanganaEndFrenchRule2010]. Furthermore, in a recent *Foreign Policy* article, Jefcoate O'Donnell and Robbie Gramer [-@odonnellCameroonPaulBiya2018] describe Paul Biya as "one of the world's most experienced autocrats", who just gave the world "a master class in fake democracy."
+
+With regard to the durability of the Paul Biya regime despite the growing political crisis in the North-West and South-West regions, in one of the few studies on this issue, Augustine Ayuk explains the stability of the Cameroonian political system with the following two factors:"a strong ruling party, the Cameroon National Union (CNU), and a strong individual, President Ahmadou Ahidjo" [@ayukRootsStabilityInstability2018]. From a bottom-up approach and using statistical analysis based on its round 6 national survey on Cameroon, Afrobarometer underlines the fact that, even though most Cameroonians do not approve the economic policy of the government, they nevertheless think that the President has governed well the country in 2014 and they trust him [@afrobarometerResultatsSixiemeEnquete2015]. This would explain why the majority of Cameroonians would vote for him and would not participate in street protests or marches that would overthrow his regime.
+
+Turning to the broader literature on autocratic regime, we find that several authors identify "the use of political institutions" as one of the major factors that help autocratic regimes to endure and autocrats to survive. In line with this, to answer the question of why so-called "good leaders" do not stay in power for long times, while so-called "bad leaders" and dictators manage to do so, Bruce Bueno de Mesquita and others built a "theory on the selection of leaders," and "show how political leaders allocate resources and how institutions for selecting leaders create incentives for leaders to pursue good and bad public policy" [@buenodemesquitaLogicPoliticalSurvival2003]. In the same vein, Jennifer Gandhi and Adam Przeworski argue that autocratic leaders rely on political institutions, such as legislatures, to "incorporate potential opposition forces, giving them a stake" in the survival of the regime [@gandhiAuthoritarianInstitutionsSurvival2007a]. Moreover, Marie-Eve Reny argues that autocratic rulers use the following "four mechanisms to control societal organizations: repression, coercion, cooptation and containment" [@renyAutocraciesControlSocietal].
+
+
 
 
 ## Methodology
 
-The durability of the Paul Biya regime has to do, not only with what the President and his cronies are doing (e.g., eliminating any pontential competitors, restraining political rights and civil liberties, etc.), but also with what the Cameroonians themselves think and do about the regime. In other words, we can reasonably think that some Cameroonians may genuinely support the regime or, at least, tolerate its existence to allow it to last for more than three decade. In this sense, assuming that those who support the regime would not participate in any action that would result in its termination, we adopt a micro-level (or bottom-up) approach to assess the level of popular support to the Paul Biya regime, and turn to the public opinion polls. Afrobarometer provides us reliable national surveys that can be used to assess this level of popular support.
+The durability of the Paul Biya regime has to do, not only with what the President himself and his cronies are doing (e.g., eliminating any pontential competitors, restraining political rights and civil liberties, etc.), but also with what the Cameroonians themselves think and do about the regime. In other words, we can reasonably think that some Cameroonians may genuinely support the regime or, at least, tolerate its existence to allow it to last for more than three decade. In this sense, we assume that those who support the regime would always vote for Paul Biya and would not participate in any actions (e.g., street protests) that would result in its termination.^[We verify this assumption in the *Appendix* and find that there are indeed correlation between the approval of the president, the intention to vote for him and to some extent the non-participation in street protests. See Appendix at the end of this paper.] Accordingly, we adopt a micro-level (or bottom-up) approach to assess the level of popular support to the Paul Biya regime, and turn to the public opinion polls. Afrobarometer provides us reliable national surveys that can be used to assess this level of popular support.
 
 
-Afrobarometer is “a pan-African, non-partisan research network that conducts public attitude surveys on democracy, governance, economic conditions, and related issues in more than 35 countries in Africa.” [@afrobarometerAfrobarometer2019] Over the years, Afrobarometer’s surveys became one of the most trusted and reliable sources of information on African people’s opinions and attitudes toward their political and economic conditions, as well as their rulers. Cameroon was included in rounds 5, 6, and 7 of the national surveys conducted by Afrobarometer. Even if the surveys data do not directly address the questions about the durability of the Paul Biya regime, the data from they allow us to understand the Cameroonian people’s opinions and attitudes toward the president and his regime and explain why they are willing to stay under the same regime for so many years.
+Afrobarometer is "a pan-African, non-partisan research network that conducts public attitude surveys on democracy, governance, economic conditions, and related issues in more than 35 countries in Africa.” [@afrobarometerAfrobarometer2019] Over the years, Afrobarometer’s surveys became one of the most trusted and reliable sources of information on African people’s opinions and attitudes toward their political and economic conditions, as well as their rulers. Cameroon was included in rounds 5, 6, and 7 of the national surveys conducted by Afrobarometer. Even if the surveys data do not directly address the questions about the durability of the Paul Biya regime, the data from they allow us to understand the Cameroonian people’s opinions and attitudes toward the president and his regime and explain why they are willing to stay under the same regime for so many years.
 
 
 In this study, we first assess to what extent the Cameroonian people support or reject President Biya to make his regime durable. In this sense, we will use the respondents’ responses to the questions about their trust to the institutions, including the president, as a proxy to their support or lack thereof. We assume that the more a respondent trust the president, the more likely he/she would allow his regime to endure. Next, we will analyze the trends and regional variations of their responses, particularly the difference between the French speaking and English speaking communities. Lastly, using machine learning techniques, we will also identify the factors that may be associated with their trust or not in the institutions. As, we will see these factors include: opinions regarding the performance of the regime, satisfaction with democracy, and satisfaction with freedom. 
@@ -193,90 +238,93 @@ The Cameroon round 7 dataset reveal that the approval ratings of the presidentia
 
 Nevertheless, there was a significant fluctuation of Paul Biya's approval ratings in recent years. In addition, in 2018, his approval ratings were at their lowest levels in the Anglophone areas (North-East and South-East). Indeed, as shown in Table 2 and Fig 2., Paul Biya's approval ratings reached their highest levels in recent years in 2015, when they were at 66.33%, coming from their lowest levels in 2013, when they were at 50.75%. In other words, despite the major decline between 2015 and 2018, his approval ratings in 2018 were still high, compared to those in 2013.^[See Table 2 and Fig. 2] 
 
-With regard to the regional variations of the presidential approval ratings, as shown in Fig. 3, the higher approval ratings (Approval scales 3 and 4) can be found in the South, in Adamawa, in the East, and in the Extreme-North, whereas the lowest can be found in North-West, in the South-West, and in the West.^ [See Fig. 3] In Table 3, to simplify the interpretation of the approval ratings by region, we transformed the six types of approval responses into three categories, combining "strongly disapprove" and "disapprove" as "disapproval", "approve" and "strongly approve" as "approval", and "no answer" and "don't know" as "don't know". Then, by computing the approval and disapproval ratings by region, we found the highest approval ratings were in the South -- the region of origin of President Paul Biya -- (80%) and in Adamawa (78.12%), whereas the highest disapproval ratings were in the South-West (64.04%), the North-West (59.61%), and the West (40.38%).^[See Table 3]
+With regard to the regional variations of the presidential approval ratings, as shown in Fig. 3, the higher approval ratings (Approval scales 3 and 4) can be found in the South, in Adamawa, in the East, and in the Extreme-North, whereas the lowest can be found in North-West, in the South-West, and in the West.^[See Fig. 3] In Table 3, to simplify the interpretation of the approval ratings by region, we transformed the six types of approval responses into three categories, combining "strongly disapprove" and "disapprove" as "disapproval", "approve" and "strongly approve" as "approval", and "no answer" and "don't know" as "don't know". Then, by computing the approval and disapproval ratings by region, we found the highest approval ratings were in the South -- the region of origin of President Paul Biya -- (80%) and in Adamawa (78.12%), whereas the highest disapproval ratings were in the South-West (64.04%), the North-West (59.61%), and the West (40.38%).^[See Table 3]
+
+Finally, concerning the relationship between approval ratings and voting intention, Table  
 
 
-### Identifying the Predictors of the Approval Ratings of Presdient Paul Biya's Job Performance
+### The Predictors of Paul Biya's Approval Ratings
+
+In this section, we use machine learning (or statistical learning) to identify the predictors (or determinants) of Paul Biya's approval ratings. In doing so, we follow the guidelines suggested by different data scientists who specialize in the use r statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn [@kuhnShortIntroductionCaret2015; @kuhnCaretPackage2012; @kuhnBuildingPredictiveModels2008]. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" [-@kaushikPracticalGuideImplement2016] and Brett Lanz's "Machine Learning with R" [-@lantzMachineLearning2015]. After the initial step of installing the Caret package and loading the dataset into r, the implementation of machine learning using the caret package in r generally includes the following:
+
+* defining the problem,
+* preprocessing the data if necessary,
+* spliting the data into train and test sets,
+* feature selection using the "recursive feature elimination"" or "rfe"" function,
+* traning the models on the train set,
+* generating variable importance,
+* making predictions on the test set and assessing the accuracy of the predictions.^[For the sake of reproducibility, we make the complete r script used in this machine learning implementation at the following address: https://github.com/aratsimbaharison/ElusiveQuestForPoliticalStabilitty/blob/master/cameroon/camMachineLearningScriptForApproval2.Rmd]
+
+As noted earlier, to simplify the data analyses and facilitate the interpretation of the findings, we mutate the variable "Q58A", which has six levels into a new variable "approval" which only has three levels, by combining "strongly disapprove" and "disapprove" as "disapproval", "approve" and "strongly approve" as "approval", and "no answer" and "don't know" as "don't know". We are exclusively using the new variable "approval" in the following machine learning implementation.
+
+Thus, the problem in this machine learning is to predict the "approval" of Paul Biya's job performance (i.e, the responses to the mutated variable Q58A of the Cameroon Round 7 survey ("Do you approve or disapprove of the way that the President has performed his jobs over the past 12 months?”). In other words, we are dealing here with a machine learning classification into three categories:
 
 
+* "disapproval" (for those who simply "disapprove" or "strongly dispprove" the way the President has performed his job),
+* "approval" (for those who simply "approve" or "strongly approve" the way the President has performed his job)
+* "don't know" (for those who refuse to answer the question or don’t know whether to approve or not the way the President has performed his job)
 
 
-## Discussion and Conclusion
+Since we are mainly dealing with categorical variables, with the expection of the "age" of the respondents which can be left as it is (as there are no major variation of the ages), we do not need to preprocess the data by centering and scaling the variables, and running a "principal component analysis" (pca). Accordingly, we directly proceed to randomize and split the data following the above definition of problem. In doing so, we Split the dataset into train Set and test Set based on the new variable "approval", which is set as the outcome variable (or dependent variable), with a ratio of 75% and 25%.
 
-The approval rating of President Paul Biya's job performance remained high, at 56% (+/- 3%), on the eve of the 2018 presidential election. This was despite the political crisis in the Anglophone regions (North-West and South-West), which escalated to a low level civil war since 2013, despite the Boko Haram's attacks in the Extreme North region, and the relentless attacks by the opposition. According to the opposition and many observers, Biya and his cronies mostly likely committed massive electoral fraud to win this election. Nevertheless, the fact remained that he was still popular among Cameroonians of the different regions, other than the North-West and South-West. The purpose of this study was to understand this popularity and high approval ratings, which allowed him to stay in power for three decades and more. The implementation of machine learning (or statistical learning) on the Afrobarometer round 7 survey on Cameroon (*cam_round7*), using the Caret package along with the GBM and random forest algorithms, allowed us to identify the following factors as the top predictors (with an importance of 20% and higher) of the approval rating of President Paul Biya in 2018:
+The first machine learning procedure we run is the feature selection which leads to the computation of the number of variables that would be required to obtain the highest accuracy in the predictions and the identification of the top five variables. The output of the feature selection, using the "recursive feature elimination" (*rfe*) function in Caret, is as follows:
 
-- trust in the President (responses to question Q43A of *cam_round7*),
+* 16 variables out of 286 would result in a 73.85% prediction accuracy, and
+* The top five variables (out of 16) are: 
+    + Q58B ("Do you approve or disapprove of the way that *your member of Parliament* has performed *her/his* jobs over the past 12 months?”), 
+    + Q43A ("How much do you trust *the President*, or haven’t you heard enough about *him* to say?"), 
+    + Q58C ("Do you approve or disapprove of the way that *your elected local government councillor* has performed *her/his* jobs over the past 12 months?”), 
+    + REGION (regional location of the respondent), 
+    + Q99 ("If presidential elections were held tomorrow, which party’s candidate would you vote for?  ").^[For more details about the this first procedure, please refer to the complete r script used in this machine learning implementation at the following address: https://github.com/aratsimbaharison/ElusiveQuestForPoliticalStabilitty/blob/master/cameroon/camMachineLearningScriptForApproval2.Rmd]
+
+We train the following two commonly used models for classification on the training set: Gradient Boosting Machines (GBM) and Random Forest (RF). Since the GBM model generates the highest predition accuracy of these two models, we focus on the results from this model in this study. 
+
+Next, the second procedure we use, following the training of the models, is the "variable importance estimation." Limiting the output of this procedure to the top 20 variables, using the GBM model, we obtain the following variable list along with their importance of each variable:^[See Table 3 and Fig. 4, below]
+
+
+These variables correspond to the responses to the following questions:
+
+- Q58B(1 to 9): "Do you approve or disapprove of the way that *your member of Parliament* has performed *her/his* jobs over the past 12 months?”
+- Q43A(1 to 9): "How much do you trust *the President*, or haven’t you heard enough about *him* to say?"
+- Q36(1 to 9): "Overall, how satisfied are you with the way democracy works in Cameroon?"
+- REGION: Regional location of the respondent
+- Q32(1 to 9): "Do you agree with the following statements? Statement 1: Parliament should ensure that the president explains to it on a regular basis how his government spends taxpayers’ money. Statement 2: The president should be able to devote his full attention to developing the country rather than wasting time justifying his actions."
+- Q43G3: "How much do you trust *the police*, or haven’t you heard enough about *him* to say? "
+- Q99(1220 to 9999): "If presidential elections were held tomorrow, which party’s candidate would you vote for?"
+- Q58D(1 to 9): "Do you approve or disapprove of the way that *your traditional leader* has performed *her/his* jobs over the past 12 months?”
+- Q44A(1 to 9): "How [often] do you think [the president was] involved in corruption, or haven’t you heard enough about them to say?"
+- Q44K_CAM(1 to 9): "How [often] do you think [the customs officers were] involved in corruption, or haven’t you heard enough about them to say?"
+- Q26E(1 to 9): "whether you, personally, have [participated in a demonstration or protest march] during the past year"
+- Q24B(0 to 9): "Did you work for a candidate or party [during the last national election in 2013]?"
+- Q1: "How old are you?"
+- Q42E(1 to 9): "In your opinion, how often, in this country, do officials who commit crimes go unpunished?"
+
+Finally, in predicting the outcome variable "approval" on the test set, using the trained GBM model, we obtain an accuracy of 73.91 %.^[See ]
+
+
+In sum, with a relatively high accuracy, we can predict the approval of Paul Biya's job performance, based on the responses of the respondents to questions that have to do mainly with the following factors:
+
+- approval of the job performance of their member of Parliament,
+- trust in the president himself,
+- satisfaction with the way democracy works in Cameroon,
+- regional location.
+
+
+##  Discussion and Conclusion
+
+Estimated at 56% +/- 3%, Paul Biya's approval ratings remained high on the eve of the 2018 presidential election. This was despite the political crisis in the Anglophone regions (North-West and South-West), which escalated to a low level civil war since 2013, despite the Boko Haram's attacks in the Extreme North region, and the relentless attacks by the opposition. According to the opposition and many observers, Biya and his cronies mostly likely committed massive electoral fraud to win this election. Nevertheless, the fact remained that he was still popular among Cameroonians of the different regions, other than the North-West and South-West. The purpose of this study was to understand this popularity and high approval ratings, which allowed him to stay in power for three decades and more. The implementation of machine learning (or statistical learning) on the Afrobarometer round 7 survey on Cameroon (*cam_round7*), using the Caret package along with the GBM and random forest algorithms, allowed us to identify the following factors as the top predictors (with an importance of 20% and higher) of the approval rating of President Paul Biya in 2018:
+
 - approval of the job performances of the members of the Parliament (responses to questions Q58B3 and Q58B9 of *cam_round7*),
-- regional location of the respondent (responses to question REGION of *cam_round7*),
+- trust in the President (responses to question Q43A of *cam_round7*),
+- regional location of the respondent (responses to question REGION of *cam_round7*).
 
 
-It is worth noting that "satisfaction with democracy"" (responses to question Q36 of *cam_round7*) and "fight against corruption"" (responses to question Q44 of *cam_round7*) figure among the top ten predictors, but their importance are less than 20%, compared to the trust in the president which has an importance of 100%.
+It is worth noting that "satisfaction with democracy" (responses to question Q36 of *cam_round7*) and "fight against corruption" (responses to question Q44 of *cam_round7*) figure among the top ten predictors, but their importance are less than 20%, compared to the trust in the president which has an importance of 100%.
 
 In other words, the approval rating of President Paul Biya was not based on his performance in managing the national economy, nor in handling the various political problems of the country (such as the crisis in Anglophone regions and the Boko Haram's attacks in the North), but on whether the respondents trusted him, approved the job of the members of the Parliament, or come from other regions than the North-West and the South-West.
 
 In this sense, we can explained the durability of the Paul Biya regime, not only based on what the regime is doing to repress the opposition, but also based on the personal connection or affinity between the Cameroonians and their President and members of the Parliament. 
 
-
-The correlation between "trust" and "approval":
-
-In order to determine whether "trust" and "approval" are correlated and can be used interchangeable, we compute and plot the correlation between the two variables.
-
-```{r}
-
-# Test of independence between trust and approval using the chi square test
-trustApproval <- table(cameroonRound7$Q43A, cameroonRound7$Q58A)
-chisq.test(trustApproval)
-# this test gives us a p-value < 2.2e-16, which means that the null hypothesis of independence must be rejected and that there is a relationship between the two variables.
-
-```
-
-The correlation between "trust", "approval", and "voting":
-
-In order to determine whether "trust" or "approval" are correlated with "voting intention", we crosstabulate these variable Q99, which is the answer to the question "If presidential elections were held tomorrow, which party’s candidate would you vote for?"
-
-
-```{r}
-
-prop.table(votingIntention)
-
-ggplot(data = cameroonRound7, aes(voteForThePresident)) +
-  geom_bar()
-
-votingIntentionTrust <- table(cameroonRound7$trust, cameroonRound7$voteForThePresident)
-prop.table(votingIntentionTrust)
-
-votingIntentionApproval <- table(cameroonRound7$approval, cameroonRound7$voteForThePresident)
-prop.table(votingIntentionApproval)
-
-```
-
-The predictors of trust in the President are:
-
-gbm variable importance
-
-  only 20 most important variables shown (out of 1741)
-
-           Overall
-Q43B3      100.000
-Q43B2       72.138
-Q43H3       70.212
-Q43B9       39.969
-Q43L_CAM2   20.865
-REGION1231  15.828
-Q43E3       14.454
-Q1          11.612
-Q43E9       11.186
-Q43G2        9.696
-Q2B2         8.560
-Q43H9        7.583
-Q43F1        7.366
-Q361         6.616
-Q61A5        6.552
-Q932         6.391
-Q43I2        6.325
-Q43D2        6.062
-Q58A4        5.990
-Q61C2        5.946
 
 
 
@@ -303,7 +351,7 @@ approvalTable
 ```
 
 
-```{r Figure 1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 1 - Approval Ratings of President Paul Biya's Job Performance at the National Level (2018)"}
+```{r Figure 1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 1 - Approval Ratings of Paul Biya's Job Performance at the National Level (2018)"}
 approval_national <- ggplot(data = cameroonRound7, aes(approvalOfThePresident)) +
 geom_bar(aes(y = (..count..)/sum(..count..))) + 
           scale_y_continuous(labels=scales::percent) +
@@ -338,11 +386,11 @@ Ratings1 <- c("50.75%", "66.33%", "56.06%")
 approvalTrend <- cbind(Years, Ratings1)
 approvalTrend <- as_tibble(approvalTrend)
 names(approvalTrend) <- c("Years", "Approval Ratings")
-kable(approvalTrend, caption = "Table 2 - Approval Ratings Trend of President Paul Biya's Job Performance from 2013 to 2018")
+kable(approvalTrend, caption = "Table 2 - Approval Ratings Trend of Paul Biya's Job Performance from 2013 to 2018")
 
 ```
 
-```{r Fig. 2 - Approval ratings trend, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Fig. 2 - Approval Ratings Trend of President Paul Biya's Job Performance from 2013 to 2018", paged.print=FALSE}
+```{r Fig. 2 - Approval ratings trend, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Fig. 2 - Approval Ratings Trend of Paul Biya's Job Performance from 2013 to 2018", paged.print=FALSE}
 
 Years <- c(2013, 2015, 2018)
 Ratings2 <- c(50.75, 66.33, 56.06)
@@ -351,7 +399,7 @@ approvalTrend2 <- as_tibble(approvalTrend2)
 
 ggplot(approvalTrend2, aes(x = Years, y = Ratings2)) +
   geom_line(linetype="dashed", size=1.5) +
-  geom_point(shape = 24, size = 3) + ylim(0, 100) + ylab("Approval Ratings (%)")
+  geom_point(shape = 17, size = 5) + ylim(0, 100) + ylab("Approval Ratings (%)")
 
 ```
 
@@ -361,15 +409,15 @@ ggplot(approvalTrend2, aes(x = Years, y = Ratings2)) +
 approvalByRegion <- cameroonRound7 %>%
   group_by(regionalLocation, approval) %>%
   summarise (n = n()) %>%
-  mutate(percentage = n / sum(n)*100)
+  mutate(round(percentage = n / sum(n)*100))
 approvalByRegion <- as_tibble(approvalByRegion)
 names(approvalByRegion) <- c("Region", "Transformed Approval Scale", "Count", "Percentage")
-kable(approvalByRegion, caption = "Table 3 - Approval Ratings of President Paul Biya's Job Performance by Region (2018)")
+kable(approvalByRegion, caption = "Table 2 - Approval Ratings of Paul Biya's Job Performance by Region (2018)")
 
 ```
 
 
-```{r Fig 3 Approval Ratings of the President by Regions, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 3 - Approval Ratings of the Presidential Job Performance by Regions (2018)"}
+```{r Fig 3 Approval Ratings of the President by Regions, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 3 - Approval Ratings of Paul Biya's Job Performance by Regions (2018)"}
 # Approval among the different regions
 approval_regionalLocation <- ggplot(data = cameroonRound7, aes(Q58A, group = "regionalLocation")) + 
   geom_bar(aes(y = ..prop..), stat="count") + 
@@ -382,11 +430,86 @@ approval_regionalLocation
 ```
 
 
+```{r Table on variable importance with GBM, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Checking variable importance with GBM
+
+# varImp(object=approvalModel_gbm, caption = "Table 3 - Variable Importance Using GBM")
+
+
+```
+
+
+```{r Figure on variable importance with GBM, echo=FALSE, fig.cap= "Fig. 4 Variable Importance Using GBM", message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Plotting Variable importance for GBM model
+# plot(varImp(object=approvalModel_gbm, caption = "Fig. 4 - Variable Importance Using GBM"), top = 20)
+```
+
+```{r prediction accuracy using GBM, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+#Predictions with gbm
+# approvalPrediction_gbm <-predict.train(object=approvalModel_gbm,approvalTestSet,type="raw")
+# table(approvalPrediction_gbm)
+
+```
+
+
+```{r Table 4 on prediction accuracy using GBM, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# predictionAccuracy <- confusionMatrix(approvalPrediction_gbm,approvalTestSet$approval)
+# print(predictionAccuracy, caption = "Table 4 - Prediction Accuracy Using GBM")
+```
+
+
+## Appendices
+
+
+```{r Table on voting intention for general population, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Voting intention for the general population
+votingIntentionGeneral <- table(cameroonRound7$voteForThePresident)
+votingIntentionGeneral <-prop.table(votingIntentionGeneral)
+votingIntentionGeneral <- as.data.frame(votingIntentionGeneral)
+names(votingIntentionGeneral) <- c("Voting Intention", "Proportion")
+kable(votingIntentionGeneral, caption = "Table A.1 - Voting Intention for the general population")
+
+
+```
+
+
+```{r Table on voting intention among Paul Biya supporters, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Voting intention for those who approve the President
+supporter <-filter(cameroonRound7, cameroonRound7$approval == "Approve")
+votingIntentionSupporter <- table(supporter$voteForThePresident)
+votingIntentionSupporter <- prop.table(votingIntentionSupporter)
+votingIntentionSupporter <- as.data.frame(votingIntentionSupporter)
+names(votingIntentionSupporter) <- c("Voting Intention", "Proportion")
+kable(votingIntentionSupporter, caption = "Table A.2 - Voting Intention Among Paul Biya's Supporters")
+
+```
+
+
+```{r Table on protest for the general population, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Participation in protest for the general population
+protestParticipationGeneral <- table(cameroonRound7$protest)
+protestParticipationGeneral <-prop.table(protestParticipationGeneral)
+protestParticipationGeneral <- as.data.frame(protestParticipationGeneral)
+names(protestParticipationGeneral) <- c("Participation in Street Protests", "Proportion")
+kable(protestParticipationGeneral, caption = "Table B1 - Participation in Street Protests for the General Population")
+
+```
+
+
+```{r Table on protest for Paul Biya supporters, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Participation in protest for those who approve the President
+supporter <-filter(cameroonRound7, cameroonRound7$approval == "Approve")
+protestParticipationSupporter <- table(supporter$protest)
+protestParticipationSupporter <- prop.table(protestParticipationSupporter)
+protestParticipationSupporter <- as.data.frame(protestParticipationSupporter)
+names(protestParticipationSupporter) <- c("Participation in Street Protests", "Proportion")
+kable(protestParticipationSupporter, caption = "Table B.2 - Participation in Street Protests among the Paul Biya Supporters")
+```
+
 ## References
 
----
-nocite: | 
-@levineCameroonFederalRepublic1971, @argentiIntestinesStateYouth2008, @takougangDemocracyDemocratizationCameroon1998, @koningsNegotiatingAnglophoneIdentity2003, @fowlerAfricanCrossroadsIntersections1996, @josephRadicalNationalismCameroun1977, @afrobarometerAfrobarometer2019, @afrobarometerSamplingPrinciplesWeighting2019
-...
-
-@acemogluEconomicOriginsDictatorship2005, @ayukRootsStabilityInstability2018

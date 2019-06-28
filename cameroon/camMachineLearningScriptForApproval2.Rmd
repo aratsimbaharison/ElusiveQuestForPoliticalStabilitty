@@ -1,7 +1,7 @@
 ---
-title: "Cameroon: Machine Learning Script for the Predition of Approval"
+title: "Cameroon: Machine Learning Script for the Predition of the Approval of Paul Biya's Job Performance"
 author: "Adrien Ratsimbaharison"
-date: "June 3, 2019"
+date: "June 23, 2019"
 output:
   word_document: default
   html_document: default
@@ -13,23 +13,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This machine learning script is based on the "Practical guide to implement machine learning with CARET in R" suggested by Saurav Kaushik in the Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/ (December 8, 2016).   
+In this machine learning implementation, we follow the guidelines suggested by different data scientists who specialize in the use r statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" and Brett Lanz's "Machine Learning with R." After the initial step of installing the Caret package and loading the dataset into r, this machine learning implementation includes the following:
 
-The Caret package solves many problems in the implementation of machine learning process, and make it much easier to execute, even for beginners like the autors of this book.
-As Kaushik puts it, "This package [i.e., CARET package] alone is all you need to know for solve almost any supervised machine learning problem. It provides a uniform interface to several machine learning algorithms and standardizes various other tasks such as Data splitting, Pre-processing, Feature selection, Variable importance estimation, etc."
-
-Among the different steps suggested by Saurav Kaushik, we will focus on the following:  
-
-1) Getting started with loading the package and reading the data
-2) Pre-processing the data using Caret
-3) Splitting the data using Caret
-4) Feature selection using Caret
-5) Training models using Caret
-6) Variable importance estimation using Caret
-7) Making predictions using Caret
+* defining the problem,
+* preprocessing the data if necessary,
+* spliting the data into train and test sets,
+* feature selection using the "recursive feature elimination"" or "rfe"" function,
+* traning the models on the train set,
+* generating variable importance,
+* making predictions on the test set and assessing the accuracy of the predictions.
 
 
-## 1. Getting started with loading the package and looking at the data
+## 1. Getting started with loading the package, looking at the data, and defining the problem
 
 Installing and loading the Caret package and its dependencies:
 
@@ -49,13 +44,13 @@ library(gbm)
 
 Reading the data in R and looking at its structure:
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r Loading the data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # Reading the data
 approvalData <- read_sav("cam_r7_data_eng.sav")
 approvalData <- as_tibble(approvalData)
 
 # Looking at its structure
-str(approvalData)
+# str(approvalData)
 
 # Selecting the variables of interest
 
@@ -76,11 +71,12 @@ approvalData <- select(approvalData, - c(Q2AOTHER, Q2BOTHER, Q55PT3OTHER, Q55PT2
 
 Defining the problem:
 
-In this problem we want to predict the classification of Cameroonians into three categories, according to their responses to Question Q58A in Afrobarometer Round 7 survey ("Do you approve or disapprove of the way that the President has performed his jobs over the past 12 months?"):
+The problem in this machine learning is to predict the "approval" of Paul Biya's job performance (i.e, the responses to the mutated variable Q58A of the Cameroon Round 7 survey ("Do you approve or disapprove of the way that the President has performed his jobs over the past 12 months?”). In other words, we are dealing here with a machine learning classification into three categories:
 
-- "Disapprove the way the President has performed his job"
-- "Approve the way the President has performed his job"
-- "Don't know whether to approve or not the way the President has performed his job"
+
+* "disapproval" (for those who simply "disapprove" or "strongly dispprove" the way the President has performed his job),
+* "approval" (for those who simply "approve" or "strongly approve" the way the President has performed his job)
+* "don't know" (for those who refuse to answer the question or don’t know whether to approve or not the way the President has performed his job)
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -102,7 +98,8 @@ approvalData_transformed <- approvalData
 
 In this step, we only check for the missing values, and skipped the other pre-processing procedures, such as centering, scaling, principal component analysis, and creation of "one hot encoding". 
 
-```{r}
+```{r cheking NA, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
 sum(is.na(approvalData_transformed))
 
 ```
@@ -115,13 +112,14 @@ Since there is no missing value to remove, we can move to the next step, which i
 
 Since the dataset was initially arranged in a country-year format, it is a good idea to randomize the rows before splitting the dataset into trainSet and testSet. 
 
-```{r}
+```{r randomization and splitting of the data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # Randomizing the dataset
-set.seed(333)
+set.seed(123)
 rows <- sample(nrow(approvalData_transformed))
 approvalData_transformed <- approvalData_transformed[rows,]
 
 #Spliting dataset into trainSet and testSet based on outcome with a ratio of 75% and 25%, using createDataPartition in Caret
+set.seed(234)
 index <- createDataPartition(approvalData_transformed$approval, p=0.75, list=FALSE)
 approvalTrainSet <- approvalData_transformed[index,]
 approvalTestSet <- approvalData_transformed[-index,]
@@ -135,9 +133,9 @@ str(approvalTrainSet)
 
 ## 4. Feature selection using Caret
 
-The feature selection, which is a crucial part of machine learning, is made easy by Caret. The "recursive feature elimination" or "rfe" function in Caret is used to find the best subset of features to be included in the models.
+The feature selection, which is suggested by most data scientists, is made easy by Caret. The "recursive feature elimination" or "rfe" function in Caret is used to find the best subset of features to be included in the models.
 
-```{r}
+```{r Feature selection using rfe, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 # Feature selection using rfe in caret
 ctrl <- rfeControl(functions = rfFuncs,
                    method = "repeatedcv",
@@ -153,23 +151,14 @@ approvalProfile <- rfe(x, y,
 approvalProfile
 
 ```
-Results:
-
-Recursive feature selection
-
-Outer resampling method: Cross-Validated (10 fold, repeated 3 times) 
-
-Resampling performance over subset size:
 
 
-The top 5 variables (out of 16):
-   Q58B, Q43A, Q58C, REGION, Q99
 
 ## 5. Training models using Caret
 
-Caret provides a large number of algorithms with similar syntax. Following Kaushik's practical guide, we will apply the following: GBM and Random forest.
+Caret provides a large number of algorithms with similar syntax. After trying different models, we decide to use Gradient Boosting Machines (GBM) and Random Forest (RF). Nevertheless, since the GBM model generates the highest prediction accuracy of these two models, we focus on the results from this model in this study.
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Trianing the models, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 fitControl <- trainControl(method = "repeatedcv",
                            number = 5,
                            repeats = 3)
@@ -192,22 +181,22 @@ approvalModel_rf <- train(approval ~ ., data = approvalTrainSet,
 
 We can also check the variable importance estimates in Caret by using the "varImp" function" for any model.
 
-### 6.1 Variable importance for GBM
+### 6.1 Variable importance with GBM
 
-```{r}
-# Checking variable importance for GBM
+```{r Variable importance with GBM, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Checking variable importance with GBM
 # Variable Importance
 varImp(object=approvalModel_gbm)
 
 
-#Plotting Varianle importance for GBM
-plot(varImp(object=approvalModel_gbm),main="GBM - Variable Importance", top = 20)
+#Plotting Variable importance for GBM model
+plot(varImp(object=approvalModel_gbm),main="Variable Importance Using GBM", top = 20)
 
 ```
 
-### 6.2 Variable importance for RF
+### 6.2 Variable importance with RF
 
-```{r}
+```{r Variable importance with RF, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 #Checking variable importance for RF
 varImp(object=approvalModel_rf)
 #rf variable importance
@@ -243,5 +232,21 @@ confusionMatrix(approvalPrediction_rf,approvalTestSet$approval)
 ```
 
 
-> 
 ## Conclusion
+
+The predictors identified in this machine learning are the following variables:
+
+- Q43A(1 to 9): "How much do you trust *the President*, or haven’t you heard enough about *him* to say?"
+- Q58B(1 to 9): "Do you approve or disapprove of the way that *your member of Parliament* has performed *her/his* jobs over the past 12 months?”
+- REGION: Regional location of the respondent
+- Q36(1 to 9): "Overall, how satisfied are you with the way democracy works in Cameroon?"
+- Q32(1 to 9): "Do you agree with the following statements? Statement 1: Parliament should ensure that the president explains to it on a regular basis how his government spends taxpayers’ money. Statement 2: The president should be able to devote his full attention to developing the country rather than wasting time justifying his actions."
+- Q43G3: "How much do you trust *the police*, or haven’t you heard enough about *him* to say? "
+- Q99(1220 to 9999): "If presidential elections were held tomorrow, which party’s candidate would you vote for?"
+- Q58D(1 to 9): "Do you approve or disapprove of the way that *your traditional leader* has performed *her/his* jobs over the past 12 months?”
+- Q44A(1 to 9): "How [often] do you think [the president was] involved in corruption, or haven’t you heard enough about them to say?"
+- Q44K_CAM(1 to 9): "How [often] do you think [the customs officers were] involved in corruption, or haven’t you heard enough about them to say?"
+- Q26E(1 to 9): "whether you, personally, have [participated in a demonstration or protest march] during the past year"
+- Q24B(0 to 9): "Did you work for a candidate or party [during the last national election in 2013]?"
+- Q1: "How old are you?"
+- Q42E(1 to 9): "In your opinion, how often, in this country, do officials who commit crimes go unpunished?"

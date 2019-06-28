@@ -1,7 +1,7 @@
 ---
-title: "Cameroon: Machine Learning Script for the Predition of Trust "
+title: "Cameroon: Machine Learning Script for the Predition of Trust in Paul Biya"
 author: "Adrien Ratsimbaharison"
-date: "May 26, 2019"
+date: "June 23, 2019"
 output:
   word_document: default
   html_document: default
@@ -13,20 +13,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This machine learning script is based on the "Practical guide to implement machine learning with CARET in R" suggested by Saurav Kaushik in the Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/ (December 8, 2016).   
+In this machine learning implementation, we follow the guidelines suggested by different data scientists who specialize in the use r statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" and Brett Lanz's "Machine Learning with R." After the initial step of installing the Caret package and loading the dataset into r, this machine learning implementation includes the following:
 
-The Caret package solves many problems in the implementation of machine learning process, and make it much easier to execute, even for beginners like the autors of this book.
-As Kaushik puts it, "This package [i.e., CARET package] alone is all you need to know for solve almost any supervised machine learning problem. It provides a uniform interface to several machine learning algorithms and standardizes various other tasks such as Data splitting, Pre-processing, Feature selection, Variable importance estimation, etc."
-
-Among the different steps suggested by Saurav Kaushik, we will focus on the following:  
-
-1) Getting started with loading the package and reading the data
-2) Pre-processing the data using Caret
-3) Splitting the data using Caret
-4) Feature selection using Caret
-5) Training models using Caret
-6) Variable importance estimation using Caret
-7) Making predictions using Caret
+* defining the problem,
+* preprocessing the data if necessary,
+* spliting the data into train and test sets,
+* feature selection using the "recursive feature elimination"" or "rfe"" function,
+* traning the models on the train set,
+* generating variable importance,
+* making predictions on the test set and assessing the accuracy of the predictions.
 
 
 ## 1. Getting started with loading the package and looking at the data
