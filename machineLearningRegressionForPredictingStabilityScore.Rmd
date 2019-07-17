@@ -1,0 +1,263 @@
+---
+title: "Machine Learning Script for the Prediction of Stability Score of a country"
+author: "Adrien Ratsimbaharison"
+date: "July 16, 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+In this machine learning implementation, we follow the guidelines suggested by different data scientists who specialize in the use r statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" and Brett Lanz's "Machine Learning with R." After the initial step of installing the Caret package and loading the dataset into r, this machine learning implementation includes the following:
+
+- defining the problem,
+- preprocessing the data,
+- spliting the data into training and test sets,
+- feature selection using the "recursive feature elimination"" or "rfe"" function,
+- traning models on the training set,
+- generating variable importance,
+- making predictions on the test set and assessing the accuracy of the predictions.
+
+
+## 1. Getting started with loading the package, looking at the data, and defining the problem
+
+Installing and loading the Caret package and its dependencies:
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+# loading the caret package and other required packages:
+library(caret)
+library(dplyr)
+library(magrittr)
+library(readxl)
+library(knitr)
+library('RANN')
+
+```
+
+Reading the data in R and looking at its structure:
+
+```{r Loading the data, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Reading the data
+
+stabilityFullDataset <- read.csv("WGI2popDevIneqPovRegimeConflict2.csv", header = TRUE)
+
+stabilityFullDataset <- as.data.frame(stabilityFullDataset)
+
+# Selecting the variables of interest
+
+stabilityFullDataset <- select(stabilityFullDataset, date, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+
+# Correcting the types of some variables
+stabilityFullDataset$date <- as.numeric(stabilityFullDataset$date)
+stabilityFullDataset$population <- as.numeric(stabilityFullDataset$population)
+stabilityFullDataset$date <- as.numeric(stabilityFullDataset$date)
+stabilityFullDataset$inverse_pr <- as.numeric(stabilityFullDataset$inverse_pr)
+stabilityFullDataset$inverse_cl <- as.numeric(stabilityFullDataset$inverse_cl)
+stabilityFullDataset$inverse_mean <- as.numeric(stabilityFullDataset$inverse_mean)
+stabilityFullDataset$conflictHistory <- as.factor(stabilityFullDataset$conflictHistory)
+
+# Looking at its structure of the full dataset
+str(stabilityFullDataset)
+
+```
+
+
+Defining the problem:
+
+The problem in this machine learning is to predict the stability score of a country. In other words, we are dealing here with a machine learning regression on the variable "stability".
+
+Feature engineering:
+
+```{r summary stats on vote number, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# summary statistics of the stability scores
+summary(stabilityFullDataset$stability)
+
+```
+
+```{r boxplot of the votes, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityFullDataset, aes(y= stability)) +
+  geom_boxplot()
+
+```
+
+
+```{r histogram of vote number, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityFullDataset, aes(x= stability)) +
+  geom_histogram() + 
+  geom_vline(xintercept = mean(stabilityFullDataset$stability), linetype="dotted",                 color = "blue", size=1.5) +
+  annotate(geom="text", x=-0.5, y=400, label="Mean = 0.02312",
+              color="blue")
+
+```
+
+As shown in these figures, the stability score around the world during the period of 1996-2017 was slightly positive and skewed to the left. This outcome variable needs to be centered and scaled to get meaningful statistical results.
+
+
+## 2. Pre-processing the data using Caret
+
+In this pre-processing step, we first check for the missing values and remove them. 
+
+```{r cheking NA, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Checking for missing values
+sum(is.na(stabilityFullDataset))
+
+# Removing NAs
+stabilityFullDataset <- na.omit(stabilityFullDataset)
+sum(is.na(stabilityFullDataset))
+```
+
+
+Next, we are centering and scaling the numerical values:
+
+```{r centering and scaling numerical variables, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# centering and scaling the numerical variable educationLevel
+preProcValues <- preProcess(stabilityFullDataset, method = c("center","scale"))
+
+stabilityFullDataset_processed <- predict(preProcValues, stabilityFullDataset)
+sum(is.na(stabilityFullDataset_processed))
+
+```
+
+
+Then, we create "one hot encoding" for the factor variables:
+
+```{r creating one hot encoding, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+#Converting every categorical variable to numerical using dummy variables
+dmy <- dummyVars(" ~ .", data = stabilityFullDataset_processed,fullRank = T)
+stabilityFullDataset_processed <- data.frame(predict(dmy, newdata = stabilityFullDataset_processed))
+
+#Checking the structure of transformed train file
+str(stabilityFullDataset_processed)
+
+```
+
+
+## 3. Splitting the data using Caret
+
+
+In this step, we splitt the dataset into trainSet and testSet based on outcome with a ratio of 65% and 35%, using createDataPartition in Caret.
+
+```{r splitting of the data, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Spliting dataset into trainSet and testSet
+set.seed(1234)
+index <- createDataPartition(stabilityFullDataset_processed$stability, p=0.75, list=FALSE)
+stabilityTrainSet <- stabilityFullDataset_processed[index,]
+stabilityTestSet <- stabilityFullDataset_processed[-index,]
+
+#Checking the structure of approvalTrainSet
+str(stabilityTrainSet)
+
+```
+
+
+
+## 4. Feature selection using Caret
+
+In this step, we use the "recursive feature elimination" or "rfe" function in Caret to identify the best subset of features to be included in the models.
+
+```{r Feature selection using rfe, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Feature selection using rfe in caret
+ctrl <- rfeControl(functions = rfFuncs,
+                   method = "repeatedcv",
+                   repeats = 3,
+                   verbose = FALSE)
+
+y <- stabilityTrainSet$stability
+x <- select(stabilityTrainSet, - stability)
+
+stabilityProfile <- rfe(x, y,
+                rfeControl = ctrl)
+
+stabilityProfile
+
+```
+
+
+## 5. Training models on training set using Caret
+
+In this step, we train the generalized linear model (glm) on the train set:
+
+```{r Training the models, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+stabilityModel_glm <- train(stability ~ ., data = stabilityTrainSet, 
+                 method = "glm")
+
+
+```
+
+
+## 6. Variable importance estimation on training set using Caret 
+
+In this step, we check the variable importance estimates in Caret by using the "varImp" function" for the glm model.
+
+
+```{r Variable importance with glm using caret, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Checking variable importance with glm
+# Variable Importance
+varImp(object=stabilityModel_glm)
+
+
+#Plotting Variable importance for GBM model
+plot(varImp(object=stabilityModel_glm),main="Variable Importance Using GBM", top = 20)
+
+```
+
+
+## 7. Making predictions on test set using Caret
+
+```{r prediction on test set with glm, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+#Predictions with glm
+stabilityPrediction_glm <- predict.train(object=stabilityModel_glm,stabilityTestSet,type="raw")
+
+summary(stabilityPrediction_glm)
+
+stabilityModel_glm
+
+# Assessing the accuracy of the prediction
+
+postResample(pred = stabilityPrediction_glm, obs = stabilityTestSet$stability)
+
+```
+
+
+
+## Conclusion
+
+The top 5 variables (out of 45):
+   population, ruleOfLaw, conflictHistory.1, HDI, GNIperCapita
+
+2) Prediction of stability of the test set
+
+glm variable importance
+
+  only 20 most important variables shown (out of 41)
+
+                             Overall
+ruleOfLaw                     100.00
+conflictHistory.1              69.71
+region.Asia                    57.90
+subregion.South.Eastern.Asia   53.23
+subregion.Northern.Africa      46.84
+subregion.Central.Asia         45.97
+population                     42.63
+subregion.Eastern.Asia         41.16
+regulatoryQuality              37.49
+subregion.Melanesia            26.25
+region.Europe                  25.49
+subregion.Micronesia           23.59
+subregion.Eastern.Europe       23.29
+governmentEffectiveness        23.09
+subregion.Central.America      21.35
+region.Oceania                 20.21
+GDPannualGrowthRate            19.33
+subregion.Eastern.Africa       18.03
+politicalChangeFH.no.change    17.90
+date                           17.08
+

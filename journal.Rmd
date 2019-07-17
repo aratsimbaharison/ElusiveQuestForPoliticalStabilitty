@@ -298,6 +298,93 @@ I start to apply Kaushik's "practical guide to implement machine learning with c
 
 5/26/2019
 
-I finished the script for machine learning implementation based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).
+I completed and run a script for machine learning classification based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).   
 
+The results are as follows:   
 
+* Feature selection using the rfe procedure
+The top 5 variables (out of 16):
+   population, ruleOfLaw, corruptionControl, conflictHistory, GNIperCapita
+   
+* Random forest allows to predict stability and instability with an accuracy of 92.8% (nearly 93%).
+Result:
+ Accuracy : 0.9283        
+                 95% CI : (0.91, 0.9439)
+    No Information Rate : 0.5437        
+    P-Value [Acc > NIR] : <2e-16        
+                                        
+                  Kappa : 0.8559        
+                                        
+ Mcnemar's Test P-Value : 0.1822        
+                                        
+            Sensitivity : 0.9353        
+            Specificity : 0.9225
+
+June 1 to July 15, 2019:
+
+I took a break from this project to work on the following project:   
+
+- "Understanding the Durability of the Paul Biya Regime in Cameroon" - with Benn Bongang
+- "The Lessons Learned from the 2018 Presidential Election in Madagascar" - with Richard Marcus
+
+In the meantime, I got the following ideas that need to be tested abd incorportated in this project:   
+
+1) There is a need to demonstrate that "stability" does not mean "durability": As shown in the Cameroon case, the Paul Biya regime is the most durable regime in Africa and in the world, yet at the same time it is also one of the most unstable regimes.
+To test this idea, we just need to calculate the correlation between the two variables and plot one against the other.
+
+2) It is possible also that "stability/instability" and "state fragility" are not measuring the same thing and they are not correlated.
+To test this idea, we need to do the following:
+- download the two different dataset on "state fragility index": one from the Centre for Systemic Peace (SFI1) and the other from Fund for Peace (SFI2)
+- correlate and plot stability score with SFI1 and SFI2 and we will see if they are correlated and measure the same thing    
+
+3) There may be also a need to include the data on religion in the main data set, but we just need to correlate stability with religion variables to see if there are some correlation
+
+7/16/2019
+
+I completed and run a script for machine learning regression based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).   
+
+The results are as follows:   
+
+1) Recursive feature selection
+
+Outer resampling method: Cross-Validated (10 fold, repeated 3 times) 
+
+Resampling performance over subset size:
+
+ Variables   RMSE Rsquared    MAE  RMSESD RsquaredSD    MAESD Selected
+         4 0.4531   0.8139 0.3412 0.06053   0.041049 0.051084         
+         8 0.3191   0.9037 0.2340 0.01412   0.007979 0.010611         
+        16 0.2868   0.9221 0.2089 0.01419   0.007266 0.009291         
+        45 0.2834   0.9239 0.2066 0.01480   0.007524 0.009649        *
+
+The top 5 variables (out of 45):
+   population, ruleOfLaw, conflictHistory.1, HDI, GNIperCapita
+
+2) Prediction of stability of the test set
+
+glm variable importance
+
+  only 20 most important variables shown (out of 41)
+
+                             Overall
+ruleOfLaw                     100.00
+conflictHistory.1              69.71
+region.Asia                    57.90
+subregion.South.Eastern.Asia   53.23
+subregion.Northern.Africa      46.84
+subregion.Central.Asia         45.97
+population                     42.63
+subregion.Eastern.Asia         41.16
+regulatoryQuality              37.49
+subregion.Melanesia            26.25
+region.Europe                  25.49
+subregion.Micronesia           23.59
+subregion.Eastern.Europe       23.29
+governmentEffectiveness        23.09
+subregion.Central.America      21.35
+region.Oceania                 20.21
+GDPannualGrowthRate            19.33
+subregion.Eastern.Africa       18.03
+politicalChangeFH.no.change    17.90
+date                           17.08
+> 

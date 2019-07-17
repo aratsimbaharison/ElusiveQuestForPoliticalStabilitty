@@ -1,0 +1,58 @@
+---
+title: "Script for Comparing Stability Score with Regime Durability and State Fragility"
+author: "Adrien Ratsimbaharison"
+date: "July 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Purpose and objectives
+
+The purpose of this script is to compile and compare the other measures state or regime characteristics to see if they are correlated and can be used interchangeably.   
+
+## Loading the packages and data
+
+```{r Required R Packages, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readxl)
+
+
+```
+
+The data on stability score and durability from the full dataset:
+
+```{r data on stability and durability, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Loading the data on stability and durability from the full dataset (WGI2popDevIneqPovRegimeConflict1.csv) available in the local repository which include the Polity IV data with regime durability
+
+stabilityDurabilityDataset <- read.csv("WGI2popDevIneqPovRegimeConflict1.csv", header = TRUE)
+stabilityDurabilityDataset <- as.data.frame(stabilityDurabilityDataset)
+
+# Selecting the variables of interest
+stabilityDurabilityDataset <- select(stabilityDurabilityDataset, country, M49Code, iso2c, iso3c, date, stability, durability = durable)
+str(stabilityDurabilityDataset)
+
+# Downloading the data on state fragility index (SFIv2017) for the Center of Systemic Peace
+# url <- "http://www.systemicpeace.org/inscr/SFIv2017.xls"
+# destfile <- "SFIv2017.xls"
+# curl::curl_download(url, destfile)
+# SFIv2017 <- read_excel(destfile)
+#
+# Making SFIv2017 available in the local repository
+# SFIv2017 <- write.csv(SFIv2017, "SFIv2017.csv")
+
+# Loading the data on state fragility index (SFIv2017)
+SFIv2017 <- read.csv("SFIv2017.csv", header = TRUE)
+SFIv2017 <- as.data.frame(SFIv2017)
+
+# Selecting the variables of interest from SFIv2017
+SFIv2017 <- select(SFIv2017, country, scode, date = year, fragility = sfi)
+str(SFIv2017)
+
+
+```
+
+## Results
