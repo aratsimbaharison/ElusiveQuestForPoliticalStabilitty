@@ -2,13 +2,15 @@
 title: "Script for Comparing Stability Score with Regime Durability and State Fragility"
 author: "Adrien Ratsimbaharison"
 date: "July 17, 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## Purpose and objectives
+## Purpose
 
 The purpose of this script is to compile and compare the other measures state or regime characteristics to see if they are correlated and can be used interchangeably.   
 
@@ -18,6 +20,10 @@ The purpose of this script is to compile and compare the other measures state or
 library(dplyr)
 library(ggplot2)
 library(readxl)
+library(lubridate)
+library(psych)
+library(Hmisc)
+library(PerformanceAnalytics)
 
 
 ```
@@ -32,7 +38,15 @@ stabilityDurabilityDataset <- read.csv("WGI2popDevIneqPovRegimeConflict1.csv", h
 stabilityDurabilityDataset <- as.data.frame(stabilityDurabilityDataset)
 
 # Selecting the variables of interest
-stabilityDurabilityDataset <- select(stabilityDurabilityDataset, country, M49Code, iso2c, iso3c, date, stability, durability = durable)
+stabilityDurabilityDataset <- select(stabilityDurabilityDataset, country, date, stability, durability = durable)
+
+# Correcting the variable types
+stabilityDurabilityDataset$country <- as.character(stabilityDurabilityDataset$country)
+stabilityDurabilityDataset$date <- as.numeric(stabilityDurabilityDataset$date)
+stabilityDurabilityDataset$durability <- as.numeric(stabilityDurabilityDataset$durability)
+
+# Filtering the data for the period 2010 to 2017
+stabilityDurabilityDataset <- filter(stabilityDurabilityDataset, date > 2009)
 str(stabilityDurabilityDataset)
 
 # Downloading the data on state fragility index (SFIv2017) for the Center of Systemic Peace
@@ -47,12 +61,175 @@ str(stabilityDurabilityDataset)
 # Loading the data on state fragility index (SFIv2017)
 SFIv2017 <- read.csv("SFIv2017.csv", header = TRUE)
 SFIv2017 <- as.data.frame(SFIv2017)
+# Selecting the variables of interest from SFIv2017
+SFIv2017 <- select(SFIv2017, country, date = year, SFI = sfi)
+# Filtering the data for the period 2010-2017
+SFIv2017 <- filter(SFIv2017, date > 2009)
+
+# Correcting the variable types
+SFIv2017$country <- as.character(SFIv2017$country)
+SFIv2017$date <- as.numeric(SFIv2017$date)
+SFIv2017$SFI <- as.numeric(SFIv2017$SFI)
+
+# Correcting country names
+# The following country names have been changed:
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Cote d'Ivoire", "Côte d'Ivoire")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Gambia", "Gambia, The")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Cape Verde", "Cabo Verde")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Congo-Brazzaville", "Congo, Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Dem. Rep. of Congo", "Congo, Dem. Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Timor Leste", "Timor-Leste")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Egypt", "Egypt, Arab Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Syria", "Syrian Arab Republic")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Iran", "Iran, Islamic Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Kyrgyzstan", "Kyrgyz Republic")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Korea, North", "Korea, Dem. People's Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Russia", "Russian Federation")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Taiwan", "Taiwan, China")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Korea South", "Korea, Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Laos", "Lao PDR")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Yemen", "Yemen, Rep.")
+SFIv2017$country <- replace(SFIv2017$country, SFIv2017$country == "Venezuela", "Venezuela, RB")
+
+# The following country names have been deleted:
+SFIv2017 <- SFIv2017[! SFIv2017$country == "Serbia & Montenegro",]
+SFIv2017 <- SFIv2017[! SFIv2017$country == "Sudan (North)",]
+
+# # Downloading the data on fragile state index (fsi-year) from Fund for Peace at: https://fragilestatesindex.org/excel/ for the period 2010-2017
+# 
+# # For 2017
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2017.xlsx"
+# destfile <- "fsi_2017.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2017 <- read_excel(destfile)
+# str(fsi_2017)
+# 
+# # For 2016
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2016.xlsx"
+# destfile <- "fsi_2016.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2016 <- read_excel(destfile)
+# str(fsi_2016)
+# 
+# # For 2015
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2015.xlsx"
+# destfile <- "fsi_2015.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2015 <- read_excel(destfile)
+# str(fsi_2015)
+# 
+# # For 2014
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2014.xlsx"
+# destfile <- "fsi_2014.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2014 <- read_excel(destfile)
+# str(fsi_2014)
+# 
+# # For 2013
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2013.xlsx"
+# destfile <- "fsi_2013.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2013 <- read_excel(destfile)
+# str(fsi_2013)
+# 
+# # For 2012
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2012.xlsx"
+# destfile <- "fsi_2012.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2012 <- read_excel(destfile)
+# str(fsi_2012)
+# 
+# # For 2011
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2011.xlsx"
+# destfile <- "fsi_2011.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2011 <- read_excel(destfile)
+# str(fsi_2011)
+# 
+# # For 2010
+# url <- "https://fragilestatesindex.org/wp-content/uploads/data/fsi-2010.xlsx"
+# destfile <- "fsi_2010.xlsx"
+# curl::curl_download(url, destfile)
+# fsi_2010 <- read_excel(destfile)
+# str(fsi_2010)
+# 
+# # Merging the data on fragile state index (fsi2010_2017) from Fund for Peace
+# fsi2010_2017 <- rbind(fsi_2017, fsi_2016, fsi_2015, fsi_2014, fsi_2013, fsi_2012, fsi_2011, fsi_2010)
+# str(fsi2010_2017)
+# 
+# # Making fsi2010_2017 available in the local repository
+# fsi2010_2017 <- write.csv(fsi2010_2017, "fsi2010_2017.csv")
+# 
+
+# Loading the data on fragile state index (fsi2010_2017) from 
+fsi2010_2017 <- read.csv("fsi2010_2017.csv", header = TRUE)
+fsi2010_2017 <- as.data.frame(fsi2010_2017)
 
 # Selecting the variables of interest from SFIv2017
-SFIv2017 <- select(SFIv2017, country, scode, date = year, fragility = sfi)
-str(SFIv2017)
+fsi2010_2017 <- select(fsi2010_2017, country = Country, date = Year, fsi = Total)
+# Correcting the variable types
+fsi2010_2017$country <- as.character(fsi2010_2017$country)
+fsi2010_2017$fsi <- as.numeric(fsi2010_2017$fsi)
 
+# Changing the date format
+fsi2010_2017$date <- as.Date(fsi2010_2017$date)
+fsi2010_2017$date <- format(fsi2010_2017$date,"%Y")
+fsi2010_2017$date <- as.numeric(fsi2010_2017$date)
+str(fsi2010_2017)
+
+# Correcting country names
+# The following country names have been changed:
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Yemen", "Yemen, Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Cote d'Ivoire", "Côte d'Ivoire")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Gambia", "Gambia, The")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Cape Verde", "Cabo Verde")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Congo Republic", "Congo, Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Congo Democratic Republic", "Congo, Dem. Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Egypt", "Egypt, Arab Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "North Korea", "Korea, Dem. People's Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Iran", "Iran, Islamic Rep.")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Russia", "Russian Federation")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Venezuela", "Venezuela, RB")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Laos", "Lao PDR")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Syria", "Syrian Arab Republic")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Bahamas", "Bahamas, The")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Macedonia", "Macedonia, FYR")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "Sao Tome and Principe", "São Tomé and Principe")
+fsi2010_2017$country <- replace(fsi2010_2017$country, fsi2010_2017$country == "South Korea", "Korea, Rep.")
+
+# Merging the data on stability and durability with SFI and fsi
+stabilityDurabilitySFIfsi <- left_join(stabilityDurabilityDataset, SFIv2017, by = c("country", "date")) %>%
+  left_join(., fsi2010_2017, by = c("country", "date"))
+
+# Droping NAs
+stabilityDurabilitySFIfsi <- na.omit(stabilityDurabilitySFIfsi)
+str(stabilityDurabilitySFIfsi)
+summary(stabilityDurabilitySFIfsi)
 
 ```
 
-## Results
+## Correlation matrix among the variables
+
+First, we need to generate a correlation matrix with significance:
+
+```{r correlation matrix, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# selecting the variables to be included in the matrix
+stabilityDurabilitySFIfsiScores <- select(stabilityDurabilitySFIfsi, stability, durability, SFI, fsi)
+correlationScores <- rcorr(as.matrix(stabilityDurabilitySFIfsiScores))
+correlationScores
+
+```
+
+
+The tables below calculate and plot the correlations among stability, durability, Center of Systemic Peace's SFI and Fund for Peace's fsi:
+
+```{r correlation plots, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Plot with PerformanceAnalytics
+chart.Correlation(stabilityDurabilitySFIfsiScores, histogram=TRUE, pch=19)
+
+# Plot with Hmisc
+pairs.panels(stabilityDurabilitySFIfsiScores, scale=TRUE)
+
+```
+
