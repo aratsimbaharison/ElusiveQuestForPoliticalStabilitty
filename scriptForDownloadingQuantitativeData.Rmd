@@ -771,6 +771,9 @@ WGI2popDevIneqPovRegimeConflict <- select(WGI2popDevIneqPovRegimeConflict, count
 WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Micronesia, Fed. Sts.",]
 WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Virgin Islands (U.S.)",]
 WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Netherlands Antilles (former)",]
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "French Guiana",]
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Puerto Rico",]
+WGI2popDevIneqPovRegimeConflict <- WGI2popDevIneqPovRegimeConflict[! WGI2popDevIneqPovRegimeConflict$country == "Réunion",]
 
 summary(WGI2popDevIneqPovRegimeConflict)
 

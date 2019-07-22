@@ -228,8 +228,41 @@ The tables below calculate and plot the correlations among stability, durability
 # Plot with PerformanceAnalytics
 chart.Correlation(stabilityDurabilitySFIfsiScores, histogram=TRUE, pch=19)
 
-# Plot with Hmisc
-pairs.panels(stabilityDurabilitySFIfsiScores, scale=TRUE)
+```
 
+Scaterplot of stability against durability:
+
+```{r Fig. stability against durability, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityDurabilitySFIfsi, aes(x = durability, y = stability)) +
+  geom_point() + geom_hline(yintercept=0, color = "red", size=1.5) +
+  geom_smooth() + geom_vline(xintercept = 95, linetype="dotted", color = "blue", size=1)
+
+```
+
+Scaterplot of stability against SFI:
+
+```{r Fig. stability against SFI, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityDurabilitySFIfsi, aes(x = SFI, y = stability)) +
+  geom_point() + geom_hline(yintercept=0, color = "red", size=1.5) +
+  geom_smooth() + geom_vline(xintercept = 16.5, linetype="dotted", color = "blue", size=1)
+
+```
+
+
+Scaterplot of stability against fsi:
+
+```{r Fig. stability against fsi, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityDurabilitySFIfsi, aes(x = fsi, y = stability)) +
+  geom_point() + geom_hline(yintercept=0, color = "red", size=1) +
+  geom_smooth() + geom_vline(xintercept = 34, linetype="dotted", color = "blue", size=1.5) +
+  geom_vline(xintercept = 94, linetype="dotted", color = "red", size=1.5)
+
+```
+
+Scaterplot of SFI against fsi:
+
+```{r Fig. SFI against fsi, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityDurabilitySFIfsi, aes(x = SFI, y = fsi)) +
+  geom_point() + geom_smooth()
 ```
 

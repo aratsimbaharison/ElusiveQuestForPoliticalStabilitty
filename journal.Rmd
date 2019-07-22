@@ -387,4 +387,12 @@ GDPannualGrowthRate            19.33
 subregion.Eastern.Africa       18.03
 politicalChangeFH.no.change    17.90
 date                           17.08
-> 
+
+
+- 7/18/2019
+
+I completed a script for comparing stability scores with durability, SFI, and fsi. I appears that there are significant correlation between these variables, even though the correlation between stability and durability was moderate (0.51).
+
+- 7/21/2019
+
+I started editing the draft of Chapter 1, and stopped at Line 21.
