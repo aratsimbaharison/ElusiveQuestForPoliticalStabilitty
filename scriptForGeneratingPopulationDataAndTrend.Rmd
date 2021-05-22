@@ -1,0 +1,60 @@
+---
+title: "Burundi"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Population Data
+
+The data set shows the political stability estimate of the country each year.
+
+
+```{r politicalStabilityEstimateByCountry, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+populationData <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+populationVariables <- c("country", "iso3c", "date","population","populationCategory5")
+populationData <- populationData[populationVariables]
+
+
+# data by country
+# country = x
+x <- populationData[populationData$country == "Burundi",]
+x
+
+```
+
+## Population trend
+
+The plot shows the trends of stabilization and destabilization for the each country. 
+
+```{r Political Stability Plot, echo=FALSE, fig.cap="Political Stability Trend", message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+populationTrend <- ggplot(data=x, aes(x=date, y=population)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=0.0, color = "red", size = 1.25) +
+   geom_hline(yintercept=1.0, linetype="dashed", color = "red", size = 1) +
+   geom_hline(yintercept=-1.0, linetype="dashed", color = "red", size = 1) +
+  ylim(0, 100000000) + 
+  xlab("Year") +
+  ylab("Population Trend")
+
+plot(populationTrend)
+
+# To save the figure:
+# png("populationTrend.png")
+# 
+# plot(populationTrend)
+# 
+# dev.off()
+
+```
+

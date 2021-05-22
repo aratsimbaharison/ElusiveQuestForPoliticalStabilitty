@@ -1,5 +1,5 @@
 ---
-title: "Scripts for Collecting and Cleaning the Quantitative Data"
+title: "Scripts for Downloading the Quantitative Data"
 author: "Adrien Ratsimbaharison"
 date: "9/19/2018"
 output: html_document
@@ -86,14 +86,16 @@ head(WGI2)
 summary(WGI2)
 table(WGI2$stabilityCategory2)
 
-# Assiming that countries with stability scores close to zero are either "moderately stable" (scores from 0 to 0.999) or "moderately unstable"" (scores from -0.999 to 0), we also create a variable with four categories of stability with dplyr based on arbitrary thresholds of + 1 (for highly stable) and - 1 (for hinghly unstable)
+# Assuming that countries with stability scores close to zero are either "moderately stable" (scores from 0 to 0.999) or "moderately unstable"" (scores from -0.999 to 0), we also create a variable with four categories of stability with dplyr based on arbitrary thresholds of + 1 (for highly stable) and - 1 (for highly unstable)
 WGI2 <- WGI2 %>% mutate(stabilityCategory4 =cut(stability, breaks=c(-Inf, -1, 0, 1, Inf), labels=c("highly unstable","moderately unstable","moderately stable", "highly stable")))
 head(WGI2)
 summary(WGI2)
 table(WGI2$stabilityCategory2)
 
-
+# Making WGI2 available in the directory
+# WGI2 <- write.csv(WGI2, "WGI2.csv")
 ```
+
 
 ## Downloading the Data on the UN Country Names and Codes with their Classification into Region and Subregion from a GitHub Repository Maintained by Luke Duncalfe   
 

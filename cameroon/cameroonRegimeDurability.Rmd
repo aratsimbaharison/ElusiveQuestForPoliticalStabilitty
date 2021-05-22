@@ -3,8 +3,8 @@ title: "Understanding the Durability of the Paul Biya Regime in Cameroon: A Micr
 author: "Adrien Ratsimbaharison and Benn Bongang"
 date: "March 12, 2019"
 output:
-  word_document: default
   html_document: default
+  word_document: default
 bibliography: bibliography.bib
 ---
 
@@ -155,52 +155,25 @@ cameroonRound7 <- mutate(cameroonRound7,
 
 ## Abstract
 
-*[Short background information on the durability of the Paul Biya regime]*    
+As of the writing of this paper, Paul Biya, who has been in power in Cameroon as a Prime Minister since 1975 and as a President since 1982, is the “longest-ruling non-royal national leader of the world.”  While this durability has surprised many observers, it has not attracted a lot of attention from academia yet. In fact, the current literature on Cameroonian politics is generally focused on the dictatorial characteristics of the Biya regime, and not on the durability of the regime itself. The purpose of this paper is to fill this gap in the literature. Adopting a micro-level (or bottom-up) approach, we try to understand why the majority of the Cameroonian people are willing to stay under the same ruler for at least two generations. Using the data from the Afrobarometer’s round 7 national survey in Cameroon, we apply simple statistical analyses and machine learning (or predictive analytics) to find out to what extent the Cameroonian people support their president and his regime and to identify the predictors of such support. As a result, we find despite the so-called “Anglophone crisis” and Boko Haram’s attacks in the North, the majority of Cameroonians, especially the French speakers still approve the job performance of Paul Biya. Nevertheless, the main factors behind this approval have more to do with their trust in the president himself, the approval of the job performance of thei parliament members, and their regional location, than with the conduct of the political affairs of the country or the management of the national economy.
 
 
+**Keywords:** Africa, Cameroon, political stability, regime durability, micro-level analysis, Afrobarometer national survey.   
 
-
-
-
-
-
-*[Purpose of this study and research method]*
-
-We adopt a micro-level (or bottom-up) approach to understand why the majority of the Cameroonian people were willing to stay under the same ruler for at least two generations. Using the data from the Afrobarometer's round 7 national survey in Cameroon, we apply simple statistical analyses and machine learning (or predictive analytics) to find out to what extent the Cameroonian people support their president and his regime and to identify the predictors of such support. 
-
-*[Key findings]*
-
-As a result, we find despite the so-called "Anglophone crisis" and Boko Haram's attacks in the North, the majority of Cameroonians, especially the French speakers still approve the job performance of Paul Biya. Nevertheless, the main factors behind this approval have more to do with their trust in the president himself, the approval of the job performance of thei parliament members, and their regional location, than with the conduct of the political affairs of the country or the management of the national economy.
-
-
-**Keywords:** Africa, Cameroon, political stability, regime durability, micro-level analysis, Afrobarometer national survey
 
 ## Introduction
 
 
-
-*[Background information about the durability of the Paul Biya regime]*
-
-
-On eve of the 2018 presidential election, Paul Biya has been already in power in Cameroon for forty six years (ten year as Prime Minister and thirty six as President). This longevity record alone made him "Africa and the world's longest-serving head of state who is non-royal" [@tchouteuPaulBiyaCameroon2018]. 
+On the eve of the Cameroonian 2018 presidential election, which he won despite the violent post-electoral disputes, Paul Biya already hold the title of “longest-ruling non-royal national leader of the world.” [@wikipediacontributorsListCurrentLongestruling2019; See also @tchouteuPaulBiyaCameroon2018] He had been already in power in Cameroon for forty-six years, first as a Prime Minister since 1975 and then as a President since 1982. Nevertheless, Paul Biya's rise to power had no parallel with that of a crown prince, who would have everything prepared for him before ascending to the thrown. He had to work his way up through the political ladder, from a simple civil servant in the 1960s after his studies in France to a close confidant of Cameroon's first President, Ahmadou Ahidjo. He successively served as Secretary-General of the Presidency under Ahidjo, from 1968 to 1975, and then as Prime Minister from 1975 to 1982. Many observers were wondering about the main reasons behind the unexpected resignation of President Ahidjo in 1982, but this gave Paul Biya the golden opportunity to become the President as his replacement before the next presidential election.    
 
 
-*[This section is from the old literature review. Please rewrite to make it in line with the purpose and research question of the paper]*
+As a President, Paul Biya had to go through numerous difficulties and challenges. First, he survived a coup attempted by Ahidjo loyalists in April 1984. Next, following the introduction of multi-party system in Cameroon in the 1980s, he had to fight off a vigorous challenge by the opposition led by their charismatic leader, Ni John Fru Ndi, during the presidential election of 1992. Utimately, the most serious challenge to the survival of Paul Biya's regime came in 2016, when teachers and lawyers of the Anglophone regions of the North-West and South-West began to strongly oppose the government's drive to further marginalize the use of the English language in schools and courts. The ensuing street protests escalated into armed conflict when the military brutally attacked civilians and the separatists in these regions took arms to fight for the independence of their separate state, which was given the name of "Ambazonia."   
 
 
-Cameroon was barely a decade in existence as an independent federal republic when Victor  T. Levine [-@levineCameroonFederalRepublic1971] noted its political stability and hinted at the potential for future instability inherent in the "complexity” of its political, social, and economic configurations.” No doubt then that Levine found Cameroon’s stability "most remarkable.”  Unlike Cameroon, he observed, other  African countries federations fractured, including the Central African Federation, Ethiopian-Eritrean Federation, as well as the Federal Republic of Nigeria and the secession of Biafra.
-In his study on the origins of radical nationalism in Cameroon, Richard A. Joseph [-@josephRadicalNationalismCameroun1977] traces the post-World 11birth of the nationalist party, Union des Populations du Cameroon (UPC) and documents the brutal repression of its militants by the French and their allies in Cameroon who eventually became the leadership of the country under Ahmadou Ahidjo at independence.  UPC militants were exiled for several years, lured back in the early 1970s,  their leaders were publicly executed.
-
-
-*[Purpose and research question of this study]*
-
-For some reasons, this remarkable durability of the Paul Biya regime has not drawn a lot of academic interests yet. While there are numerous studies on the durability of autocratic regimes and survival of autocrats in general, we can only identify one or two on that of the Paul Biya regime. Thus, the purpose of this study is not only to fill this gap in the literature, but also to address specifically the question of why the majority of Cameroonians are still supporting the Paul Biya regime. In doing so, we will adopt a micro-level (or bottom-up) approach by trying to understand the factors that may have led to such support.
-
+Despite its remarkable durability, the Paul Biya regime has not drawn a lot of academic interests yet. While there are numerous studies on the durability of autocratic regimes and survival of autocrats around the world, there are only a handful studies on Paul Biya and his regime. Thus, the purpose of this study is not only to fill this gap in the literature, but also to address specifically the question of why the majority of Cameroonians are still supporting the Paul Biya regime. In doing so, we will adopt a micro-level (or bottom-up) approach by trying to understand the factors that may have led to such support.
 
 
 ## Literature Review
-
-[*New literature review focusing on the Paul Biya regime and its durability:*]   
 
 
 For the most part, the contemporary literature on the Cameroonian politics focuses on the dictatorial characteristics of the Paul Biya regime, the division between the Anglophone part (North-West and South-West regions, making up about 20% of the country) and its Francophone part (the rest of the country), which led in recent years to a growing interest in the so-called "Anglophone crisis." In line with this trend, very few studies have been devoted specifically to the durability of the Paul Biya regime, and there is not yet a commonly accepted explanation as to why it has lasted for more than three decades. Nevertheless, the broader literature on the durability of autocratic regime and survival of autocrats offer some insights that can help understand the durability of the Paul Biya regime.

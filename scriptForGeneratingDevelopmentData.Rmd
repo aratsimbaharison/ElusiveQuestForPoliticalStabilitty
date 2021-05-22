@@ -1,0 +1,139 @@
+---
+title: "Zimbabwe"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## GNI per capita and development level
+
+The data set shows the GNI per capita and development level of the country each year.
+
+
+```{r GNI per capita data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+library(dplyr)
+
+developmentData <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+
+developmentVariables <- c("country", "iso3c", "date","GNIperCapita","devCategory")
+developmentData <- developmentData[developmentVariables]
+
+
+# data by country
+# country = x
+x <- developmentData[developmentData$country == "Zimbabwe",]
+x
+
+```
+
+
+
+## GDP growth and economic growth classification
+
+The data set shows the GDP growth and the ecomic growth classification of the country each year.
+
+
+```{r GDP growth data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+library(dplyr)
+
+GDPgrowthData <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+
+# addind a category of GDP growth
+# -Inf to 0: negative growth
+# 0 to 2.4: slow growth
+# 2.5 to 5.4: moderate growth
+# 5.5 and more: fast growth
+
+GDPgrowthData <- GDPgrowthData %>% mutate(GDPgrowthCategory4=cut(GDPannualGrowthRate, breaks=c(-Inf, 0, 2.5, 5.5, Inf), labels=c("negative grwoth","slow growth","moderate growth", "fast growth")))
+
+GDPgrowthDataVariables <- c("country", "iso3c", "date", "GDPannualGrowthRate", "GDPgrowthCategory4")
+GDPgrowthData <- GDPgrowthData[GDPgrowthDataVariables]
+
+
+# data by country
+# country = x
+x1 <- GDPgrowthData[GDPgrowthData$country == "Zimbabwe",]
+x1
+
+```
+
+
+## Development trend
+
+The plot shows the development trend of the country. 
+
+
+```{r GNI per capita Plot, echo=FALSE, fig.cap="GNI Per Capita Trend", message=FALSE, warning=FALSE, paged.print=FALSE}
+# Development category
+# 0-1025: Low Income
+# 1026-4035: Lower Middle Income
+# 4036-12475:Upper Middle Income
+# 12476 and more: High Income
+
+library(ggplot2)
+developmentTrend <- ggplot(data=x, aes(x=date, y=GNIperCapita)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=1025, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=4035, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=12476, color = "red", size = 1.25) +
+  ylim(0, 14000) + 
+  xlab("Year") +
+  ylab("GNI per capita")
+
+plot(developmentTrend)
+
+# To save the figure:
+# png("developmentTrend.png")
+# 
+# plot(developmentTrend)
+# 
+# dev.off()
+
+```
+
+
+## Growth trend
+
+The plot shows the economic growth trend of the country. 
+
+
+```{r growth trend, echo=FALSE, fig.cap="Economic Growth Trend", message=FALSE, warning=FALSE, paged.print=FALSE}
+# Development category
+# -Inf to 0: negative growth
+# 0 to 2.4: slow growth
+# 2.5 to 5.4: moderate growth
+# 5.5 and more: fast growth
+
+library(ggplot2)
+growthTrend <- ggplot(data=x1, aes(x=date, y=GDPannualGrowthRate)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=2.5, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=5.5, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=0, color = "red", size = 1.25) +
+  ylim(0, 20) + 
+  xlab("Year") +
+  ylab("GNI per capita")
+
+plot(growthTrend)
+
+# To save the figure:
+# png("growthTrend.png")
+# 
+# plot(growthTrend)
+# 
+# dev.off()
+
+```
+

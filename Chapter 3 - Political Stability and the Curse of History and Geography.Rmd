@@ -1,0 +1,139 @@
+---
+title: "Chapter 3 - Political Stability and the Curse of History and Geography"
+author: "Adrien Ratsimbaharison"
+date: "July 26, 2019"
+output:
+  word_document: default
+  html_document: default
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+As we saw in Chapter 2, the variable conflict history was the most important factor, with a rate of 100%, that can predict the occurence of stability. The variable region appears also among the top 10 most important variable (with regions of Asia, Oceania, Americas having the rates higher than 20%). In other words, history and geography have great influence of the political stability of any country in the world.
+
+In this section, we will first review the literature on the relationships between political stability, history of conflict and geography. Next, we will apply some basic correlation and regression analyses to assess the effect of these indicators on political stability.
+
+
+
+## 4.1 - Literature review on political stability, history, and geography
+
+
+## 4.2 - Quantitative analysis of the relationship political stability, conflict history, and geography
+
+** 1) Basic Correlation **
+
+As shown in Fig. find that political stability is strongly and significantly correlated with these other world governance indicators. The correlation coefficients range from 0.63 to 0.77, with a p-value close to zero.   
+
+There is a clearcut relationship between conflict history and stability. As shown in Fig. 3.1, countries that had an armed conflict during the previous period (1945-1995) were more likely to be unstable during the period of 1996-2017.
+
+
+** 2) Analysis of Variance **
+
+
+
+
+
+
+## Tables and Figures
+
+
+```{r Required R Packages, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(psych)
+library(Hmisc)
+library(PerformanceAnalytics)
+
+
+```
+
+```{r loading the data on history and geography, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# Loading the data on stability and other WGI from the full dataset
+
+stabilityHistoryAndGeography <- read.csv("WGI2popDevIneqPovRegimeConflict2.csv", header = TRUE)
+stabilityHistoryAndGeography <- as.data.frame(stabilityHistoryAndGeography)
+stabilityHistoryAndGeography$country <- as.character(stabilityHistoryAndGeography$country)
+stabilityHistoryAndGeography$date <- as.numeric(stabilityHistoryAndGeography$date)
+str(stabilityHistoryAndGeography)
+
+```
+
+```{r checking the correlation of stability and conflict history, message=FALSE, warning=FALSE, echo=FALSE, paged.print=FALSE}
+histoGeo <- select(stabilityHistoryAndGeography, stability, conflictHistory, region, subregion)
+# Plot with PerformanceAnalytics
+boxplot(stability ~ conflictHistory, data = histoGeo)
+abline(h = 0, col = "red", lwd = 2)
+```
+
+
+```{r calculation of the likelihood of instability for countries with conflict history, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+stabilityHistoryAndGeography <- na.omit(stabilityHistoryAndGeography)
+
+# Counting the instances of conflict history
+table(stabilityHistoryAndGeography$conflictHistory)
+
+# Calculating the average stability for countries without conflict history
+noConflictHistory <- stabilityHistoryAndGeography[stabilityHistoryAndGeography$conflictHistory == 0,]
+  mean(noConflictHistory$stability, na.rm = TRUE)
+  sd(noConflictHistory$stability, na.rm = TRUE)
+
+# Calculating the average stability for countries With conflict history
+ConflictHistory <- stabilityHistoryAndGeography[stabilityHistoryAndGeography$conflictHistory == 1,]
+  mean(ConflictHistory$stability, na.rm = TRUE)
+  sd(ConflictHistory$stability, na.rm = TRUE)
+
+
+```
+
+
+```{r checking the correlation between stability and geo, echo=FALSE, fig.height=5, fig.width=6, message=FALSE, warning=FALSE, paged.print=FALSE}
+boxplot(stability~region,data=histoGeo, main="",
+        xlab="Regions", ylab="Political Stability Estimate")
+abline(h = 0, col = "red", lwd = 2)
+
+```
+
+
+```{r conflict history by region, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityHistoryAndGeography, aes(x = conflictHistory)) + 
+          geom_bar() + 
+  ylab("relative frequencies") +
+  facet_wrap(region~.)
+```
+
+
+
+```{r summary statistics of key predictors: rule of law by regions, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+stabilityHistoryAndGeography <- na.omit(stabilityHistoryAndGeography)
+stabilityHistoryAndGeography %>%
+  group_by(region) %>% summarise(RuleOfLawAverage = mean(ruleOfLaw, na.rm = TRUE),
+                                 RuleOfLawSD = sd(ruleOfLaw, na.rm = TRUE))
+```
+
+```{r summary statistics of key predictors: population by region, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+stabilityHistoryAndGeography <- na.omit(stabilityHistoryAndGeography)
+stabilityHistoryAndGeography %>%
+  group_by(region) %>% summarise(PopulationAverage = mean(population, na.rm = TRUE),
+                                 PopulationSD = sd(ruleOfLaw, na.rm = TRUE))
+```
+
+```{r summary statistics of key predictors: GNIperCapita by region, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+stabilityHistoryAndGeography <- na.omit(stabilityHistoryAndGeography)
+stabilityHistoryAndGeography %>%
+  group_by(region) %>% summarise(GNIperCapitaAverage = mean(GNIperCapita, na.rm = TRUE),
+                                 GNIperCapitaSD = sd(ruleOfLaw, na.rm = TRUE))
+```
+
+```{r summary statistics of key predictors: level of democracy by region, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+stabilityHistoryAndGeography <- na.omit(stabilityHistoryAndGeography)
+stabilityHistoryAndGeography %>%
+  group_by(region) %>% summarise(PRCLAverage = mean(inverse_mean, na.rm = TRUE),
+                                 PRCLSD = sd(inverse_mean, na.rm = TRUE))
+```
+

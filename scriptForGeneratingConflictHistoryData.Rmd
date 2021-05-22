@@ -1,0 +1,53 @@
+---
+title: "Zimbabwe"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Conflict history
+
+The data set shows the conflict history of the country each year.
+
+
+```{r conflict history data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+library(dplyr)
+
+conflictHistoryData <- read_csv("ucdpprio/ucdp-prio-acd-181.csv")
+
+conflictHistoryData <- select(conflictHistoryData, country = location, date = year, incompatibility, type_of_conflict, intensity_level, side_a, side_b)
+
+conflictHistoryData <- conflictHistoryData %>% mutate(incompatibility=recode(incompatibility, 
+                         "1" ="territory",
+                         "2" ="government",
+                         "3" = "government and Territory")) %>% 
+  mutate(type_of_conflict =recode(type_of_conflict , 
+                         "1" ="extrasystemic armed conflict",
+                         "2" ="interstate armed conflict",
+                         "3" = "internal armed conflict",
+                         "4" = "internationalized internal armed conflict"))%>% mutate(intensity_level=recode(intensity_level, 
+                         "1" ="minor",
+                         "2" ="war"))
+
+
+conflictHistoryVariables <- c("country", "date","incompatibility", "type_of_conflict", "intensity_level", "side_a", "side_b")
+
+conflictHistoryData <- conflictHistoryData[conflictHistoryVariables]
+
+
+# data by country
+# country = x
+x <- conflictHistoryData[conflictHistoryData$country == "Zimbabwe (Rhodesia)",]
+print(x, n = nrow(x))   # Print all rows of tibble
+```
+
+
+

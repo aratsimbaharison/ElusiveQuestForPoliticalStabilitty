@@ -1,0 +1,94 @@
+---
+title: "Zimbabwe"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Freedom House political status
+
+The data set shows the Freedom House political scores and status of the country each year.
+
+
+```{r political score data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+library(dplyr)
+
+FHpoliticalScoreData <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+
+FHpoliticalScoreVariables <- c("country", "iso3c", "date","mean","status")
+FHpoliticalScoreData <- FHpoliticalScoreData[FHpoliticalScoreVariables]
+
+
+# data by country
+# country = x
+x <- FHpoliticalScoreData[FHpoliticalScoreData$country == "Zimbabwe",]
+x
+
+```
+
+## Freedom House classification of political change
+
+The data set shows the GDP growth and the ecomic growth classification of the country each year.
+
+
+```{r political change data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+library(dplyr)
+
+FHpoliticalChangeData <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+
+FHpoliticalChangeVariables <- c("country", "iso3c", "date", "politicalChangeFH")
+FHpoliticalChangeData <- FHpoliticalChangeData[FHpoliticalChangeVariables]
+
+
+# data by country
+# country = x
+x1 <- FHpoliticalChangeData[FHpoliticalChangeData$country == "Zimbabwe",]
+x1
+
+```
+
+
+## Freedom House score trend
+
+The plot shows the Freedom House scores trend of the country. 
+
+
+```{r Freedom House score trend, echo=FALSE, fig.cap="Freedom House Score Trend", message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Freedom House political status
+# 0-2.5: Free
+# 2.6 to 5.5: Partly Free
+# 5.6 to 7.5: Not Free
+
+library(ggplot2)
+FHpoliticalScoreTrend <- ggplot(data=x, aes(x=date, y=mean)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=2.5, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=5.5, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=0, color = "red", size = 1.25) +
+  ylim(0, 8) + 
+  xlab("Year") +
+  ylab("Political Rights and Civil Liberties Mean Scores")
+
+plot(FHpoliticalScoreTrend)
+
+# To save the figure:
+# png("FHpoliticalScoreTrend.png")
+# 
+# plot(FHpoliticalScoreTrend)
+# 
+# dev.off()
+
+```
+

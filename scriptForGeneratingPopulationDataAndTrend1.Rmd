@@ -1,0 +1,174 @@
+---
+title: "Zimbabwe"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Population Data
+
+The data set shows the political stability estimate of the country each year.
+
+
+```{r downloading world bank data, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# downloading from the world bank web pages
+# Downloading the data on population size (SP.POP.TOTL)
+library(wbstats)
+library(dplyr)
+library(tidyr)
+
+# data on population
+
+populationDF <- wb_data(country = "countries_only", indicator = "SP.POP.TOTL", 
+                     start_date = 1996, end_date = 2018)
+populationDF <- tbl_df(populationDF)
+populationDF <- select(populationDF, country, iso3c, date, population = SP.POP.TOTL)
+populationDF$date <- as.numeric(as.character(populationDF$date))
+head(populationDF)
+summary(populationDF)
+
+# Creating population categories:
+
+# We divide the world population in 5 categories as : 
+# very small: 0 to 5000 000 (less than 5 million) 
+# small: 5 000 000 to 25 000 000 (less than 25 million)
+# medium: 25 000 000 to 75 000 000 (less than 75 million)
+# large: 75 000 000 to 250 000 000
+# very large more than 250 000 000
+
+
+populationDF <- populationDF %>% mutate(popCategory5 =cut(population, breaks= c(0, 5000000, 25000000, 75000000, 250000000, Inf), labels=c("very small", "small","medium", "large", "very large")))
+head(populationDF)
+summary(populationDF)
+table(populationDF$popCategory5)
+
+# data on population growth
+
+populationGrowthDF <- wb_data(country = "countries_only", indicator = "SP.POP.GROW", 
+                     start_date = 1996, end_date = 2018)
+populationGrowthDF <- tbl_df(populationGrowthDF)
+populationGrowthDF <- select(populationGrowthDF, country, iso3c, date, popGrowth = SP.POP.GROW)
+populationGrowthDF$date <- as.numeric(as.character(populationGrowthDF$date))
+head(populationGrowthDF)
+summary(populationGrowthDF)
+
+# Creating population growth categories:
+
+# We divide the world population growth in 5 categories as : 
+# declining: -Inf to 0
+# low growth rate: 0 to 1.5
+# moderate growth rate: 1.5 to 3.0
+# high growth rate: 3.0 and more
+
+
+populationGrowthDF <- populationGrowthDF %>% mutate(popGrowthCat5 =cut(popGrowth, breaks= c(-Inf, 0, 1.5, 3, Inf), labels=c("declining", "low growth rate","moderate growth rate", "high growth rate")))
+head(populationGrowthDF)
+summary(populationGrowthDF)
+table(populationGrowthDF$popGrowthCat5)
+
+# joining population data with population growth data
+
+populationData <- full_join(populationDF, populationGrowthDF, by = c("country", "date")) 
+populationData <- select(popDevIneqPovDF, country, iso3c = iso3c.x, date, population, popCategory5, popGrowth, popGrowthCat5)
+
+head(populationData)
+summary(populationData)
+
+# make the data set on population and population growth available in the repository
+
+# populationData <- write.csv(populationData, "populationData.csv")
+
+```
+
+
+```{r Population data and trend, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+populationData <- read_csv("populationData.csv")
+populationVariables <- c("country", "iso3c", "date","population","popCategory5")
+populationData <- populationData[populationVariables]
+populationData <- populationData[order(populationData$date),]
+
+
+# data by country
+# country = x
+x <- populationData[populationData$country == "Zimbabwe",]
+#x
+print(x, n = nrow(x))   # Print all rows of tibble
+```
+
+# Population growth data
+
+```{r Population growth data, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+popGrowthData <- read_csv("populationData.csv")
+popGrowthVariables <- c("country", "iso3c", "date","popGrowth", "popGrowthCat5")
+popGrowthData <- popGrowthData[popGrowthVariables]
+popGrowthData <- popGrowthData[order(popGrowthData$date),]
+
+
+# data by country
+# country = x
+x1 <- popGrowthData[popGrowthData$country == "Zimbabwe",]
+#x1
+print(x1, n = nrow(x))   # Print all rows of tibble
+```
+
+## Population trend
+
+The plot shows the population trend of the country. 
+
+```{r Political Stability Plot, echo=FALSE, fig.cap="Political Stability Trend", fig.height=3, fig.width=5, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+populationTrend <- ggplot(data=x, aes(x=date, y=population)) +
+  geom_line()+
+  geom_point() +
+  ylim(0, 100000000) + 
+  xlab("Year") +
+  ylab("Population Trend")
+
+plot(populationTrend)
+
+# To save the figure:
+# png("populationTrend.png")
+# 
+# plot(populationTrend)
+# 
+# dev.off()
+
+```
+
+# Population growth trend
+
+The plot shows the population growth rate trend of the country. 
+
+```{r population growth trend, echo=FALSE, fig.cap="Population Growth Trend", fig.height=3, fig.width=5, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+
+popGrowthBar <- ggplot(data=x1, aes(x=date, y=popGrowth)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=0, color = "red", size = 1) +
+  geom_hline(yintercept=1.5, linetype="dashed", color = "red", size = 1) +
+  geom_hline(yintercept=3, linetype="dashed", color = "red", size = 1) +
+  ylim(-1.5, 8) + 
+  xlab("Year") +
+  ylab("Population Growth")
+
+plot(popGrowthBar)
+# To save the figure:
+# png("populationTrend.png")
+# 
+# plot(populationTrend)
+# 
+# dev.off()
+
+```

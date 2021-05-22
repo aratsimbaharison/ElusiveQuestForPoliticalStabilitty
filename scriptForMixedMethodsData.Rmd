@@ -1,0 +1,63 @@
+---
+title: "Angola"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Political Stability Estimate Data
+
+The data set shows the political stability estimate of the country for a given year and its classification in four categories (unstable, moderately unstable, moderately stable, stable).
+
+
+```{r politicalStabilityEstimateByCountry, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+WGI2popDevIneqPovRegimeConflict1 <- read_csv("WGI2popDevIneqPovRegimeConflict1V2.csv")
+mixedMethodsVar <- c("country", "iso3c", "date","stability","stabilityCategory4")
+mixedMethodsData <- WGI2popDevIneqPovRegimeConflict1[mixedMethodsVar]
+
+
+# data by country
+# country = x
+x <- mixedMethodsData[mixedMethodsData$country == "Angola",]
+x
+
+```
+
+## Political Stability Estimate Plot
+
+The plot shows the trends of stabilization and destabilization for the each country. 
+
+A stabilization trend can be classified as absolute, if the stability scores move from unstable or moderately unstable to moderately stable or stable (that is, crossing up the red line). The trend can be considered relative, if the scores remain in the same positive or negative areas.
+Similarly, a destabilization trend can be classified as absolute, if the stability scores move from stable or moderately stable to moderately unstable or unstable (that is, crossing down the red line). The trend is considered relative, if the scores remain in the same positive or negative areas.
+
+```{r Political Stability Plot, echo=FALSE, fig.cap="Political Stability Trend", message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+stabilityTrend_CIV <- ggplot(data=x, aes(x=date, y=stability)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=0.0, color = "red", size = 1.25) +
+   geom_hline(yintercept=1.0, linetype="dashed", color = "red", size = 1) +
+   geom_hline(yintercept=-1.0, linetype="dashed", color = "red", size = 1) +
+  ylim(-3, 2.5) + 
+  xlab("Year") +
+  ylab("Political Stability Estimate")
+
+plot(stabilityTrend_CIV)
+
+# To save the figure:
+# png("stabilityTrend_CIV.png")
+# 
+# plot(stabilityTrend_CIV)
+# 
+# dev.off()
+
+```
+

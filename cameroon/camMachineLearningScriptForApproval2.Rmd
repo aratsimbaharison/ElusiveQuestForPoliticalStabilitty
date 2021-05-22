@@ -3,8 +3,8 @@ title: "Cameroon: Machine Learning Script for the Predition of the Approval of P
 author: "Adrien Ratsimbaharison"
 date: "June 23, 2019"
 output:
-  word_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}

@@ -1,5 +1,5 @@
 ---
-title: "Machine Learning Script for the Prediction of Stability Score of a country"
+title: "Appendix A: Machine Learning Regression for the Prediction of Stability Estimates of Countries"
 author: "Adrien Ratsimbaharison"
 date: "July 16, 2019"
 output:
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-In this machine learning implementation, we follow the guidelines suggested by different data scientists who specialize in the use r statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" and Brett Lanz's "Machine Learning with R." After the initial step of installing the Caret package and loading the dataset into r, this machine learning implementation includes the following:
+In this machine learning implementation, we follow the guidelines suggested by different data scientists who specialize in the use *r* statistical and programming language and particularly the Caret package, created and maintained by Max Kuhn. Among these guidelines, we found particularly useful Saurav Kaushik's "Practical guide to implement machine learning with CARET in R" and Brett Lanz's "Machine Learning with R." After the initial step of installing the Caret package and loading the dataset into r, this machine learning implementation includes the following:
 
 - defining the problem,
 - preprocessing the data,
@@ -51,12 +51,10 @@ stabilityFullDataset <- as.data.frame(stabilityFullDataset)
 
 # Selecting the variables of interest
 
-stabilityFullDataset <- select(stabilityFullDataset, date, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region, subregion)
+stabilityFullDataset <- select(stabilityFullDataset, stability, corruptionControl, governmentEffectiveness, regulatoryQuality, ruleOfLaw, voiceAndAccountability, population, GNIperCapita, GDPannualGrowthRate, HDI, GINI, povertyHeadCount, status, inverse_pr, inverse_cl, inverse_mean, politicalChangeFH, conflictHistory, region)
 
 # Correcting the types of some variables
-stabilityFullDataset$date <- as.numeric(stabilityFullDataset$date)
 stabilityFullDataset$population <- as.numeric(stabilityFullDataset$population)
-stabilityFullDataset$date <- as.numeric(stabilityFullDataset$date)
 stabilityFullDataset$inverse_pr <- as.numeric(stabilityFullDataset$inverse_pr)
 stabilityFullDataset$inverse_cl <- as.numeric(stabilityFullDataset$inverse_cl)
 stabilityFullDataset$inverse_mean <- as.numeric(stabilityFullDataset$inverse_mean)
@@ -80,19 +78,20 @@ summary(stabilityFullDataset$stability)
 
 ```
 
-```{r boxplot of the votes, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
-ggplot(stabilityFullDataset, aes(y= stability)) +
-  geom_boxplot()
+```{r boxplot of stability, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap= "Fig. 1 - Boxplot of the Political Stability Estimate of the World for the Period 1996-2017"}
 
+boxplot(stabilityFullDataset$stability, ylab = "Political Stability Estimate")
+abline(h = 0, lwd = 2, col = "red")
 ```
 
 
-```{r histogram of vote number, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-ggplot(stabilityFullDataset, aes(x= stability)) +
-  geom_histogram() + 
-  geom_vline(xintercept = mean(stabilityFullDataset$stability), linetype="dotted",                 color = "blue", size=1.5) +
-  annotate(geom="text", x=-0.5, y=400, label="Mean = 0.02312",
-              color="blue")
+```{r histogram of political stability estimate, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap="Fig. 2 - Frequency Distribution of Political Stability Estimate of the World for the Period 1996-2017"}
+
+#Figure 2 - Frequency Distribution of the Political Stability of the World for the Period 1996-2017
+
+hist(stabilityFullDataset$stability, main= "", xlab = "Political Stability Estimate")
+abline(v = median(stabilityFullDataset$stability, na.rm = TRUE), col = "red", lwd = 2)
+text(x = -1, y = 700, "Median= 0.14080")
 
 ```
 
@@ -141,9 +140,13 @@ str(stabilityFullDataset_processed)
 ## 3. Splitting the data using Caret
 
 
-In this step, we splitt the dataset into trainSet and testSet based on outcome with a ratio of 65% and 35%, using createDataPartition in Caret.
+In this step, we splitt the dataset into trainSet and testSet based on outcome with a ratio of 75% and 25%, using createDataPartition in Caret.
 
 ```{r splitting of the data, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Randomizing the dataset before spliting
+set.seed(123)
+rows <- sample(nrow(stabilityFullDataset_processed))
+stabilityFullDataset_processed <- stabilityFullDataset_processed[rows,]
 
 #Spliting dataset into trainSet and testSet
 set.seed(1234)
@@ -205,7 +208,7 @@ varImp(object=stabilityModel_glm)
 
 
 #Plotting Variable importance for GBM model
-plot(varImp(object=stabilityModel_glm),main="Variable Importance Using GBM", top = 20)
+plot(varImp(object=stabilityModel_glm),main="Variable Importance Using GLM", top = 20)
 
 ```
 
@@ -229,35 +232,4 @@ postResample(pred = stabilityPrediction_glm, obs = stabilityTestSet$stability)
 
 
 ## Conclusion
-
-The top 5 variables (out of 45):
-   population, ruleOfLaw, conflictHistory.1, HDI, GNIperCapita
-
-2) Prediction of stability of the test set
-
-glm variable importance
-
-  only 20 most important variables shown (out of 41)
-
-                             Overall
-ruleOfLaw                     100.00
-conflictHistory.1              69.71
-region.Asia                    57.90
-subregion.South.Eastern.Asia   53.23
-subregion.Northern.Africa      46.84
-subregion.Central.Asia         45.97
-population                     42.63
-subregion.Eastern.Asia         41.16
-regulatoryQuality              37.49
-subregion.Melanesia            26.25
-region.Europe                  25.49
-subregion.Micronesia           23.59
-subregion.Eastern.Europe       23.29
-governmentEffectiveness        23.09
-subregion.Central.America      21.35
-region.Oceania                 20.21
-GDPannualGrowthRate            19.33
-subregion.Eastern.Africa       18.03
-politicalChangeFH.no.change    17.90
-date                           17.08
 

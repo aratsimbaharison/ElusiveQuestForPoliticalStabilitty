@@ -223,7 +223,7 @@ correlationScores
 
 The tables below calculate and plot the correlations among stability, durability, Center of Systemic Peace's SFI and Fund for Peace's fsi:
 
-```{r correlation plots, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r correlation plots, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap= "Fig. 1.1 - Correlations between Stability, Durabilty, State Fragility Index (SFI), and Fragile State Index (FSI)"}
 
 # Plot with PerformanceAnalytics
 chart.Correlation(stabilityDurabilitySFIfsiScores, histogram=TRUE, pch=19)

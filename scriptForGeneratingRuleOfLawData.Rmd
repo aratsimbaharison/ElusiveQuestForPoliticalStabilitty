@@ -1,0 +1,61 @@
+---
+title: "Zimbabwe"
+author: ""
+date: ""
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Respect for rule of law (ROL) data
+
+The data set shows the data on the respect of the rule of law for the country.
+
+
+```{r rule of law data and trend, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readr)
+rolData <- read_csv("WGI2popDevIneqPovRegimeConflict2V2.csv")
+rolVariables <- c("country", "iso3c", "date","ruleOfLaw","ruleOfLawCategory4")
+rolData <- rolData[rolVariables]
+
+
+# data by country
+# country = x
+x <- rolData[rolData$country == "Zimbabwe",]
+x
+
+```
+
+## Respect for rule of law (ROL) trend
+
+The plot shows the trend of the respect for the rule of law for the country. 
+
+
+```{r Political Stability Plot, echo=FALSE, fig.cap="Trend of the Respect for the Rule of Law", fig.height=3, fig.width=5, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+rolTrend <- ggplot(data=x, aes(x=date, y=ruleOfLaw)) +
+  geom_line()+
+  geom_point() +
+  geom_hline(yintercept=0.0, color = "red", size = 1.25) +
+   geom_hline(yintercept=1.0, linetype="dashed", color = "red", size = 1) +
+   geom_hline(yintercept=-1.0, linetype="dashed", color = "red", size = 1) +
+  ylim(-2.5, 2.5) + 
+  xlab("Year") +
+  ylab("Respect for Rule of Law")
+
+plot(rolTrend)
+
+# To save the figure:
+# png("rolTrend.png")
+# 
+# plot(rolTrend)
+# 
+# dev.off()
+
+```
+

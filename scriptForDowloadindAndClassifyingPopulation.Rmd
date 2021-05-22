@@ -1,0 +1,58 @@
+---
+title: "script For Dowloadind And Classifying Population"
+author: "AR"
+date: "3/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+# loading the required libraries:
+library(wbstats)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(Hmisc)
+library(caret)
+library(kernlab)
+library(stringr)
+library(knitr)
+library(VIM)
+library(haven)
+
+```
+
+# Downloading the data on population size (SP.POP.TOTL)
+
+```{r}
+populationDF <- wb(country = "countries_only", indicator = "SP.POP.TOTL", 
+                     startdate = 1996, enddate = 2018, POSIXct = TRUE)
+populationDF <- tbl_df(populationDF)
+populationDF <- select(populationDF, country, iso2c, date, population = value)
+populationDF$date <- as.numeric(as.character(populationDF$date))
+head(populationDF)
+summary(populationDF)
+
+# Classifying the world population in four categories as : 
+# very small: 0 to 5000 000 (less than 5 million) 
+# small: 5 000 000 to 25 000 000 (less than 25 million)
+# medium: 25 000 000 to 75 000 000 (less than 75 million)
+# large: 75 000 000 to 250 000 000
+# very large more than 250 000 000
+
+
+# popCategory <- cut(populationDF$population, breaks = 5, labels = c("very small", "small", "medium", "large", "very large"))
+
+populationDF <- populationDF %>% mutate(populationCategory5 =cut(population, breaks= c(0, 5000000, 25000000, 75000000, 250000000, Inf), labels=c("very small", "small","medium", "large", "very large")))
+head(populationDF)
+summary(populationDF)
+table(populationDF$populationCategory5)
+
+```
+

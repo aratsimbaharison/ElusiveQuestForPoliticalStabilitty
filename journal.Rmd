@@ -5,394 +5,789 @@ date: "9/16/2018"
 output:
   html_document: default
   word_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-My research project under the sabbatical leave started practically in mid-September 2018, because the month of August was spent on getting the clearance to work on USC campus, getting office space within the Walker Institute, and getting access to the USC library and internet system.
 
+My research project under the sabbatical leave started practically in
+mid-September 2018, because the month of August was spent on getting the
+clearance to work on USC campus, getting office space within the Walker
+Institute, and getting access to the USC library and internet system.
 
 ## September 2018
 
-- 9/16/2018: I started this research project with a new r project entitled "ELUSIVE QUEST" under the "AFRICAN POLITICS RESEARCH" in my dropbox.
+-   9/16/2018: I started this research project with a new r project
+    entitled "ELUSIVE QUEST" under the "AFRICAN POLITICS RESEARCH" in my
+    dropbox.
 
-This new r project was created with a new gitHub repository entitled "ElusiveQuestForPoliticalStabilitty" and a version control on git.
+This new r project was created with a new gitHub repository entitled
+"ElusiveQuestForPoliticalStabilitty" and a version control on git.
 
-  - I will start the data collection and cleaning this week, at the same time, I will take a new online course on this subject on DataCamp.
+-   I will start the data collection and cleaning this week, at the same
+    time, I will take a new online course on this subject on DataCamp.
 
-- 9/18/2018: completed the course on data importing and cleaning on DataCamp.  
+-   9/18/2018: completed the course on data importing and cleaning on
+    DataCamp.
 
-- 9/19/2018: I realized that I still need to learn how to download, read and save qualitative data (news, reports and analysis on conflicts) in r. So I decided to take another course on "Working with Web Data in R" on DataCamp. I plan to comoplete this course in 3 to 4 days. At the same time, I need to start collecting and cleaning the quantitative data from the Word Bank.
+-   9/19/2018: I realized that I still need to learn how to download,
+    read and save qualitative data (news, reports and analysis on
+    conflicts) in r. So I decided to take another course on "Working
+    with Web Data in R" on DataCamp. I plan to comoplete this course in
+    3 to 4 days. At the same time, I need to start collecting and
+    cleaning the quantitative data from the Word Bank.
 
-- 9/20&21/2018: I looked at different techniques to collect qualitative data available online. I was able to write a script on how to do that. See `scriptForDownloadingQualitativeData` and `scriptForCollectingQualiativeData`.
+-   9/20&21/2018: I looked at different techniques to collect
+    qualitative data available online. I was able to write a script on
+    how to do that. See `scriptForDownloadingQualitativeData` and
+    `scriptForCollectingQualiativeData`.
 
-- 9/22/2018: I continued learning and refreshing memory about importing, cleaning, and manipulating data in base r and dplyr.
+-   9/22/2018: I continued learning and refreshing memory about
+    importing, cleaning, and manipulating data in base r and dplyr.
 
-- 9/23/2018: I started downloading and cleaning data from the World Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined file WGIdevIneqPov are available in the local repository.
+-   9/23/2018: I started downloading and cleaning data from the World
+    Bank (WGI, GNIperCapita, HDI, etc.). WGI, devIneqPov and the joined
+    file WGIdevIneqPov are available in the local repository.
 
-  - But I was not able to open the excel file on Freedom House data from Amanda Edgell (University of Florida). So I asked her to convert the file into csv.
+    -   But I was not able to open the excel file on Freedom House data
+        from Amanda Edgell (University of Florida). So I asked her to
+        convert the file into csv.
 
-- 9/24/2018: I was in the end able to download and read the "Stata Friendly Freedom House Data, 1973-2018" on political right and civil liberty maintained by Amanda B. Edgell, University of Florida (homepage: https://acrowinghen.com/data/)
+-   9/24/2018: I was in the end able to download and read the "Stata
+    Friendly Freedom House Data, 1973-2018" on political right and civil
+    liberty maintained by Amanda B. Edgell, University of Florida
+    (homepage: <https://acrowinghen.com/data/>)
 
-  - I am now attempting to merge the Freedom House data with the World Bank data and found out that Freedom House does not use any country code and some of the country names are different form those of the World Bank and the UN.
+    -   I am now attempting to merge the Freedom House data with the
+        World Bank data and found out that Freedom House does not use
+        any country code and some of the country names are different
+        form those of the World Bank and the UN.
 
-  - Standardization of country names and codes.
-  
-  - Step 1: I created the file `WBcountryIso2c_Iso3c_M49Code.csv` which combines the World Bank's country name, iso2c, iso3c and M49code. This file will be used to join all World Bank dataframes with other data.
-  
-  - Step 2: I reviewed Luke's country names and codes on regions and subregions. I had to change or delete some country names and codes to make Luke's country names and codes consistent with the World Bank's country names and codes.
-  
-  - Step 3: I verified that Freedom House country names correspond to the World Bank country names. I had to change or delete some country names and codes to make Freedom House's country names and codes consistent with the World Bank's country names and codes.
-  
-  
-- 9/26/2018: I am done with the script to download the quantitative data.
+    -   Standardization of country names and codes.
 
-- I will still need to clean the data before analysis.
+    -   Step 1: I created the file `WBcountryIso2c_Iso3c_M49Code.csv`
+        which combines the World Bank's country name, iso2c, iso3c and
+        M49code. This file will be used to join all World Bank
+        dataframes with other data.
 
-CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political Science at Savannah State Univeristy)
+    -   Step 2: I reviewed Luke's country names and codes on regions and
+        subregions. I had to change or delete some country names and
+        codes to make Luke's country names and codes consistent with the
+        World Bank's country names and codes.
 
-- 9/28/2018: I am temporarily working on the Cameroon Case Study in prevision of my meeting with Ben Bongang on October 5, 2018.
+    -   Step 3: I verified that Freedom House country names correspond
+        to the World Bank country names. I had to change or delete some
+        country names and codes to make Freedom House's country names
+        and codes consistent with the World Bank's country names and
+        codes.
 
-  - I downloaded the WGI for Cameroon
-  
-  - I downloaded the economic and social indicators from the World Bank
-  
-  - I downloaded the regime type indicators
-  
-  - I rerun and verify the script on downloading the quantitative indicators on Cameroon
+-   9/26/2018: I am done with the script to download the quantitative
+    data.
 
+-   I will still need to clean the data before analysis.
 
-- 9/29/2018: I am back to the main project: I reviewed the script for downloading quantitative data and initiated a script for quantitative data analysis.
+CAMEROON RESEARCH PROJECT (with Ben Bongang, Professor of Political
+Science at Savannah State Univeristy)
 
-  . the data analysis starts with the stability average and stability trend around the world for the period of 1996 to 2016.
-  
-  . Next: the stability averages and trends by region
+-   9/28/2018: I am temporarily working on the Cameroon Case Study in
+    prevision of my meeting with Ben Bongang on October 5, 2018.
 
+    -   I downloaded the WGI for Cameroon
 
+    -   I downloaded the economic and social indicators from the World
+        Bank
+
+    -   I downloaded the regime type indicators
+
+    -   I rerun and verify the script on downloading the quantitative
+        indicators on Cameroon
+
+-   9/29/2018: I am back to the main project: I reviewed the script for
+    downloading quantitative data and initiated a script for
+    quantitative data analysis.
+
+    . the data analysis starts with the stability average and stability
+    trend around the world for the period of 1996 to 2016.
+
+    . Next: the stability averages and trends by region
 
 ## October 2018
 
-- 10/2/2018: I realized that the data on HDI and polity IV from the World Bank have a lot of missing values. Therefore, I decided to download directly the HDI data from the UNDP website and the data on polityScore directly from the Center for Systemic Peace. I took the whole day to do that and I couldn't continue the data analysis.
+-   10/2/2018: I realized that the data on HDI and polity IV from the
+    World Bank have a lot of missing values. Therefore, I decided to
+    download directly the HDI data from the UNDP website and the data on
+    polityScore directly from the Center for Systemic Peace. I took the
+    whole day to do that and I couldn't continue the data analysis.
 
+-   10/4/2018: I have the complete dataset on political stability,
+    econimic and social development, and regime types under the file
+    **"WGIdevRegimeType.csv"** by joining the following dataframes:
 
-- 10/4/2018: I have the complete dataset on political stability, econimic and social development, and regime types under the file **"WGIdevRegimeType.csv"** by joining the following dataframes:
+1)  the clean data on WGI: "WGIbyCountryAndRegion.csv"
 
-1) the clean data on WGI: "WGIbyCountryAndRegion.csv" 
+2)  the clean data on economic and social indicators:
+    "WGIdevIneqPov.csv"
 
-2) the clean data on economic and social indicators: "WGIdevIneqPov.csv"
+3)  the clean data on regime type WGIregimeTypeByRegion:
+    "WGIregimeTypeByRegion.csv"
 
-3) the clean data on regime type WGIregimeTypeByRegion: "WGIregimeTypeByRegion.csv"
+-   10/5 to 10/14/2018: I read John Creswell's textbook on mixed methods
+    research (A Concise Introduction to Mixed Methods Research, 2015)
+    and decided to write the introduction following his guidelines. I
+    also completed some basic courses on machine learning with DataCamp,
+    especially the Machine Learning Toolbox with Max Khun (the author of
+    the caret package in r).
 
-- 10/5 to 10/14/2018: I read John Creswell's textbook on mixed methods research (A Concise Introduction to Mixed Methods Research, 2015) and decided to write the introduction following his guidelines. I also completed some basic courses on machine learning with DataCamp, especially the Machine Learning Toolbox with Max Khun (the author of the caret package in r).
-
-- Next: during the week of 10/15, I will start writing Chapter 1, following the guideline of John Creswell.
+-   Next: during the week of 10/15, I will start writing Chapter 1,
+    following the guideline of John Creswell.
 
 ## November 2018
 
-- Between 10/ and 11/15, I read the following books and articles:
+-   Between 10/ and 11/15, I read the following books and articles:
 
-1) Creswell, J. W. (2015). A Concise Introduction to Mixed Methods Research. Los Angeles, CA: SAGE.
-2) Woodward, S. L. (2017). The Ideology of Failed States: Why Intervention Fails. Cambridge, UK: Cambridge University Press.
-3) Ezrow, N. M., & Frantz, E. (2013). Failed States and Institutional Decay: Understanding Instability and Poverty in the Developing World. New York, NY: Bloomsbury Academic.
-4) Kaufmann, D., Kraay, A., & Mastruzzi, M. (2011). The Worldwide Governance Indicators: Methodology and Analytical Issues (Policy Research Working Paper 5430 No. 1876–4053). Washington, DC: The World Bank. Retrieved from http://ssrn.com/abstract=1682130
-5) Goldstone, J. A., Bates, R. H., Epstein, D. L., Gurr, T. R., Lustik, M. B., Marshall, M. G., … Woodward, M. (2010). A Global Model for Forecasting Political Instability. American Journal of Political Science, 54(1), 190–208.
-6) Gates, S., Hegre, H., Jones, M. P., & Strand, H. (2006). Institutional Inconsistency and Political Instability: Polity Duration, 1800–2000. American Journal of Political Science, 50(4), 893–908. https://doi.org/10.1111/j.1540-5907.2006.00222.x
+1)  Creswell, J. W. (2015). A Concise Introduction to Mixed Methods
+    Research. Los Angeles, CA: SAGE.
+2)  Woodward, S. L. (2017). The Ideology of Failed States: Why
+    Intervention Fails. Cambridge, UK: Cambridge University Press.
+3)  Ezrow, N. M., & Frantz, E. (2013). Failed States and Institutional
+    Decay: Understanding Instability and Poverty in the Developing
+    World. New York, NY: Bloomsbury Academic.
+4)  Kaufmann, D., Kraay, A., & Mastruzzi, M. (2011). The Worldwide
+    Governance Indicators: Methodology and Analytical Issues (Policy
+    Research Working Paper 5430 No. 1876--4053). Washington, DC: The
+    World Bank. Retrieved from <http://ssrn.com/abstract=1682130>
+5)  Goldstone, J. A., Bates, R. H., Epstein, D. L., Gurr, T. R.,
+    Lustik, M. B., Marshall, M. G., ... Woodward, M. (2010). A Global
+    Model for Forecasting Political Instability. American Journal of
+    Political Science, 54(1), 190--208.
+6)  Gates, S., Hegre, H., Jones, M. P., & Strand, H. (2006).
+    Institutional Inconsistency and Political Instability: Polity
+    Duration, 1800--2000. American Journal of Political Science, 50(4),
+    893--908. <https://doi.org/10.1111/j.1540-5907.2006.00222.x>
 
-- 11/15/2018: I go back to writing Chapter 1, focusing particularly on literature review:
+-   11/15/2018: I go back to writing Chapter 1, focusing particularly on
+    literature review:
 
-  - on how "political stability" has been defined and operationalized by previous authors
-  - on why "political stability" is important for African political leaders and people, as well as for the international community, starting with the African Union, the United Nations, and the international donors
+    -   on how "political stability" has been defined and
+        operationalized by previous authors
+    -   on why "political stability" is important for African political
+        leaders and people, as well as for the international community,
+        starting with the African Union, the United Nations, and the
+        international donors
 
-- 11/18/2018: I am now at the sections "Why Does Political Stability Matter?" and "The Argument of the book"
+-   11/18/2018: I am now at the sections "Why Does Political Stability
+    Matter?" and "The Argument of the book"
 
-- 11/21/2018: writing the "approach and methodology" and "argument of the book"
+-   11/21/2018: writing the "approach and methodology" and "argument of
+    the book"
 
-- 11/23/2018: finished writing the draft of Chapter 1, and will start writing Chapter 2, which is now renamed "Political Stability Around the World Since the End of the Cold War: Descriptive Statistics"
+-   11/23/2018: finished writing the draft of Chapter 1, and will start
+    writing Chapter 2, which is now renamed "Political Stability Around
+    the World Since the End of the Cold War: Descriptive Statistics"
 
-- 11/24/2018: I finished the rough draft of chapter, mainly by transferring the text and figures from the paper "Understanding the conditions of political stability since the end of the Cold War", presented at the SC Political Association in March 2018.
+-   11/24/2018: I finished the rough draft of chapter, mainly by
+    transferring the text and figures from the paper "Understanding the
+    conditions of political stability since the end of the Cold War",
+    presented at the SC Political Association in March 2018.
 
-- 11/30 to 12/01/2018: I attended the African Studies Association annual meeting in Atlanta, GA, where I discussed with Benn Bongang a book project on the political stability in Cameroon.
+-   11/30 to 12/01/2018: I attended the African Studies Association
+    annual meeting in Atlanta, GA, where I discussed with Benn Bongang a
+    book project on the political stability in Cameroon.
 
 ## December 2018
 
-This month I will travel to Madagascar, where I will complete the following tasks:
-- observation of the second round of the presidential election: look at the campaign stategies, people's interest and participation,
+This month I will travel to Madagascar, where I will complete the
+following tasks: - observation of the second round of the presidential
+election: look at the campaign stategies, people's interest and
+participation,
 
-- look also for possible collaboration on a book about the politics in Madagascar. This will include survey and elite interview on: the meaning of politics for the malagasy people, the objectives of participating in the political process, and the different stategies that can be used to achieve those objectives
+-   look also for possible collaboration on a book about the politics in
+    Madagascar. This will include survey and elite interview on: the
+    meaning of politics for the malagasy people, the objectives of
+    participating in the political process, and the different stategies
+    that can be used to achieve those objectives
 
-- 12/4/2018: before I leave for Madagascar, I downloaded the "Comprehensive Machine Learning Workflow" by Gabriel Pierobon (which I will read on the plane and during my trip to Madagascar), and I also reviewed the online courses on "Machine learning toobox" by Max Kuhn.
+-   12/4/2018: before I leave for Madagascar, I downloaded the
+    "Comprehensive Machine Learning Workflow" by Gabriel Pierobon (which
+    I will read on the plane and during my trip to Madagascar), and I
+    also reviewed the online courses on "Machine learning toobox" by Max
+    Kuhn.
 
+-   12/10 to 12/12/2018: I applied Pierobon's machine learning workflow
+    in the analysis of the quantitative data in Chapter 2
 
-- 12/10 to 12/12/2018: I applied Pierobon's machine learning workflow in the analysis of the quantitative data in Chapter 2
+-   12/13/2018: the application of Pierobon's workflow lead me to
+    reconsider my dataset and decide to include a new variable on
+    development category using the World Bank's latest economic
+    classification
 
-
-- 12/13/2018: the application of Pierobon's workflow lead me to reconsider my dataset and decide to include a new variable on development category using the World Bank's latest economic classification
-
-- 12/19/2018: While in Madagascar, I continued the application of Pierobon's workflow and stopped at the identification of the unnecessary variables. 
-In fact, I was not able to create the new variable on development category, because of the internet connection did not allow me to access my data from the cloud.
+-   12/19/2018: While in Madagascar, I continued the application of
+    Pierobon's workflow and stopped at the identification of the
+    unnecessary variables. In fact, I was not able to create the new
+    variable on development category, because of the internet connection
+    did not allow me to access my data from the cloud.
 
 ## January 2019:
 
-- 01/25/2019: I decided to review the data by reviewing the scripts and reloading the data from their original sources, and then clean then.
+-   01/25/2019: I decided to review the data by reviewing the scripts
+    and reloading the data from their original sources, and then clean
+    then.
 
-- As I cleaned the data, I realized that there were too many variables that had too much missing values (up to 80%). I decided to drop these variables. I also decided to impute the values of variables that should not fluctuate too much over time (especially, GNI per capita, GINI, povertyHeadcount) and when it is reasonable to think that such imputation would not change the big picture. This applies particularly to the variables with missing values about 10%.
+-   As I cleaned the data, I realized that there were too many variables
+    that had too much missing values (up to 80%). I decided to drop
+    these variables. I also decided to impute the values of variables
+    that should not fluctuate too much over time (especially, GNI per
+    capita, GINI, povertyHeadcount) and when it is reasonable to think
+    that such imputation would not change the big picture. This applies
+    particularly to the variables with missing values about 10%.
 
-As a result of the decision to impute the values of GNI per capita, GINI and povertyHeadcount, I ended up with two datasets on devIneqPov:
-1) devIneqPovDF without imputation
-2) devIneqPovDF2 with imputattion 
+As a result of the decision to impute the values of GNI per capita, GINI
+and povertyHeadcount, I ended up with two datasets on devIneqPov: 1)
+devIneqPovDF without imputation 2) devIneqPovDF2 with imputattion
 
-The existence of these two datasets also led me to create two datasets for WGIdevIneqPovDF:
-1) WGIdevIneqPovDF without imputation
-2) WGIdevIneqPovDF2 with imputattion 
+The existence of these two datasets also led me to create two datasets
+for WGIdevIneqPovDF: 1) WGIdevIneqPovDF without imputation 2)
+WGIdevIneqPovDF2 with imputattion
 
-- 01/27/2019:  
+-   01/27/2019:
 
-Going back to the dataset on WGI, due to the fact that there were missing values over 80% in most of the originnal dataset WGIbyCountryAndRegion, the following variables had to be dropped afterward:  
+Going back to the dataset on WGI, due to the fact that there were
+missing values over 80% in most of the originnal dataset
+WGIbyCountryAndRegion, the following variables had to be dropped
+afterward:
 
-  - corruptionControl
-  - governmentEffectiveness
-  - ruleOfLaw
-  - voiceAndAccountability
+-   corruptionControl
+-   governmentEffectiveness
+-   ruleOfLaw
+-   voiceAndAccountability
 
-By dropping these variables, we are left with only the following variables related to the WGI:  
+By dropping these variables, we are left with only the following
+variables related to the WGI:
 
-  - stability
-  - stabilityDummy
-  - stabilityCategory
-  - regulatoryQuality
+-   stability
 
-- 1/28/2019:
+-   stabilityDummy
 
-I have finally two clean datasets on WGI, development and poverty:
-1) WGIdevIneqPovDF without imputation (2472 observations), available in the local repository under `WGIdevIneqPov.csv`
-2) WGIdevIneqPovDF2 with imputation (3090 observations), available in the local repository under `WGIdevIneqPov2.csv`
+-   stabilityCategory
 
-I also review and clean the data on WGI and regime type and made it available in the local repository, under the file name `WGIregimeTypeByRegion.csv`
+-   regulatoryQuality
 
-- 01/29/2019:
+-   1/28/2019:
 
-I joined the dataframes on WGI, development, inequality, poverty, and regime types together. Specifically, the dataframes joined are:
-1) WGIdevIneqPovDF: without imputation and without the variables on inequality and poverty (GINI and povertyHeadcount)
-2) WGIdevIneqPovDF2: with imputation for the GINI and povertyHeadcount, and
-3) WGIregimeTypeByRegionDF
+I have finally two clean datasets on WGI, development and poverty: 1)
+WGIdevIneqPovDF without imputation (2472 observations), available in the
+local repository under `WGIdevIneqPov.csv` 2) WGIdevIneqPovDF2 with
+imputation (3090 observations), available in the local repository under
+`WGIdevIneqPov2.csv`
 
-The results of the joining of the above dataframes are: `WGIdevRegimeTypeDF1` and `WGIdevRegimeTypeDF2` that are available in the local repository under `WGIdevRegimeType1.csv` and `WGIdevRegimeType2.csv`
+I also review and clean the data on WGI and regime type and made it
+available in the local repository, under the file name
+`WGIregimeTypeByRegion.csv`
 
-- 01/30/2019:
-I decided to complete the execution of Pierobon's "machine learning workflow" to my data.
+-   01/29/2019:
 
-- 1/30 at 12:16 pm
-I completed the analysis of variance of the stability means by regions, and found that their differences are statistically significant.
+I joined the dataframes on WGI, development, inequality, poverty, and
+regime types together. Specifically, the dataframes joined are: 1)
+WGIdevIneqPovDF: without imputation and without the variables on
+inequality and poverty (GINI and povertyHeadcount) 2) WGIdevIneqPovDF2:
+with imputation for the GINI and povertyHeadcount, and 3)
+WGIregimeTypeByRegionDF
+
+The results of the joining of the above dataframes are:
+`WGIdevRegimeTypeDF1` and `WGIdevRegimeTypeDF2` that are available in
+the local repository under `WGIdevRegimeType1.csv` and
+`WGIdevRegimeType2.csv`
+
+-   01/30/2019: I decided to complete the execution of Pierobon's
+    "machine learning workflow" to my data.
+
+-   1/30 at 12:16 pm I completed the analysis of variance of the
+    stability means by regions, and found that their differences are
+    statistically significant.
 
 I also completed the "correlation with level of significance"
 
-- 1/31/2019:
+-   1/31/2019:
 
-I skipped the section on "Feature Engineering" and went directly to "Data Preparation" (line 457), and stopped for now.
+I skipped the section on "Feature Engineering" and went directly to
+"Data Preparation" (line 457), and stopped for now.
 
-- Weekend of "Presidential's Day", 2/16 to 2/18
+-   Weekend of "Presidential's Day", 2/16 to 2/18
 
-I finished reading "Lantz, B. (2015). Machine Learning with R (2 edition). Birmingham, UK: Packt Publishing," particularly Chapters 5 and 6 on classification and regression methods.
+I finished reading "Lantz, B. (2015). Machine Learning with R (2
+edition). Birmingham, UK: Packt Publishing," particularly Chapters 5 and
+6 on classification and regression methods.
 
-Then, I send an email to Aart Kray (Responsible of the WGI Project at the World Bank) to asking advice about the missing values in the WGI dataset I downloaded. I suggested to just download the complete dataset from the link provided in the homepage of the WGI Project.
+Then, I send an email to Aart Kray (Responsible of the WGI Project at
+the World Bank) to asking advice about the missing values in the WGI
+dataset I downloaded. I suggested to just download the complete dataset
+from the link provided in the homepage of the WGI Project.
 
-I just downloaded the data and reviewed everything with this new dataset.
+I just downloaded the data and reviewed everything with this new
+dataset.
 
 Redo the merging of WGI2 with countryAndRegion classification.
 
-I finished downloading, cleaning and merging the WGI dataset with the different regions and subregions, and made it available in the local repository under the file name `WGI2byCountryAndRegion`. It has all of the variables with 3600 complete observations.
+I finished downloading, cleaning and merging the WGI dataset with the
+different regions and subregions, and made it available in the local
+repository under the file name `WGI2byCountryAndRegion`. It has all of
+the variables with 3600 complete observations.
 
-- 2/21/2018: 
+-   2/21/2018:
 
-I decided to delete the dataset on WGI downloaded with 'wbstats` package which produced the massive missiing values over 80% for some variable. I will completely rely on the new dataset WGI2 downloaded directly from the WGI Project homepage.
+I decided to delete the dataset on WGI downloaded with 'wbstats\`
+package which produced the massive missiing values over 80% for some
+variable. I will completely rely on the new dataset WGI2 downloaded
+directly from the WGI Project homepage.
 
-I started to review the script for downloading the other datasets to be merged with the new dataset on WGI2:
-1) dataset on economic and social conditions (since the data on GINI and poverty headcount are not given every year and they are not likely to fluctuate, we can safely impute them with the kNN function)
-2) dataset on political conditions or regime types
-3) dataset on geographic and cultural conditions
+I started to review the script for downloading the other datasets to be
+merged with the new dataset on WGI2: 1) dataset on economic and social
+conditions (since the data on GINI and poverty headcount are not given
+every year and they are not likely to fluctuate, we can safely impute
+them with the kNN function) 2) dataset on political conditions or regime
+types 3) dataset on geographic and cultural conditions
 
+-   2/23/2019
 
-- 2/23/2019
-
-I finished downloading, merging and cleaning all datasets, and made available in the local repository the final dataset `WGIdevRegimeType`. It can be also access in the working directory under the file name `WGIdevRegimeTypeDF`.
+I finished downloading, merging and cleaning all datasets, and made
+available in the local repository the final dataset `WGIdevRegimeType`.
+It can be also access in the working directory under the file name
+`WGIdevRegimeTypeDF`.
 
 I go back to finish the machine learning workflow by Pierobon.
 
-- 3/11/2019 to 3/16/2019: Spring break
+-   3/11/2019 to 3/16/2019: Spring break
 
-I review the DataCamp courses on Machine Learning, especially the Machine Learning Toolbox.
-I found out that the worlflow suggested by Pierobon is not very helpful in my case.
-Therefore, I decided to create my own script for Machine Learning procedures.
+I review the DataCamp courses on Machine Learning, especially the
+Machine Learning Toolbox. I found out that the worlflow suggested by
+Pierobon is not very helpful in my case. Therefore, I decided to create
+my own script for Machine Learning procedures.
 
-The review of the ML courses led me to the following conclusions:   
+The review of the ML courses led me to the following conclusions:
 
-1) I need to use the `caret package' for the data preprocessing and modeling. I may also use `radom forest` as a single model for classification and regression predictions (I have to learn more about random forest to make a definitive decision on this).
-2) There is no need to clean the data at the level of the collection. Caret will take care of this with the preProcessing command: "knnImpute"
-3) There is no need to transform some variables with outliers. Caret will take care of this with the preProcessing commands: "center", "scale"
-4) There is no need to drop the multicorrelated variables, the non significant variables. Caret will take care of this with the commands: "pca", "zv" (zero variance), "nzv" (near zero variance)
+1)  I need to use the
+    `caret package' for the data preprocessing and modeling. I may also use`radom
+    forest\` as a single model for classification and regression
+    predictions (I have to learn more about random forest to make a
+    definitive decision on this).
+2)  There is no need to clean the data at the level of the collection.
+    Caret will take care of this with the preProcessing command:
+    "knnImpute"
+3)  There is no need to transform some variables with outliers. Caret
+    will take care of this with the preProcessing commands: "center",
+    "scale"
+4)  There is no need to drop the multicorrelated variables, the non
+    significant variables. Caret will take care of this with the
+    commands: "pca", "zv" (zero variance), "nzv" (near zero variance)
 
-- 3/16/2019:
+-   3/16/2019:
 
-In reviewing the script on the data collection, I decided to impute the missing values of several variables, including GINI, and povertyHeadCount.
+In reviewing the script on the data collection, I decided to impute the
+missing values of several variables, including GINI, and
+povertyHeadCount.
 
-However, when it comes to handling the extreme values in the Polity IV dataset, I just decided to remove all observations with the values of -66 (interruption periods), -77 (interregnum periods), and -88 (transitional periods). The reason for this is that there is no single and agreed upon procedure to handle these extreme values among scholars (See Plümper & Neumayer, 2010).
+However, when it comes to handling the extreme values in the Polity IV
+dataset, I just decided to remove all observations with the values of
+-66 (interruption periods), -77 (interregnum periods), and -88
+(transitional periods). The reason for this is that there is no single
+and agreed upon procedure to handle these extreme values among scholars
+(See Plümper & Neumayer, 2010).
 
-- 3/17/2019:
+-   3/17/2019:
 
-I completed another review of the script for data collection and manipulation.
+I completed another review of the script for data collection and
+manipulation.
 
-I completed the initial script for machine learning prediction, based on classification and regression. I just need to review and improve it for the final identification of the significant predictors.
+I completed the initial script for machine learning prediction, based on
+classification and regression. I just need to review and improve it for
+the final identification of the significant predictors.
 
-- 3/25/2019:
+-   3/25/2019:
 
-After reading the paper on ViEWS (Hegre, H., et al.2019. ViEWS: A political violence early-warning system. *Journal of Peace Research*, 56(2), 002234331982386. https://doi.org/10.1177/0022343319823860
-), I came up with the following ideas:
+After reading the paper on ViEWS (Hegre, H., et al.2019. ViEWS: A
+political violence early-warning system. *Journal of Peace Research*,
+56(2), 002234331982386. <https://doi.org/10.1177/0022343319823860> ), I
+came up with the following ideas:
 
-1) include conflict (or conflict history) and state legitimacy as predictors in the main dataframe
-2) correlate and plot stability against the measures of "state fragility index" (Center for Systemic Peace) and "state failure" to see if they are correlated and measure the same thing
+1)  include conflict (or conflict history) and state legitimacy as
+    predictors in the main dataframe
+2)  correlate and plot stability against the measures of "state
+    fragility index" (Center for Systemic Peace) and "state failure" to
+    see if they are correlated and measure the same thing
 
-- 5/6/2019:
+-   5/6/2019:
 
-After reading the practical guide for the implementation of machine learning using the CARET package by Kaushik (Kaushik, S. 2016, December 8. Practical guide to implement machine learning with CARET in R. Retrieved April 18, 2019, from Analytics Vidhya website: https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/), I decided to adopte a simplified version of this practical guide for my future machine learning implementations.
+After reading the practical guide for the implementation of machine
+learning using the CARET package by Kaushik (Kaushik, S. 2016, December
+8. Practical guide to implement machine learning with CARET in R.
+Retrieved April 18, 2019, from Analytics Vidhya website:
+<https://www.analyticsvidhya.com/blog/2016/12/practical-guide-to-implement-machine-learning-with-caret-package-in-r-with-practice-problem/>),
+I decided to adopte a simplified version of this practical guide for my
+future machine learning implementations.
 
-- 5/7/2019:
+-   5/7/2019:
 
-I downloaded the Armed Conflict Dataset version 18.1 for the UCDP/PRIO website and gave it the name of "armedConflictDF"
+I downloaded the Armed Conflict Dataset version 18.1 for the UCDP/PRIO
+website and gave it the name of "armedConflictDF"
 
-- 5/19/2019:
+-   5/19/2019:
 
-I created a dummy variable conflictHistory (0 = No, 1 = yes) for countries that experienced an internal armed conflict and internationalized internal armed conflict.
-I merged the conflictHistory variable to the main dataset
+I created a dummy variable conflictHistory (0 = No, 1 = yes) for
+countries that experienced an internal armed conflict and
+internationalized internal armed conflict. I merged the conflictHistory
+variable to the main dataset
 
-I also downloaded the data on population size from the World Bank homepage. 
+I also downloaded the data on population size from the World Bank
+homepage.
 
-I will review the whole dataset and add the population size variable to the main dataset.
+I will review the whole dataset and add the population size variable to
+the main dataset.
 
+-   5/20/2019:
 
-- 5/20/2019:
+After reviewing the data on political regime from Polity IV and Freedom
+House and merging them with the data on WGI by region, we realized that
+the rates of missing values among the variables from Polity IV were very
+high (27%), whereas the missing values among the variables from Freedom
+House were relatively low (14%). Besides, the variables from Polity IV
+came with some problems of coding that have to be resolve through
+transformation or recoding. In effect, there were different events that
+were coded as: -66, - 77, and -88.
 
-After reviewing the data on political regime from Polity IV and Freedom House and merging them with the data on WGI by region, we realized that the rates of missing values among the variables from Polity IV were very high (27%), whereas the missing values among the variables from Freedom House were relatively low (14%). Besides, the variables from Polity IV came with some problems of coding that have to be resolve through transformation or recoding. In effect, there were different events that were coded as: -66, - 77, and -88.
+According to the 2017 manual: "-66 Cases of foreign "interruption" are
+treated as "system missing." -77 Cases of "interregnum," or anarchy, are
+converted to a "neutral" Polity score of "0." -88 Cases of "transition"
+are prorated across the span of the transition. For example, country X
+has a POLITY score of -7 in 1957, followed by three years of -88 and,
+finally, a score of +5 in 1961. The change (+12) would be prorated over
+the intervening three years at a rate of per year, so that the converted
+scores would be as follows: 1957 -7; 1958 -4; 1959 -1; 1960 +2; and 1961
++5."
 
-According to the 2017 manual: 
-"-66 Cases of foreign “interruption” are treated as “system missing.”
--77 Cases of “interregnum,” or anarchy, are converted to a “neutral”
-Polity score of “0.”
--88 Cases of “transition” are prorated across the span of the transition.
-For example, country X has a POLITY score of -7 in 1957, followed
-by three years of -88 and, finally, a score of +5 in 1961. The change
-(+12) would be prorated over the intervening three years at a rate of
-per year, so that the converted scores would be as follows: 1957 -7;
-1958 -4; 1959 -1; 1960 +2; and 1961 +5."
-
-Due to these problems of missing values and coding the data from Polity IV will not be included in the main dataset for the machine learning implementation.
+Due to these problems of missing values and coding the data from Polity
+IV will not be included in the main dataset for the machine learning
+implementation.
 
 In the end we have two full dataset:
 
-1) a full dataset with Polity IV variables "WGI2popDevIneqPovRegimeConflict1" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict1.csv"
-2) a full dataset without Polity IV variables "WGI2popDevIneqPovRegimeConflict2" which is available in the local repository as : "WGI2popDevIneqPovRegimeConflict2.csv"
+1)  a full dataset with Polity IV variables
+    "WGI2popDevIneqPovRegimeConflict1" which is available in the local
+    repository as : "WGI2popDevIneqPovRegimeConflict1.csv"
+2)  a full dataset without Polity IV variables
+    "WGI2popDevIneqPovRegimeConflict2" which is available in the local
+    repository as : "WGI2popDevIneqPovRegimeConflict2.csv"
 
 5/23/2019:
 
-I start to apply Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).
+I start to apply Kaushik's "practical guide to implement machine
+learning with caret package" (Kaushik, 2016).
 
 5/26/2019
 
-I completed and run a script for machine learning classification based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).   
+I completed and run a script for machine learning classification based
+on Kaushik's "practical guide to implement machine learning with caret
+package" (Kaushik, 2016).
 
-The results are as follows:   
+The results are as follows:
 
-* Feature selection using the rfe procedure
-The top 5 variables (out of 16):
-   population, ruleOfLaw, corruptionControl, conflictHistory, GNIperCapita
-   
-* Random forest allows to predict stability and instability with an accuracy of 92.8% (nearly 93%).
-Result:
- Accuracy : 0.9283        
-                 95% CI : (0.91, 0.9439)
-    No Information Rate : 0.5437        
-    P-Value [Acc > NIR] : <2e-16        
-                                        
-                  Kappa : 0.8559        
-                                        
- Mcnemar's Test P-Value : 0.1822        
-                                        
+-   Feature selection using the rfe procedure The top 5 variables (out
+    of 16): population, ruleOfLaw, corruptionControl, conflictHistory,
+    GNIperCapita
+
+-   Random forest allows to predict stability and instability with an
+    accuracy of 92.8% (nearly 93%). Result: Accuracy : 0.9283\
+    95% CI : (0.91, 0.9439) No Information Rate : 0.5437\
+    P-Value [Acc \> NIR] : \<2e-16
+
+                    Kappa : 0.8559        
+
+Mcnemar's Test P-Value : 0.1822
+
             Sensitivity : 0.9353        
             Specificity : 0.9225
 
 June 1 to July 15, 2019:
 
-I took a break from this project to work on the following project:   
+I took a break from this project to work on the following project:
 
-- "Understanding the Durability of the Paul Biya Regime in Cameroon" - with Benn Bongang
-- "The Lessons Learned from the 2018 Presidential Election in Madagascar" - with Richard Marcus
+-   "Understanding the Durability of the Paul Biya Regime in Cameroon" -
+    with Benn Bongang
+-   "The Lessons Learned from the 2018 Presidential Election in
+    Madagascar" - with Richard Marcus
 
-In the meantime, I got the following ideas that need to be tested abd incorportated in this project:   
+In the meantime, I got the following ideas that need to be tested abd
+incorportated in this project:
 
-1) There is a need to demonstrate that "stability" does not mean "durability": As shown in the Cameroon case, the Paul Biya regime is the most durable regime in Africa and in the world, yet at the same time it is also one of the most unstable regimes.
-To test this idea, we just need to calculate the correlation between the two variables and plot one against the other.
+1)  There is a need to demonstrate that "stability" does not mean
+    "durability": As shown in the Cameroon case, the Paul Biya regime is
+    the most durable regime in Africa and in the world, yet at the same
+    time it is also one of the most unstable regimes. To test this idea,
+    we just need to calculate the correlation between the two variables
+    and plot one against the other.
 
-2) It is possible also that "stability/instability" and "state fragility" are not measuring the same thing and they are not correlated.
-To test this idea, we need to do the following:
-- download the two different dataset on "state fragility index": one from the Centre for Systemic Peace (SFI1) and the other from Fund for Peace (SFI2)
-- correlate and plot stability score with SFI1 and SFI2 and we will see if they are correlated and measure the same thing    
+2)  It is possible also that "stability/instability" and "state
+    fragility" are not measuring the same thing and they are not
+    correlated. To test this idea, we need to do the following:
 
-3) There may be also a need to include the data on religion in the main data set, but we just need to correlate stability with religion variables to see if there are some correlation
+-   download the two different dataset on "state fragility index": one
+    from the Centre for Systemic Peace (SFI1) and the other from Fund
+    for Peace (SFI2)
+-   correlate and plot stability score with SFI1 and SFI2 and we will
+    see if they are correlated and measure the same thing
+
+3)  There may be also a need to include the data on religion in the main
+    data set, but we just need to correlate stability with religion
+    variables to see if there are some correlation
 
 7/16/2019
 
-I completed and run a script for machine learning regression based on Kaushik's "practical guide to implement machine learning with caret package" (Kaushik, 2016).   
+I completed and run a script for machine learning regression based on
+Kaushik's "practical guide to implement machine learning with caret
+package" (Kaushik, 2016).
 
-The results are as follows:   
+The results are as follows:
 
-1) Recursive feature selection
+1)  Recursive feature selection
 
-Outer resampling method: Cross-Validated (10 fold, repeated 3 times) 
+Outer resampling method: Cross-Validated (10 fold, repeated 3 times)
 
 Resampling performance over subset size:
 
- Variables   RMSE Rsquared    MAE  RMSESD RsquaredSD    MAESD Selected
-         4 0.4531   0.8139 0.3412 0.06053   0.041049 0.051084         
-         8 0.3191   0.9037 0.2340 0.01412   0.007979 0.010611         
-        16 0.2868   0.9221 0.2089 0.01419   0.007266 0.009291         
-        45 0.2834   0.9239 0.2066 0.01480   0.007524 0.009649        *
+Variables RMSE Rsquared MAE RMSESD RsquaredSD MAESD Selected 4 0.4531
+0.8139 0.3412 0.06053 0.041049 0.051084\
+8 0.3191 0.9037 0.2340 0.01412 0.007979 0.010611\
+16 0.2868 0.9221 0.2089 0.01419 0.007266 0.009291\
+45 0.2834 0.9239 0.2066 0.01480 0.007524 0.009649 \*
 
-The top 5 variables (out of 45):
-   population, ruleOfLaw, conflictHistory.1, HDI, GNIperCapita
+The top 5 variables (out of 45): population, ruleOfLaw,
+conflictHistory.1, HDI, GNIperCapita
 
-2) Prediction of stability of the test set
+2)  Prediction of stability of the test set
 
 glm variable importance
 
-  only 20 most important variables shown (out of 41)
+only 20 most important variables shown (out of 41)
 
                              Overall
-ruleOfLaw                     100.00
-conflictHistory.1              69.71
-region.Asia                    57.90
-subregion.South.Eastern.Asia   53.23
-subregion.Northern.Africa      46.84
-subregion.Central.Asia         45.97
-population                     42.63
-subregion.Eastern.Asia         41.16
-regulatoryQuality              37.49
-subregion.Melanesia            26.25
-region.Europe                  25.49
-subregion.Micronesia           23.59
-subregion.Eastern.Europe       23.29
-governmentEffectiveness        23.09
-subregion.Central.America      21.35
-region.Oceania                 20.21
-GDPannualGrowthRate            19.33
-subregion.Eastern.Africa       18.03
-politicalChangeFH.no.change    17.90
-date                           17.08
 
+ruleOfLaw 100.00 conflictHistory.1 69.71 region.Asia 57.90
+subregion.South.Eastern.Asia 53.23 subregion.Northern.Africa 46.84
+subregion.Central.Asia 45.97 population 42.63 subregion.Eastern.Asia
+41.16 regulatoryQuality 37.49 subregion.Melanesia 26.25 region.Europe
+25.49 subregion.Micronesia 23.59 subregion.Eastern.Europe 23.29
+governmentEffectiveness 23.09 subregion.Central.America 21.35
+region.Oceania 20.21 GDPannualGrowthRate 19.33 subregion.Eastern.Africa
+18.03 politicalChangeFH.no.change 17.90 date 17.08
 
-- 7/18/2019
+-   7/18/2019
 
-I completed a script for comparing stability scores with durability, SFI, and fsi. I appears that there are significant correlation between these variables, even though the correlation between stability and durability was moderate (0.51).
+I completed a script for comparing stability scores with durability,
+SFI, and fsi. I appears that there are significant correlation between
+these variables, even though the correlation between stability and
+durability was moderate (0.51).
 
-- 7/21/2019
+-   7/21/2019
 
 I started editing the draft of Chapter 1, and stopped at Line 21.
+
+-   7/22/2019
+
+I finished editing Chapter 1 which includes the comparison of stability
+scores with durability, SFI, and fsi.
+
+-   7/25/2019
+
+I started editing Chapter 2 - Political Stability Around the World and
+stopped at Line 54 Avagerage by region
+
+-   7/26/2019
+
+I continued editing Chapter 2. I got to Section 2.2 - Predictive
+Analytics. Since the variable "subregion" is creating too much noise, I
+decided to drop this variable from the list of predictors.
+
+-   7/28/2019
+
+In addition to subregion, I also decided to drop the variable "date"
+from the model, because it is meaningless.
+
+-   7/29/2019
+
+I started sketches of Chapter 3 on Stability and the curse of history
+and geography, and Chapter 4 on Stability and the other WGI
+
+-   8/3/2019
+
+I need to create file listing the variables included in the full dataset
+and their sources. This will constitute Appendix A
+
+Appendix B would be the machine learning script for the identification
+of the predictors of political stability scores.
+
+-   8/5/2019
+
+New idea about the discussion on the influence of geography on
+stability:
+
+The fact is that the stability of Europe and Oceania have less to do
+specifically with to their geographic locations (i.e., physical
+geography of those places) than the political, economic, and social
+factors that they have in common. Therefore, the best way to drive this
+idea is to implement machine learning classification of the regions to
+see what are the common predictors for the countries on Europe and
+Oceania.
+
+## MARCH 2021
+
+I am determined to finish this book this year and submit it to Palgrave.
+
+The bibliography in the project rmarkdown has been updated as of today
+(March 9, 2021).
+
+The dataset that will be used will be the full dataset with Polity IV
+data ("WGI2popDevIneqPovRegimeConflict1.csv") which will cover the year
+1996-2017
+
+For SERAS conference this week (March 12-13), I will discuss the
+following: - definition of political stability - why does it still
+matter, by comparing the economic performance of stable countries with
+the unstable countries
+
+For the research project
+
+-   started to generate the data for the episodes of stabilization and
+    destabilization for each african countries
+
+March 11, 2021
+
+-   Finished with generating the data for the episodes of stabilization
+    and destabilization for each African countries
+
+March 12, 2021
+
+-   finished collecting:
+
+1)  country timeline from BBC News
+2)  country profile from the CIA World Factbook
+
+Next steps in data analysis:
+
+Step 1 - identify the episodes of stabilization and destabilization Step
+2 - begin analyzing the conditions of stabilization and destabilization
+Step 3 - begin analyzing the actors and actions under stabilization and
+destabilization
+
+## STEP 1 - IDENTIFICATION OF THE EPISODES OF STABILIZATION AND DESTABILIZATION AS WELL AS THE COUNTRIES WITH PERMANENT STABILITY AND PERMANENT INSTABILITY (IN MAXQDA)
+
+March 14, 2021:
+
+-   started with adding document variables to the documents on episodes
+    of stabilization/destabilization
+
+-   First category of variable: Existence of episode of stabilization or
+    destabilization
+
+-   yes / no: an episode of absolute stabilization occurred in the
+    country
+
+-   yes / no: an episode of absolute destabilization occurred in the
+    country
+
+-   Second category of variable: if no episode of stabilization or
+    destabilization occurred
+
+-   yes / no: the country has been always stable
+
+-   yes / no: the country has been always unstable
+
+-   Second category of variable: geographic location of the country
+
+-   Sub-regional location: North, South, East, West, Central Africa
+
+-   Zone of conflict: "arc of instability" (or transition zone or
+    Sahel), "Great Lake area", "Horn of Africa"
+
+March 16, 2021:
+
+-   Before continuing the analysis of quantitative data, I need to
+    review the quantitative data to remove the names of countries with
+    special characters: Cote d'Ivoire and Sao Tome and Principe
+
+-   The review was completed and the new data set was called Version 2:
+    WGI2popDevIneqPovRegimeConflict1V2
+
+
+March 17, 2021
+
+- start completing the document variables
+
+- document variables have been completed
+
+- all episodes of stabilization and destabilization have been identified
+
+- next step is to code the BBC News timeline and CIA country profile, paying attention to the following:
+
+1) conditions of instability: conflict history, respect for rule of law, population size, GNI per capita (devCategory)
+- qualitative data need to be generate concerning: respect for rule of law, population size, and GNI per capita
+
+2) the main actors and their actions or behaviors
+
+
+March 18, 2021
+
+- the script to generate population category and population growth data for each country
+
+We divide the world population in 5 categories as : 
+- very small: 0 to 5000 000 (less than 5 million) 
+- small: 5 000 000 to 25 000 000 (less than 25 million)
+- medium: 25 000 000 to 75 000 000 (less than 75 million)
+- large: 75 000 000 to 250 000 000
+- very large more than 250 000 000
+
+We divide the world population growth in 5 categories as : 
+- declining: -Inf to 0
+- slowly growing population: 0 to 1.4
+- moderately growing population: 1.5 to 2.9
+- fast growing population: 3.0 and more (with a doubling time of 23.3 years, which is 70/3.0)
+
+- the script to generate respect for rule of law category and respect for rule of law data for each country
+
+- the script to generate development category data for each country
+
+Next step: start collecting data on population, rule of law, and GNI per capita
+
+
+March 20, 2021
+
+- completed the collection of the data on population
+
+- completed the collection of the data on rule of law
+
+- completed the collection of the data on GNI per capita and GDP growth
+
+- completed the collection of the data on political status and change
+
+
+Next step: generate data on conflict history of each country
+
+
+In the analysis I decide to focus on the following:
+- Chapter 1 - Introduction: Political Stability: What Is It and Why Does It Matter?
+- Chapter 2 - Methodology: The Mixed Methods Research (MMR) Approach to Political Stability
+- Chapter 3 - Quantitative analysis: Political stability around the world and in Africa
+- Chapter 4 - What do stable countries have in common compared to unstable countries
+- Chapter 5 - From stability to instability: the process of destabilization
+- Chapter 6 - Coming back from instability: the difficult process of stabilization
+- Chapter 7 - Conclusion: Toward a theory of political instability
+
+March 21, 2021
+
+- completed the collection of the data on conflict history
+
+Next step: code data on conflict history and make the codes document variables
+
+

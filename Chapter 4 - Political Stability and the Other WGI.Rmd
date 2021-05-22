@@ -1,0 +1,105 @@
+---
+title: "Chapter 4 - Political Stability and the Other World Governance Indicators"
+author: "Adrien Ratsimbaharison"
+date: "July 26, 2019"
+output: html_document
+
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+In this section, we will first review the literature on the relationships between political stability and the other governance indicators, such as rule of law, regulatory quality, government effectiveness, corruption control, and voice and accountability. Since the variable importance figure in Chapter 2 points to two first indicators as the most important, we will focus on them. Next, we will apply some basic correlation and regression analyses to assess the effect of these indicators on political stability.
+
+
+
+## 4.1 - Literature review on political stability and governance
+
+
+## 4.2 - Quantitative analysis of the relationship political stability and governance
+
+** 1) Basic Correlation **
+
+As shown in Fig. find that political stability is strongly and significantly correlated with these other world governance indicators. The correlation coefficients range from 0.63 to 0.77, with a p-value close to zero.   
+
+
+** 2) Regression Analysis **
+
+Univariate analysis
+
+```{r univariate regression analysis, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+WGI_lm1 <- lm(stability ~ ruleOfLaw, data = stabilityAndOtherWGI)
+summary(WGI_lm1)
+
+```
+
+
+Multivariate analysis
+
+```{r multivariate regression analysis, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+WGI_lm2 <- lm(stability ~ ruleOfLaw + regulatoryQuality + governmentEffectiveness + corruptionControl, data = stabilityAndOtherWGI)
+summary(WGI_lm2)
+
+```
+
+
+## Tables and Figures
+
+
+```{r Required R Packages, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(psych)
+library(Hmisc)
+library(PerformanceAnalytics)
+
+
+```
+
+```{r loading the data on  WGI, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# Loading the data on stability and other WGI from the full dataset
+
+stabilityAndOtherWGI <- read.csv("WGI2popDevIneqPovRegimeConflict2.csv", header = TRUE)
+stabilityAndOtherWGI <- as.data.frame(stabilityAndOtherWGI)
+stabilityAndOtherWGI$country <- as.character(stabilityAndOtherWGI$country)
+stabilityAndOtherWGI$date <- as.numeric(stabilityAndOtherWGI$date)
+str(stabilityAndOtherWGI)
+
+
+
+```
+
+```{r checking the correlations of the variables, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+WGI <- select(stabilityAndOtherWGI, stability, ruleOfLaw, regulatoryQuality, governmentEffectiveness, corruptionControl, voiceAndAccountability)
+# Plot with PerformanceAnalytics
+chart.Correlation(WGI, histogram=TRUE, pch=19)
+
+```
+
+```{r regression analysis, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityAndOtherWGI, aes(x = ruleOfLaw, y = stability)) +
+  geom_point() + geom_smooth() +
+  geom_hline(yintercept=0, color = "red", size=1.5)
+```
+
+```{r regression analysis the effect of the level of develpment, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityAndOtherWGI, aes(x = ruleOfLaw, y = stability, color = devCategory)) +
+  geom_point() +
+  geom_hline(yintercept=0, color = "red", size=1.5)
+
+```
+
+```{r regression analysis - effect of regime type, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot(stabilityAndOtherWGI, aes(x = ruleOfLaw, y = stability, color = status)) +
+  geom_point() +
+  geom_hline(yintercept=0, color = "red", size=1.5)
+
+```
+

@@ -274,3 +274,4 @@ ggplot(WGIdevRegimeType, aes(x = stability, y = HDI)) +
 
 
 ```
+/
