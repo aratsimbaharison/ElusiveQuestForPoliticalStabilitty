@@ -792,7 +792,30 @@ Next step: code data on conflict history and make the codes document variables
 
 ---
 
-SUMMER 2021 PROGRAM
+SUMMER 2021 - LEARNING PROGRAM
+
+I need to master the following this summer:
+1) R basics
+2) R Machine learning and Markdown
+3) Mixed Methods Research with MAXQDA
+
+If I have time, I will also learn to code
+
+---
+
+SUMMER 2021 - RESEARCH PROGRAM
+
+I need to complete the following for my research on "Elusive Quest":
+1) Review and update the quantitative data
+2) Complete the collection of qualitative data
+3) Start coding qualitative data in MAXQDA
+
+---
+
+
+
+
+
 
 
 
