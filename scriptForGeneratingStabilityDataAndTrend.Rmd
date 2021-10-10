@@ -1,5 +1,5 @@
 ---
-title: "Angola"
+title: "Zimbabwe"
 author: ""
 date: ""
 output:
@@ -26,7 +26,7 @@ stabilityData <- stabilityData[stabilityVariables]
 
 # data by country
 # country = x
-x <- stabilityData[stabilityData$country == "Angola",]
+x <- stabilityData[stabilityData$country == "Zimbabwe",]
 x
 
 ```
@@ -43,7 +43,7 @@ stabilityTrend <- ggplot(data=x, aes(x=date, y=stability)) +
   geom_hline(yintercept=0.0, color = "red", size = 1.25) +
    geom_hline(yintercept=1.0, linetype="dashed", color = "red", size = 1) +
    geom_hline(yintercept=-1.0, linetype="dashed", color = "red", size = 1) +
-  ylim(-3, 2.5) + 
+  ylim(-3.5, 2.5) + 
   xlab("Year") +
   ylab("Political Stability Estimate")
 
